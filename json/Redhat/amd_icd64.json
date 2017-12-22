@@ -1,0 +1,8 @@
+{
+	"file_format_version": "1.0.0",
+		"ICD": {
+			"library_path": "/usr/lib64/amdvlk64.so",
+			"abi_versions": "0.9.0"
+		}
+}
+
