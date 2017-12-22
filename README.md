@@ -41,7 +41,7 @@ The following features and improvements are planned in future releases:
 * LLPC optimizations to improve GPU-limited performance and compile time
 * Optimizations to improve CPU-limited performance
 
-> **Note:** The CPU overhead of command submission may be  reduced by leveraging the kernel driver's developmental VM-always-valid feature.  This feature is temporarily disabled by default.  For the time being, you may try it as described in [Runtime Settings](#Runtime-Settings).
+> **Note:** The CPU overhead of command submission may be  reduced by leveraging the kernel driver's developmental VM-always-valid feature.  This feature is temporarily disabled by default.  For the time being, you may try it as described in [Runtime Settings](#runtime-settings).
 
 ### Known Issues
 * Dawn of War III may crash during gameplay on Radeon&trade; RX Vega Series due to geometry shader is not yet supported
@@ -191,7 +191,7 @@ EndSection
 ```
 
 ### Required Settings
-On the AMDGPU upstream driver stack, the max number of command streams per submission **MUST** be limited to 4 (the default setting in AMD Open Source driver for Vulkan is 16). This can be accomplished via the [Runtime Settings](#Runtime-Settings) mechanism by adding the following line to /etc/amd/amdPalSettings.cfg:
+On the AMDGPU upstream driver stack, the max number of command streams per submission **MUST** be limited to 4 (the default setting in AMD Open Source driver for Vulkan is 16). This can be accomplished via the [Runtime Settings](#runtime-settings) mechanism by adding the following line to /etc/amd/amdPalSettings.cfg:
 ```
 MaxNumCmdStreamsPerSubmit,4
 ```
@@ -219,7 +219,7 @@ Runtime settings are only read at device initialization, and cannot be changed w
 ## PAL GpuProfiler Layer
 The GpuProfiler is an optional layer that is designed to intercept the PAL interface to provide basic GPU profiling support.  Currently, this layer is controlled exclusively through runtime settings and outputs its results to file.
 
-You can use the following [runtime settings](#Runtime-Settings) to generate a .csv file with GPU timings of work performed during the designated frames:
+You can use the following [Runtime Settings](#runtime-settings) to generate a .csv file with GPU timings of work performed during the designated frames:
 
 | Setting Name                     | Value                            | Comment                                                                                                                                                                                               |
 | -------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
