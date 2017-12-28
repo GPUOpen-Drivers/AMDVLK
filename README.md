@@ -27,7 +27,7 @@ The AMD Open Source Driver for Vulkan is designed to support following distros o
 * Ubuntu 16.04.3 (64-bit version)
 * RedHat 7.4 (64-bit version)
 
-The driver has not been tested on other distros. You may try it our on other distros of your choice.
+The driver has not been tested on other distros. You may try it out on other distros of your choice.
 
 ### Feature Support and Performance
 The AMD Open Source Driver for Vulkan is designed to support the following features:
