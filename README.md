@@ -2,7 +2,8 @@
 # AMD Open Source Driver for Vulkan&reg;
 The AMD Open Source Driver for Vulkan&reg; is an open-source Vulkan driver for Radeon&trade; graphics adapters on Linux&reg;. It is built on top of AMD's Platform Abstraction Library (PAL), a shared component that is designed to encapsulate certain hardware and OS-specific programming details for many of AMD's 3D and compute drivers. Leveraging PAL can help provide a consistent experience across platforms, including support for recently released GPUs and compatibility with AMD developer tools.
 
-Shaders that compose a particular `VkPipeline` object are compiled as a single entity using the LLVM-Based Pipeline Compiler (LLPC) library.  LLPC builds on LLVM's existing shader compilation infrastructure for AMD GPUs to generate code objects compatible with PAL's pipeline ABI.  
+Shaders that compose a particular `VkPipeline` object are compiled as a single entity using the LLVM-Based Pipeline Compiler (LLPC) library.  LLPC builds on LLVM's existing shader compilation infrastructure for AMD GPUs to generate code objects compatible with PAL's pipeline ABI. Notably, AMD's closed-source Vulkan driver currently uses a different pipeline compiler, which is the major difference between AMD's open-source and closed-source Vulkan drivers.
+
 
 ![High-Level Architecture Diagram](topLevelArch.png)
 
@@ -22,9 +23,11 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 > **Note:** Pipeline compiler support for geometry and tessellation shaders is not fully implemented for the Radeon&trade; RX Vega Series. APU support is limited. These issues will be addressed in upcoming releases.
 
 ### Operating System Support
-The AMD Open Source Driver for Vulkan is designed to support following distros on both the upstream driver stack and the [AMDGPU Pro driver stack](http://support.amd.com/en-us/kb-articles/Pages/AMDGPU-PRO-Driver-for-Linux-Release-Notes.aspx):
+The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](http://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
 * Ubuntu 16.04.3 (64-bit version)
 * RedHat 7.4 (64-bit version)
+
+The driver has not been tested on other distros. You may try it our on other distros of your choice.
 
 ### Feature Support and Performance
 The AMD Open Source Driver for Vulkan is designed to support the following features:
@@ -44,7 +47,8 @@ The following features and improvements are planned in future releases:
 > **Note:** The CPU overhead of command submission may be  reduced by leveraging the kernel driver's developmental VM-always-valid feature.  This feature is temporarily disabled by default.  For the time being, you may try it as described in [Runtime Settings](#runtime-settings).
 
 ### Known Issues
-* Dawn of War III may crash during gameplay on Radeon&trade; RX Vega Series due to geometry shader is not yet supported
+* Dawn of War III may crash during gameplay on Radeon&trade; RX Vega Series due to geometry shader is not yet supported in LLPC
+* F1 2017 old version may hang or crash during gameplay on Radeon&trade; RX Vega Series. Please upgrade the game to latest version to run it with the AMD Open Source Driver for Vulkan 
 * CTS may hang in VK.synchronization.internally_synchronized_objects.pipeline_cache_compute with Linux kernel versions lower than 4.13
 
 ### How to Contribute
@@ -69,7 +73,7 @@ Please make each contribution reasonably small. If you would like to make a big 
 ## Build Instructions
 
 ### System Requirements
-Your build system must have at least 16GB of RAM.
+It is recommended to install 16GB RAM in your build system.
 
 ### Install Dev and Tools Packages
 #### Ubuntu
@@ -178,8 +182,8 @@ sudo cp <root of vulkandriver>/drivers/AMDVLK/json/redhat/* /etc/vulkan/icd.d/
 
 > **Note:** The remaining steps are only required when running the AMDGPU upstream driver stack.
 
-### Turn on DRI3
-In /usr/share/X11/xorg.conf.d/10-amdgpu.conf:
+### Turn on DRI3 and disable modesetting X driver
+Add following lines in /usr/share/X11/xorg.conf.d/10-amdgpu.conf:
 ```
 Section "Device"
 
@@ -188,6 +192,11 @@ Identifier "AMDgpu"
 Option  "DRI" "3"
 
 EndSection
+```
+
+And make sure following line is **NOT** included in the section:
+```
+Driver      "modesetting"
 ```
 
 ### Required Settings
