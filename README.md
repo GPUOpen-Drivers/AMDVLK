@@ -171,13 +171,13 @@ sudo rm /usr/share/vulkan/icd.d/*
 ```
 sudo cp <root of vulkandriver>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib/x86_64-linux-gnu/
 sudo cp <root of vulkandriver>/drivers/xgl/builds/Release/icd/amdvlk32.so /usr/lib/i386-linux-gnu/
-sudo cp <root of vulkandriver>/drivers/AMDVLK/json/ubuntu/* /etc/vulkan/icd.d/
+sudo cp <root of vulkandriver>/drivers/AMDVLK/json/Ubuntu/* /etc/vulkan/icd.d/
 ```
 #### RedHat
 ```
 sudo cp <root of vulkandriver>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib64/
 sudo cp <root of vulkandriver>/drivers/xgl/builds/Release/icd/amdvlk32.so /usr/lib/
-sudo cp <root of vulkandriver>/drivers/AMDVLK/json/redhat/* /etc/vulkan/icd.d/
+sudo cp <root of vulkandriver>/drivers/AMDVLK/json/Redhat/* /etc/vulkan/icd.d/
 ```
 
 > **Note:** The remaining steps are only required when running the AMDGPU upstream driver stack.
