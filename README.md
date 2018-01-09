@@ -38,7 +38,7 @@ The AMD Open Source Driver for Vulkan is designed to support the following featu
 * Built-in debug and profiling tools
 * Mid-command buffer preemption and SR-IOV virtualization
 
-The following features and improvements are planned in future releases:
+The following features and improvements are planned in future releases (Please refer to [Release Notes](https://github.com/GPUOpen-Drivers/AMDVLK/wiki/Release-notes) for update of each release):
 * Upcoming versions of the Vulkan API
 * Hardware performance counter collection through [RenderDoc](https://renderdoc.org/)
 * LLPC optimizations to improve GPU-limited performance and compile time
@@ -160,10 +160,12 @@ make -j$(nproc)
 ### Install Vulkan SDK
 Refer to installation instructions [here](http://support.amd.com/en-us/kb-articles/Pages/Install-LunarG-Vulkan-SDK.aspx).
 
-### Remove Previous Installed JSON Files
+### Uninstall Previously Installed JSON Files
+Please make sure all JSON files for AMD GPUs under below folders are uninstalled: 
+
 ```
-sudo rm /etc/vulkan/icd.d/*
-sudo rm /usr/share/vulkan/icd.d/*
+/etc/vulkan/icd.d
+/usr/share/vulkan/icd.d
 ```
 
 ### Copy Driver and JSON Files
