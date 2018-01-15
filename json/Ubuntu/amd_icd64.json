@@ -2,7 +2,7 @@
 	"file_format_version": "1.0.0",
 		"ICD": {
 			"library_path": "/usr/lib/x86_64-linux-gnu/amdvlk64.so",
-			"api_version": "1.0"
+			"api_version": "1.0.65"
 		}
 }
 
