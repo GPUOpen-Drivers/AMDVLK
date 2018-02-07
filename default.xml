@@ -12,6 +12,6 @@
   <project path="drivers/xgl" name="xgl" revision="dev"/>
   <project path="drivers/pal" name="pal" revision="dev"/>
   <project path="drivers/AMDVLK" name="AMDVLK" revision="dev"/>
-  <project path="drivers/llvm" name="llvm" revision="amd-vulkan-master"/>
+  <project path="drivers/llvm" name="llvm" revision="amd-vulkan-dev"/>
 
 </manifest>
