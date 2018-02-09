@@ -106,18 +106,20 @@ chmod a+x ~/bin/repo
 ```
 mkdir vulkandriver
 cd vulkandriver
-~/bin/repo init -u https://github.com/GPUOpen-Drivers/AMDVLK.git -b master{dev}
+~/bin/repo init -u https://github.com/GPUOpen-Drivers/AMDVLK.git -b master
 ~/bin/repo sync
 ```
+
+> **Note:** Source code in dev branch can be gotten by using "-b dev" in the "repo init" command
 
 ### 64-bit Build
 #### Ubuntu
 ```
 cd <root of vulkandriver>/drivers/xgl
 
-cmake -H. -Bbuilds/Release64{Debug64} -DCMAKE_BUILD_TYPE=Release{Debug} -DCMAKE_MODULE_PATH=$PWD/../pal/cmake/Modules -DXGL_PAL_PATH:PATH=$PWD/../pal -DCMAKE_C_FLAGS="-DLINUX -D__x86_64__ -D__AMD64__" -DCMAKE_CXX_FLAGS="-DLINUX -D__x86_64__ -D__AMD64__" -DXGL_LLVM_SRC_PATH=$PWD/../llvm
+cmake -H. -Bbuilds/Release64
 
-cd builds/Release64{Debug64}
+cd builds/Release64
 
 make -j$(nproc)
 ```
@@ -126,9 +128,9 @@ make -j$(nproc)
 ```
 cd <root of vulkandriver>/drivers/xgl
 
-cmake3 -H. -Bbuilds/Release64{Debug64} -DCMAKE_BUILD_TYPE=Release{Debug} -DCMAKE_MODULE_PATH=$PWD/../pal/cmake/Modules -DXGL_PAL_PATH:PATH=$PWD/../pal   -DCMAKE_C_FLAGS="-DLINUX -D__x86_64__ -D__AMD64__" -DCMAKE_CXX_FLAGS="-DLINUX -D__x86_64__ -D__AMD64__" -DXGL_LLVM_SRC_PATH=$PWD/../llvm
+cmake3 -H. -Bbuilds/Release64
 
-cd builds/Release64{Debug64}
+cd builds/Release64
 
 make -j$(nproc)
 ```
@@ -138,9 +140,9 @@ make -j$(nproc)
 ```
 cd <root of vulkandriver>/drivers/xgl
 
-cmake -H. -Bbuilds/Release{Debug} -DCMAKE_BUILD_TYPE=Release{Debug} -DCMAKE_MODULE_PATH=$PWD/../pal/cmake/Modules -DXGL_PAL_PATH:PATH=$PWD/../pal -DCMAKE_C_FLAGS="-m32 -DLINUX -march=i686 -D__i386__" -DCMAKE_CXX_FLAGS="-m32 -DLINUX -march=i686 -D__i386__" -DXGL_LLVM_SRC_PATH=$PWD/../llvm
+cmake -H. -Bbuilds/Release -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
 
-cd builds/Release{Debug}
+cd builds/Release
 
 make -j$(nproc)
 ```
@@ -148,13 +150,15 @@ make -j$(nproc)
 ```
 cd <root of vulkandriver>/drivers/xgl
 
-cmake3 -H. -Bbuilds/Release{Debug} -DCMAKE_BUILD_TYPE=Release{Debug} -DCMAKE_MODULE_PATH=$PWD/../pal/cmake/Modules -DXGL_PAL_PATH:PATH=$PWD/../pal   -DCMAKE_C_FLAGS="-m32 -DLINUX -march=i686 -D__i386__" -DCMAKE_CXX_FLAGS="-m32 -DLINUX -march=i686 -D__i386__" -DXGL_LLVM_SRC_PATH=$PWD/../llvm
+cmake3 -H. -Bbuilds/Release -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
 
-cd builds/Release{Debug}
+cd builds/Release
 
 make -j$(nproc)
 ```
-> **Note:**  If the build runs into errors like "collect2: fatal error: ld terminated with signal 9 [Killed]" due to out of memory, you could try  with reducing the number of threads in "make" command.
+> **Note:**  
+* If the build runs into errors like "collect2: fatal error: ld terminated with signal 9 [Killed]" due to out of memory, you could try  with reducing the number of threads in "make" command.  
+* Debug build can be done by using -DCMAKE_BUILD_TYPE=Debug
 
 ## Installation Instructions
 ### Install Vulkan SDK
@@ -268,3 +272,4 @@ Vega is a codename for AMD architecture, and is not a product name.
 Linux is the registered trademark of Linus Torvalds in the U.S. and other countries.
 
 Vulkan and the Vulkan logo are registered trademarks of the Khronos Group, Inc.
+
