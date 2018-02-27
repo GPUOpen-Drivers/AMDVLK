@@ -20,7 +20,6 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 * Radeon&trade; Pro WX x100 Series
 * Radeon&trade; Pro 400/500 Series
 
-> **Note:** Pipeline compiler support for geometry and tessellation shaders is not fully implemented for the Radeon&trade; RX Vega Series. APU support is limited. These issues will be addressed in upcoming releases.
 
 ### Operating System Support
 The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](http://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
@@ -47,8 +46,7 @@ The following features and improvements are planned in future releases (Please r
 > **Note:** The CPU overhead of command submission may be  reduced by leveraging the kernel driver's developmental VM-always-valid feature.  This feature is temporarily disabled by default.  For the time being, you may try it as described in [Runtime Settings](#runtime-settings).
 
 ### Known Issues
-* Dawn of War III may crash during gameplay on Radeon&trade; RX Vega Series due to geometry shader is not yet supported in LLPC
-* F1 2017 old version may hang or crash during gameplay on Radeon&trade; RX Vega Series. Please upgrade the game to latest version to run it with the AMD Open Source Driver for Vulkan 
+* Dawn of War III show corruption with max setting on Radeon&trade; RX Vega Series
 * CTS may hang in VK.synchronization.internally_synchronized_objects.pipeline_cache_compute with Linux kernel versions lower than 4.13
 
 ### How to Contribute
