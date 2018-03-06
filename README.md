@@ -31,7 +31,7 @@ The driver has not been tested on other distros. You may try it out on other dis
 ### Feature Support and Performance
 The AMD Open Source Driver for Vulkan is designed to support the following features:
 
-* Vulkan 1.0
+* Vulkan 1.1
 * More than 30 extensions
 * [Radeon&trade; GPUProfiler](https://github.com/GPUOpen-Tools/Radeon-GPUProfiler) tracing
 * Built-in debug and profiling tools
@@ -43,7 +43,6 @@ The following features and improvements are planned in future releases (Please r
 * LLPC optimizations to improve GPU-limited performance and compile time
 * Optimizations to improve CPU-limited performance
 
-> **Note:** The CPU overhead of command submission may be  reduced by leveraging the kernel driver's developmental VM-always-valid feature.  This feature is temporarily disabled by default.  For the time being, you may try it as described in [Runtime Settings](#runtime-settings).
 
 ### Known Issues
 * Dawn of War III show corruption with max setting on Radeon&trade; RX Vega Series
@@ -216,7 +215,7 @@ The driver exposes many settings that can customize the driver's behavior and fa
 | ------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `ShaderCacheMode`        | 0: disable cache<br/>1: runtime cache<br/>2: cache to disk  | Runtime cache is the default mode.                                                                                                |
 | `IFH`                    | 0: default<br/>1: drop all submits<br/>                     | Infinitely Fast Hardware.  Submit calls are dropped before being sent to hardware.  Useful for measuring CPU-limited performance. |
-| `EnableVmAlwaysValid`    | 0: disable<br/>1: enable<br/>                               | 0 is the default setting.  Can be enabled to reduce command buffer submission overhead related to virtual memory management.      |
+| `EnableVmAlwaysValid`    | 0: disable<br/>1: enable<br/>                               | 1 is the default setting which enables the VM-always-valid feature for kernel 4.16 and above.  The feature can reduce command buffer submission overhead related to virtual memory management.     |
 | `IdleAfterSubmitGpuMask` | Bitmask of GPUs (i.e., bit 0 is GPU0, etc.)                 | Forces the CPU to immediately wait for each GPU submission to complete on the specified set of GPUs.                              |
 
 *All* available settings can be determined by examining the .cfg source files that define them.
