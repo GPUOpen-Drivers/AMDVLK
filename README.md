@@ -77,7 +77,7 @@ It is recommended to install 16GB RAM in your build system.
 ```
 sudo apt-get install build-essential python3 cmake curl g++-multilib gcc-multilib
 
-sudo apt-get install libx11-dev libxcb1-dev x11proto-dri2-dev libxcb-dri3-dev libxcb-dri2-0-dev libxcb-present-dev libxshmfence-dev libx11-dev:i386 libxcb1-dev:i386 x11proto-dri2-dev:i386 libxcb-dri3-dev:i386 libxcb-dri2-0-dev:i386 libxcb-present-dev:i386 libxshmfence-dev:i386
+sudo apt-get install libx11-dev libxcb1-dev x11proto-dri2-dev libxcb-dri3-dev libxcb-dri2-0-dev libxcb-present-dev libxshmfence-dev libx11-dev:i386 libxcb1-dev:i386 x11proto-dri2-dev:i386 libxcb-dri3-dev:i386 libxcb-dri2-0-dev:i386 libxcb-present-dev:i386 libxshmfence-dev:i386 libwayland-dev libwayland-dev:i386
 ```
 #### RedHat
 ```
@@ -155,7 +155,8 @@ make -j$(nproc)
 ```
 > **Note:**  
 * If the build runs into errors like "collect2: fatal error: ld terminated with signal 9 [Killed]" due to out of memory, you could try  with reducing the number of threads in "make" command.  
-* Debug build can be done by using -DCMAKE_BUILD_TYPE=Debug
+* Debug build can be done by using -DCMAKE_BUILD_TYPE=Debug.
+* To enable Wayland support, you need to build the driver by using -DBUILD_WAYLAND_SUPPORT=ON and install the Wayland [WSA libarary](https://github.com/GPUOpen-Drivers/wsa). 
 
 ## Installation Instructions
 ### Install Vulkan SDK
@@ -215,7 +216,7 @@ The driver exposes many settings that can customize the driver's behavior and fa
 | ------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `ShaderCacheMode`        | 0: disable cache<br/>1: runtime cache<br/>2: cache to disk  | Runtime cache is the default mode.                                                                                                |
 | `IFH`                    | 0: default<br/>1: drop all submits<br/>                     | Infinitely Fast Hardware.  Submit calls are dropped before being sent to hardware.  Useful for measuring CPU-limited performance. |
-| `EnableVmAlwaysValid`    | 0: disable<br/>1: enable<br/>                               | 1 is the default setting which enables the VM-always-valid feature for kernel 4.16 and above.  The feature can reduce command buffer submission overhead related to virtual memory management.     |
+| `EnableVmAlwaysValid`    | 0: disable<br/>1: default<br/>2:  force enable<br/>                               | 1 is the default setting which enables the VM-always-valid feature for kernel 4.16 and above.  The feature can reduce command buffer submission overhead related to virtual memory management.     |
 | `IdleAfterSubmitGpuMask` | Bitmask of GPUs (i.e., bit 0 is GPU0, etc.)                 | Forces the CPU to immediately wait for each GPU submission to complete on the specified set of GPUs.                              |
 
 *All* available settings can be determined by examining the .cfg source files that define them.
