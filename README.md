@@ -45,7 +45,6 @@ The following features and improvements are planned in future releases (Please r
 
 
 ### Known Issues
-* Dawn of War III show corruption with max setting on Radeon&trade; RX Vega Series
 * CTS may hang in VK.synchronization.internally_synchronized_objects.pipeline_cache_compute with Linux kernel versions lower than 4.13
 
 ### How to Contribute
