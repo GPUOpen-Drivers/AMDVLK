@@ -4,14 +4,14 @@
   <remote  name="vulkan-github"
            fetch="https://github.com/GPUOpen-Drivers" />
 
-  <default revision="master"
+  <default revision="releases/amd-18.20"
            remote="vulkan-github"
            sync-j="8"
            sync-c="true" />
 
-  <project path="drivers/xgl" name="xgl" revision="master"/>
-  <project path="drivers/pal" name="pal" revision="master"/>
-  <project path="drivers/AMDVLK" name="AMDVLK" revision="master"/>
-  <project path="drivers/llvm" name="llvm" revision="amd-vulkan-master"/>
+  <project path="drivers/xgl" name="xgl" revision="releases/amd-18.20"/>
+  <project path="drivers/pal" name="pal" revision="releases/amd-18.20"/>
+  <project path="drivers/AMDVLK" name="AMDVLK" revision="releases/amd-18.20"/>
+  <project path="drivers/llvm" name="llvm" revision="releases/amd-18.20-vulkan"/>
 
 </manifest>
