@@ -203,9 +203,10 @@ Driver      "modesetting"
 ```
 
 ### Required Settings
-On the AMDGPU upstream driver stack, the max number of command streams per submission **MUST** be limited to 4 (the default setting in AMD Open Source driver for Vulkan is 16). This can be accomplished via the [Runtime Settings](#runtime-settings) mechanism by adding the following line to /etc/amd/amdPalSettings.cfg:
+On the AMDGPU upstream driver stack with libdrm version lower than 2.4.92, the max number of IB per submission **MUST** be limited to 4 (the default setting in AMD Open Source driver for Vulkan is 16). This can be accomplished via the [Runtime Settings](#runtime-settings) mechanism by adding the following line to /etc/amd/amdPalSettings.cfg:
 ```
 MaxNumCmdStreamsPerSubmit,4
+CommandBufferCombineDePreambles,1
 ```
 
 ## Runtime Settings
