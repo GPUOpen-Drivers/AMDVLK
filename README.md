@@ -111,7 +111,7 @@ cd vulkandriver
 ### 64-bit Build
 #### Ubuntu
 ```
-cd <root of vulkandriver>/drivers/xgl
+cd <vulkandriver_path>/drivers/xgl
 
 cmake -H. -Bbuilds/Release64
 
@@ -122,7 +122,7 @@ make -j$(nproc)
 
 #### RedHat
 ```
-cd <root of vulkandriver>/drivers/xgl
+cd <vulkandriver_path>/drivers/xgl
 
 cmake3 -H. -Bbuilds/Release64
 
@@ -134,7 +134,7 @@ make -j$(nproc)
 ### 32-bit Build
 #### Ubuntu
 ```
-cd <root of vulkandriver>/drivers/xgl
+cd <vulkandriver_path>/drivers/xgl
 
 cmake -H. -Bbuilds/Release -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
 
@@ -144,7 +144,7 @@ make -j$(nproc)
 ```
 #### RedHat
 ```
-cd <root of vulkandriver>/drivers/xgl
+cd <vulkandriver_path>/drivers/xgl
 
 cmake3 -H. -Bbuilds/Release -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
 
@@ -172,15 +172,15 @@ Please make sure all JSON files for AMD GPUs under below folders are uninstalled
 ### Copy Driver and JSON Files
 #### Ubuntu
 ```
-sudo cp <root of vulkandriver>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib/x86_64-linux-gnu/
-sudo cp <root of vulkandriver>/drivers/xgl/builds/Release/icd/amdvlk32.so /usr/lib/i386-linux-gnu/
-sudo cp <root of vulkandriver>/drivers/AMDVLK/json/Ubuntu/* /etc/vulkan/icd.d/
+sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib/x86_64-linux-gnu/
+sudo cp <vulkandriver_path>/drivers/xgl/builds/Release/icd/amdvlk32.so /usr/lib/i386-linux-gnu/
+sudo cp <vulkandriver_path>/drivers/AMDVLK/json/Ubuntu/* /etc/vulkan/icd.d/
 ```
 #### RedHat
 ```
-sudo cp <root of vulkandriver>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib64/
-sudo cp <root of vulkandriver>/drivers/xgl/builds/Release/icd/amdvlk32.so /usr/lib/
-sudo cp <root of vulkandriver>/drivers/AMDVLK/json/Redhat/* /etc/vulkan/icd.d/
+sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib64/
+sudo cp <vulkandriver_path>/drivers/xgl/builds/Release/icd/amdvlk32.so /usr/lib/
+sudo cp <vulkandriver_path>/drivers/AMDVLK/json/Redhat/* /etc/vulkan/icd.d/
 ```
 
 > **Note:** The remaining steps are only required when running the AMDGPU upstream driver stack.
@@ -232,16 +232,38 @@ Runtime settings are only read at device initialization, and cannot be changed w
 ## PAL GpuProfiler Layer
 The GpuProfiler is an optional layer that is designed to intercept the PAL interface to provide basic GPU profiling support.  Currently, this layer is controlled exclusively through runtime settings and outputs its results to file.
 
-You can use the following [Runtime Settings](#runtime-settings) to generate a .csv file with GPU timings of work performed during the designated frames:
+You can use the following [Runtime Settings](#runtime-settings) to generate .csv files with GPU timings of work performed during the designated frames of an application (one file for each frame):
 
 | Setting Name                     | Value                            | Comment                                                                                                                                                                                               |
 | -------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GpuProfilerMode`                | 0: disable<br/>1: enable with sqtt off<br/>2: enable with sqtt for thread trace<br/>3: enable with sqtt for RGP                     | Enables and sets the SQTT mode for the GPU performance profiler layer. Actual capture of performance data must be specified via frame number with GpuProfilerStartFrame or by holding shift-F11.     |
-| `GpuProfilerLogDirectory`        | <nobr>&lt;directory-path></nobr> | Must be a directory that your application has write permissions for.                                                                                                                                  |
+| `GpuProfilerLogDirectory`        | <nobr>&lt;directory-path></nobr> | Must be a directory that your application has write permissions for. The profiling log will be output to a subdirectory that is named in the format like <nobr>&lt;AppName></nobr>_<nobr>&lt;yyyy-MM-dd></nobr>_<nobr>&lt;HH:mm:ss></nobr>.                                                                                                                                   |
 | `GpuProfilerGranularity`         | 0: per-draw<br/>1: per-cmdbuf    | Defines what is measured/profiled.  *Per-draw* times individual commands (such as draw, dispatch, etc.) inside command buffers, while *per-cmdbuf* only profiles entire command buffers in aggregate. |
 | `GpuProfilerStartFrame`          | Positive integer                 | First frame to capture data for.  If StartFrame and FrameCount are not set, all frames will be profiled.                                                                                              |
-| `GpuProfilerFrameCount`          | Positive integer                 | Number of frames to capture data for.                                                                                                                                                                 |
+| `GpuProfilerFrameCount`          | Positive integer                 | Number of frames to capture data for.                                                                                                                                                               |
 | `GpuProfilerRecordPipelineStats` | 0, 1                             | Gathers pipeline statistic query data per entry if enabled.                                                                                                                                           |
+
+You can use the script [timingReport.py](https://github.com/GPUOpen-Drivers/pal/tree/dev/tools/gpuProfilerTools/timingReport.py) to analyze the profiling log:
+```
+timeReport.py <profiling_log_subdirectory>
+```
+
+## Dump Pipelines and Shaders
+The output of timeReport.py includes the information of top pipelines like below: 
+```
+Top Pipelines (>= 1%) 
+Compiler Hash         | Type         | Avg. Call Count | Avg. GPU Time [us] | Avg. Frame %
+1. 0xd91d15e42d62dcbb | VsPs         |              43 |          11,203.15 |      10.20 %
+2. 0x724e9af55f2adf1b | Cs           |               1 |           9,347.50 |       8.51 %
+3. 0x396e5ad6f7a789f7 | VsHsDsPs     |             468 |           8,401.35 |       7.65 %
+```
+
+You can add the following settings to amdPalSettings.cfg to dump the information of each pipeline:
+```
+EnablePipelineDump,1
+PipelineDumpDir,<dump_dir_path>
+```
+The pipeline dump file is named in the format like Pipeline<nobr>&lt;Type></nobr>_<nobr>&lt;Compiler_Hash></nobr>.pipe. For example, the above top 1 pipeline is dumped to PipelineVsFs_0xD91D15E42D62DCBB.pipe. The shaders referenced by each pipeline will also be dumped to .spv files.
 
 ## PAL Debug Overlay
 PAL's debug overlay can be enabled to display real time statistics and information on top of a running application.  This includes a rolling FPS average, CPU and GPU frame times, and a ledger tracking how much video memory has been allocated from each available heap.  Benchmarking (i.e., "Benchmark (F11)") is currently unsupported.
