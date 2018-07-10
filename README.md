@@ -50,15 +50,15 @@ The following features and improvements are planned in future releases (Please r
 ### How to Contribute
 You are welcome to submit contributions of code to the AMD Open Source Driver for Vulkan.
 
-The driver is built from source code in three repositories: [LLVM](https://github.com/GPUOpen-Drivers/llvm), [XGL](https://github.com/GPUOpen-Drivers/xgl) (including both Vulkan API translation and LLPC) and [PAL](https://github.com/GPUOpen-Drivers/pal).
+The driver is built from source code in four repositories: [LLVM](https://github.com/GPUOpen-Drivers/llvm), [XGL](https://github.com/GPUOpen-Drivers/xgl), [LLPC](https://github.com/GPUOpen-Drivers/llpc) and [PAL](https://github.com/GPUOpen-Drivers/pal).
 
 For changes to LLVM, you should submit contribution to the [LLVM trunk](http://llvm.org/svn/llvm-project/llvm/trunk/). Commits there will be evaluated to merge into the amd-vulkan-master branch periodically.
 
-For changes to XGL or PAL, please [create a pull request](https://help.github.com/articles/creating-a-pull-request/) against the dev branch. After your change is reviewed and if it is accepted, it will be evaluated to merge into the master branch in a subsequent regular promotion.
+For changes to XGL, LLPC and PAL, please [create a pull request](https://help.github.com/articles/creating-a-pull-request/) against the dev branch. After your change is reviewed and if it is accepted, it will be evaluated to merge into the master branch in a subsequent regular promotion.
 
 **IMPORTANT**: By creating a pull request, you agree to allow your contribution to be licensed by the project owners under the terms of the [MIT License](LICENSE.txt).
 
-When contributing to XGL and PAL, your code should:
+When contributing to XGL, LLPC and PAL, your code should:
 * Match the style of nearby existing code. Your code may be edited to comply with our coding standards when it is merged into the master branch.
 * Avoid adding new dependencies, including dependencies on STL.
 
@@ -236,7 +236,7 @@ You can use the following [Runtime Settings](#runtime-settings) to generate .csv
 
 | Setting Name                     | Value                            | Comment                                                                                                                                                                                               |
 | -------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GpuProfilerMode`                | 0: disable<br/>1: enable with sqtt off<br/>2: enable with sqtt for thread trace<br/>3: enable with sqtt for RGP                     | Enables and sets the SQTT mode for the GPU performance profiler layer. Actual capture of performance data must be specified via frame number with GpuProfilerStartFrame or by holding shift-F11.     |
+| `GpuProfilerMode`                | 0: disable<br/>1: enable with sqtt off<br/>2: enable with sqtt for thread trace<br/>3: enable with sqtt for RGP                     | Enables and sets the SQTT mode for the GPU performance profiler layer. Actual capture of performance data must be specified via frame number with GpuProfilerStartFrame.     |
 | `GpuProfilerLogDirectory`        | <nobr>&lt;directory-path></nobr> | Must be a directory that your application has write permissions for. The profiling log will be output to a subdirectory that is named in the format like <nobr>&lt;AppName></nobr>_<nobr>&lt;yyyy-MM-dd></nobr>_<nobr>&lt;HH:mm:ss></nobr>.                                                                                                                                   |
 | `GpuProfilerGranularity`         | 0: per-draw<br/>1: per-cmdbuf    | Defines what is measured/profiled.  *Per-draw* times individual commands (such as draw, dispatch, etc.) inside command buffers, while *per-cmdbuf* only profiles entire command buffers in aggregate. |
 | `GpuProfilerStartFrame`          | Positive integer                 | First frame to capture data for.  If StartFrame and FrameCount are not set, all frames will be profiled.                                                                                              |
@@ -245,7 +245,7 @@ You can use the following [Runtime Settings](#runtime-settings) to generate .csv
 
 You can use the script [timingReport.py](https://github.com/GPUOpen-Drivers/pal/tree/dev/tools/gpuProfilerTools/timingReport.py) to analyze the profiling log:
 ```
-timeReport.py <profiling_log_subdirectory>
+python timeReport.py <profiling_log_subdirectory>
 ```
 
 ## Dump Pipelines and Shaders
@@ -279,7 +279,7 @@ PAL's debug overlay can be enabled to display real time statistics and informati
 ## Third Party Software
 The AMD Open Source Driver for Vulkan contains code written by third parties.
 * LLVM is distributed under the terms of the University of Illinois/NCSA Open Source License. See LICENSE.TXT file in the top directory of the LLVM repository.
-* Please see the README.md file in the [PAL](https://github.com/GPUOpen-Drivers/pal) and [XGL](https://github.com/GPUOpen-Drivers/xgl) repositories for information on third party software used by those libraries.
+* Please see the README.md file in the [PAL](https://github.com/GPUOpen-Drivers/pal), [LLPC](https://github.com/GPUOpen-Drivers/llpc) and [XGL](https://github.com/GPUOpen-Drivers/xgl) repositories for information on third party software used by those libraries.
 
 
 #### DISCLAIMER
