@@ -9,10 +9,10 @@
            sync-j="8"
            sync-c="true" />
 
-  <project path="drivers/xgl" name="xgl" revision="master"/>
-  <project path="drivers/pal" name="pal" revision="master"/>
-  <project path="drivers/llpc" name="llpc" revision="master"/>
-  <project path="drivers/AMDVLK" name="AMDVLK" revision="master"/>
-  <project path="drivers/llvm" name="llvm" revision="amd-vulkan-master"/>
+  <project path="drivers/xgl" name="xgl" revision="releases/amd-18.40"/>
+  <project path="drivers/pal" name="pal" revision="releases/amd-18.40"/>
+  <project path="drivers/llpc" name="llpc" revision="releases/amd-18.40"/>
+  <project path="drivers/AMDVLK" name="AMDVLK" revision="releases/amd-18.40"/>
+  <project path="drivers/llvm" name="llvm" revision="releases/amd-18.40-vulkan"/>
 
 </manifest>
