@@ -203,18 +203,23 @@ Driver      "modesetting"
 ```
 
 ### Required Settings
-On the AMDGPU upstream driver stack with libdrm version lower than 2.4.92, the max number of IB per submission **MUST** be limited to 4 (the default setting in AMD Open Source driver for Vulkan is 16). This can be accomplished via the [Runtime Settings](#runtime-settings) mechanism by adding the following line to /etc/amd/amdPalSettings.cfg:
+On the AMDGPU upstream driver stack with libdrm version lower than 2.4.92, the max number of IB per submission **MUST** be limited to 4 (the default setting in AMD Open Source driver for Vulkan is 16). This can be accomplished via the [Runtime Settings](#runtime-settings) mechanism by adding the following line to amdPalSettings.cfg:
 ```
 MaxNumCmdStreamsPerSubmit,4
 CommandBufferCombineDePreambles,1
 ```
 
 ## Runtime Settings
-The driver exposes many settings that can customize the driver's behavior and facilitate debugging.  Add/edit settings in /etc/amd/amdPalSettings.cfg, formatted with one `name,value` pair per line.  Some example settings are listed below:
+The driver exposes many settings that can customize the driver's behavior and facilitate debugging. You can add/edit settings in amdPalSettings.cfg file under one of below paths, formatted with one `name,value` pair per line: 
+* /etc/amd
+* $XDG_CONFIG_HOME
+* $HOME/.config 
+
+Some example settings are listed below:
 
 | Setting Name             | Valid Values                                                | Comment                                                                                                                           |
 | ------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `ShaderCacheMode`        | 0: disable cache<br/>1: runtime cache<br/>2: cache to disk  | Runtime cache is the default mode.                                                                                                |
+| `ShaderCacheMode`        | 0: disable cache<br/>1: runtime cache<br/>2: cache to disk  | Runtime cache is the default mode. For "cache to disk", the cache file is generated under $AMD_SHADER_DISK_CACHE_PATH/AMD/LlpcCache or $XDG_CACHE_HOME/AMD/LlpcCach or $HOME/.cache/AMD/LlpcCach   |
 | `IFH`                    | 0: default<br/>1: drop all submits<br/>                     | Infinitely Fast Hardware.  Submit calls are dropped before being sent to hardware.  Useful for measuring CPU-limited performance. |
 | `EnableVmAlwaysValid`    | 0: disable<br/>1: default<br/>2:  force enable<br/>                               | 1 is the default setting which enables the VM-always-valid feature for kernel 4.16 and above.  The feature can reduce command buffer submission overhead related to virtual memory management.     |
 | `IdleAfterSubmitGpuMask` | Bitmask of GPUs (i.e., bit 0 is GPU0, etc.)                 | Forces the CPU to immediately wait for each GPU submission to complete on the specified set of GPUs.                              |
@@ -237,10 +242,10 @@ You can use the following [Runtime Settings](#runtime-settings) to generate .csv
 | Setting Name                     | Value                            | Comment                                                                                                                                                                                               |
 | -------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GpuProfilerMode`                | 0: disable<br/>1: enable with sqtt off<br/>2: enable with sqtt for thread trace<br/>3: enable with sqtt for RGP                     | Enables and sets the SQTT mode for the GPU performance profiler layer. Actual capture of performance data must be specified via frame number with GpuProfilerStartFrame.     |
-| `GpuProfilerLogDirectory`        | <nobr>&lt;directory-path></nobr> | Must be a directory that your application has write permissions for. The profiling log will be output to a subdirectory that is named in the format like <nobr>&lt;AppName></nobr>_<nobr>&lt;yyyy-MM-dd></nobr>_<nobr>&lt;HH:mm:ss></nobr>.                                                                                                                                   |
+| `GpuProfilerLogDirectory`        | <nobr>&lt;directory-path></nobr> | The directory path is relative to $AMD_DEBUG_DIR or $TMPDIR or /var/tmp/, default value is "amdpal/". Your application must have write permissions to the directory. The profiling log will be output to a subdirectory that is named in the format like <nobr>&lt;AppName></nobr>_<nobr>&lt;yyyy-MM-dd></nobr>_<nobr>&lt;HH:mm:ss></nobr>. |
 | `GpuProfilerGranularity`         | 0: per-draw<br/>1: per-cmdbuf    | Defines what is measured/profiled.  *Per-draw* times individual commands (such as draw, dispatch, etc.) inside command buffers, while *per-cmdbuf* only profiles entire command buffers in aggregate. |
-| `GpuProfilerStartFrame`          | Positive integer                 | First frame to capture data for.  If StartFrame and FrameCount are not set, all frames will be profiled.                                                                                              |
-| `GpuProfilerFrameCount`          | Positive integer                 | Number of frames to capture data for.                                                                                                                                                               |
+| `GpuProfilerConfig_StartFrame`   | Positive integer                 | First frame to capture data for.  If StartFrame and FrameCount are not set, all frames will be profiled.                                                                                              |
+| `GpuProfilerConfig_FrameCount`   | Positive integer                 | Number of frames to capture data for.                                                                                                                                                               |
 | `GpuProfilerRecordPipelineStats` | 0, 1                             | Gathers pipeline statistic query data per entry if enabled.                                                                                                                                           |
 
 You can use the script [timingReport.py](https://github.com/GPUOpen-Drivers/pal/tree/dev/tools/gpuProfilerTools/timingReport.py) to analyze the profiling log:
