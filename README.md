@@ -219,17 +219,17 @@ Some example settings are listed below:
 
 | Setting Name             | Valid Values                                                | Comment                                                                                                                           |
 | ------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `ShaderCacheMode`        | 0: disable cache<br/>1: runtime cache<br/>2: cache to disk  | Runtime cache is the default mode. For "cache to disk", the cache file is generated under $AMD_SHADER_DISK_CACHE_PATH/AMD/LlpcCache or $XDG_CACHE_HOME/AMD/LlpcCach or $HOME/.cache/AMD/LlpcCach   |
+| `ShaderCacheMode`        | 0: disable cache<br/>1: runtime cache<br/>2: cache to disk  | Runtime cache is the default mode. For "cache to disk", the cache file is generated under $AMD_SHADER_DISK_CACHE_PATH/AMD/LlpcCache or $XDG_CACHE_HOME/AMD/LlpcCache or $HOME/.cache/AMD/LlpcCache   |
 | `IFH`                    | 0: default<br/>1: drop all submits<br/>                     | Infinitely Fast Hardware.  Submit calls are dropped before being sent to hardware.  Useful for measuring CPU-limited performance. |
 | `EnableVmAlwaysValid`    | 0: disable<br/>1: default<br/>2:  force enable<br/>                               | 1 is the default setting which enables the VM-always-valid feature for kernel 4.16 and above.  The feature can reduce command buffer submission overhead related to virtual memory management.     |
 | `IdleAfterSubmitGpuMask` | Bitmask of GPUs (i.e., bit 0 is GPU0, etc.)                 | Forces the CPU to immediately wait for each GPU submission to complete on the specified set of GPUs.                              |
 
-*All* available settings can be determined by examining the .cfg source files that define them.
+*All* available settings can be determined by examining below source files that define them.
 
 * .../xgl/icd/settings/settings.cfg (API layer settings)
-* .../pal/src/core/settings.cfg (PAL hardware-independent settings)
-* .../pal/src/core/hw/gfxip/gfx6/gfx6PalSettings.cfg (PAL GFX6-8 settings)
-* .../pal/src/core/hw/gfxip/gfx9/gfx9PalSettings.cfg (PAL GFX9+ settings)
+* .../pal/src/core/settings_core.json (PAL hardware-independent settings)
+* .../pal/src/core/hw/gfxip/gfx6/settings_gfx6.json (PAL GFX6-8 settings)
+* .../pal/src/core/hw/gfxip/gfx9/settings_gfx9.json (PAL GFX9+ settings)
 
 Runtime settings are only read at device initialization, and cannot be changed without restarting the application. If running on a system with multiple GPUs, the same settings will apply to all of them.  Lines in the settings file that start with `;` will be treated as comments.
 
@@ -241,14 +241,14 @@ You can use the following [Runtime Settings](#runtime-settings) to generate .csv
 
 | Setting Name                     | Value                            | Comment                                                                                                                                                                                               |
 | -------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GpuProfilerMode`                | 0: disable<br/>1: enable with sqtt off<br/>2: enable with sqtt for thread trace<br/>3: enable with sqtt for RGP                     | Enables and sets the SQTT mode for the GPU performance profiler layer. Actual capture of performance data must be specified via frame number with GpuProfilerStartFrame.     |
-| `GpuProfilerLogDirectory`        | <nobr>&lt;directory-path></nobr> | The directory path is relative to $AMD_DEBUG_DIR or $TMPDIR or /var/tmp/, default value is "amdpal/". Your application must have write permissions to the directory. The profiling log will be output to a subdirectory that is named in the format like <nobr>&lt;AppName></nobr>_<nobr>&lt;yyyy-MM-dd></nobr>_<nobr>&lt;HH:mm:ss></nobr>. |
+| `GpuProfilerMode`                | 0: disable<br/>1: enable with sqtt off<br/>2: enable with sqtt for thread trace<br/>3: enable with sqtt for RGP                     | Enables and sets the SQTT mode for the GPU performance profiler layer. Actual capture of performance data must be specified via frame number with GpuProfilerConfig_StartFrame or by pressing shift-F11.     |
+| `GpuProfilerLogDirectory`        | <nobr>&lt;directory-path></nobr> | The directory path is relative to $AMD_DEBUG_DIR or $TMPDIR or /var/tmp/, default value is "amdpal/". Your application must have write permissions to the directory. The profiling logs are output to a subdirectory that is named in the format like <nobr>&lt;AppName></nobr>_<nobr>&lt;yyyy-MM-dd></nobr>_<nobr>&lt;HH:mm:ss></nobr>. |
 | `GpuProfilerGranularity`         | 0: per-draw<br/>1: per-cmdbuf    | Defines what is measured/profiled.  *Per-draw* times individual commands (such as draw, dispatch, etc.) inside command buffers, while *per-cmdbuf* only profiles entire command buffers in aggregate. |
 | `GpuProfilerConfig_StartFrame`   | Positive integer                 | First frame to capture data for.  If StartFrame and FrameCount are not set, all frames will be profiled.                                                                                              |
 | `GpuProfilerConfig_FrameCount`   | Positive integer                 | Number of frames to capture data for.                                                                                                                                                               |
 | `GpuProfilerRecordPipelineStats` | 0, 1                             | Gathers pipeline statistic query data per entry if enabled.                                                                                                                                           |
 
-You can use the script [timingReport.py](https://github.com/GPUOpen-Drivers/pal/tree/dev/tools/gpuProfilerTools/timingReport.py) to analyze the profiling log:
+You can use the script [timingReport.py](https://github.com/GPUOpen-Drivers/pal/tree/master/tools/gpuProfilerTools/timingReport.py) to analyze the profiling log:
 ```
 python timeReport.py <profiling_log_subdirectory>
 ```
@@ -268,7 +268,7 @@ You can add the following settings to amdPalSettings.cfg to dump the information
 EnablePipelineDump,1
 PipelineDumpDir,<dump_dir_path>
 ```
-The pipeline dump file is named in the format like Pipeline<nobr>&lt;Type></nobr>_<nobr>&lt;Compiler_Hash></nobr>.pipe. For example, the above top 1 pipeline is dumped to PipelineVsFs_0xD91D15E42D62DCBB.pipe. The shaders referenced by each pipeline will also be dumped to .spv files.
+PipelineDumpDir is a sub-path relative to $AMD_DEBUG_DIR or $TMPDIR or /var/tmp/, default value is "spvPipeline/". The pipeline dump file is named in the format like Pipeline<nobr>&lt;Type></nobr>_<nobr>&lt;Compiler_Hash></nobr>.pipe. For example, the above top 1 pipeline is dumped to PipelineVsFs_0xD91D15E42D62DCBB.pipe. The shaders referenced by each pipeline are also dumped to .spv files.
 
 ## PAL Debug Overlay
 PAL's debug overlay can be enabled to display real time statistics and information on top of a running application.  This includes a rolling FPS average, CPU and GPU frame times, and a ledger tracking how much video memory has been allocated from each available heap.  Benchmarking (i.e., "Benchmark (F11)") is currently unsupported.
