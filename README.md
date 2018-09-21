@@ -79,7 +79,7 @@ It is recommended to install 16GB RAM in your build system.
 ```
 sudo apt-get install build-essential python3 cmake curl g++-multilib gcc-multilib
 
-sudo apt-get install libx11-dev libxcb1-dev x11proto-dri2-dev libxcb-dri3-dev libxcb-dri2-0-dev libxcb-present-dev libxshmfence-dev libx11-dev:i386 libxcb1-dev:i386 x11proto-dri2-dev:i386 libxcb-dri3-dev:i386 libxcb-dri2-0-dev:i386 libxcb-present-dev:i386 libxshmfence-dev:i386 libwayland-dev libwayland-dev:i386
+sudo apt-get install libx11-dev libxcb1-dev x11proto-dri2-dev libxcb-dri3-dev libxcb-dri2-0-dev libxcb-present-dev libxshmfence-dev libxrandr-dev libx11-dev:i386 libxcb1-dev:i386 x11proto-dri2-dev:i386 libxcb-dri3-dev:i386 libxcb-dri2-0-dev:i386 libxcb-present-dev:i386 libxshmfence-dev:i386 libwayland-dev libwayland-dev:i386 libxrandr-dev:i386
 ```
 #### RedHat
 ```
@@ -89,7 +89,7 @@ sudo yum localinstall epel-release-latest-7.noarch.rpm
 
 sudo yum update
 
-sudo yum -y install gcc-c++ cmake3 python34 curl glibc-devel glibc-devel.i686 libstdc++-devel libstdc++-devel.i686 libxcb-devel libxcb-devel.i686 libX11-devel libX11-devel.i686 libxshmfence-devel libxshmfence-devel.i686
+sudo yum -y install gcc-c++ cmake3 python34 curl glibc-devel glibc-devel.i686 libstdc++-devel libstdc++-devel.i686 libxcb-devel libxcb-devel.i686 libX11-devel libX11-devel.i686 libxshmfence-devel libxshmfence-devel.i686 libXrandr-devel libXrandr-devel.i686
 ```
 
 ### Get Repo Tools
