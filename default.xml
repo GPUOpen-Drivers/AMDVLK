@@ -12,6 +12,7 @@
   <project path="drivers/xgl" name="xgl" revision="master"/>
   <project path="drivers/pal" name="pal" revision="master"/>
   <project path="drivers/llpc" name="llpc" revision="master"/>
+  <project path="drivers/spvgen" name="spvgen" revision="master"/>
   <project path="drivers/AMDVLK" name="AMDVLK" revision="master"/>
   <project path="drivers/llvm" name="llvm" revision="amd-vulkan-master"/>
 
