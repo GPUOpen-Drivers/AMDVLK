@@ -114,8 +114,16 @@ class BuildDeb:
         print("The target repos is " + self.targetRepo);
 
     def ConnectGithub(self):
+        foundRepo = False;
         self.github = Github(self.accessToken);
-        self.repo   = self.github.get_user().get_repo('AMDVLK');
+        for repo in self.github.get_user().get_repos():
+            if (repo.name == 'AMDVLK'):
+                self.repo = repo;
+                foundRepo = True;
+
+        if (foundRepo == False):
+            print("Fatal: AMDVLK repo is not found");
+            sys.exit(-1);
 
     def GetReleasedTagsOnGithub(self):
         releases = self.repo.get_releases();
