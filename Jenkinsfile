@@ -1,34 +1,26 @@
+#!/usr/bin/env groovy
+
+/**
+ * Pipeline for building and upload deb package of AMDVLK
+ *
+ * Build parameters:
+ *      @githubToken: token to access github
+ */
+
 pipeline {
-  agent none
-  stages {
-    stage('Greeting') {
-      steps {
-        echo 'Hello Vulkan Open Source'
-      }
-    }
-    stage('Builds') {
-      parallel {
-        stage('Build32') {
-          steps {
-            sh 'sfsdfsd'
-          }
+    agent none
+    stages {
+        stage("BuildPackage") {
+            agent { label "jacob-jenkins" }
+            steps {
+                runScript()
+            }
         }
-        stage('Build64') {
-          steps {
-            sh 'Build64'
-          }
-        }
-      }
     }
-    stage('Tests') {
-      steps {
-        echo 'Testing starts'
-      }
-    }
-    stage('Deploy') {
-      steps {
-        echo 'Deployment starts...'
-      }
-    }
-  }
+}
+
+def runScript() {
+    def workDir = "${WORKSPACE}"
+
+    sh "python ${WORKSPACE}/bin/amdvlk_build_deb_from_tag.py -w ${WORKSPACE} -a ${githubToken}"
 }
