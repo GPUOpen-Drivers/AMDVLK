@@ -9,11 +9,11 @@
            sync-j="8"
            sync-c="true" />
 
-  <project path="drivers/xgl" name="xgl" revision="master"/>
-  <project path="drivers/pal" name="pal" revision="master"/>
-  <project path="drivers/llpc" name="llpc" revision="master"/>
-  <project path="drivers/spvgen" name="spvgen" revision="master"/>
+  <project path="drivers/xgl" name="xgl" revision="4730177"/>
+  <project path="drivers/pal" name="pal" revision="69d21e4"/>
+  <project path="drivers/llpc" name="llpc" revision="1c4e5d1"/>
+  <project path="drivers/spvgen" name="spvgen" revision="328a099"/>
   <project path="drivers/AMDVLK" name="AMDVLK" revision="master"/>
-  <project path="drivers/llvm" name="llvm" revision="amd-vulkan-master"/>
+  <project path="drivers/llvm" name="llvm" revision="678b8d52b91"/>
 
 </manifest>
