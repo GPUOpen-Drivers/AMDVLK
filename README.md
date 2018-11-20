@@ -212,6 +212,15 @@ MaxNumCmdStreamsPerSubmit,4
 CommandBufferCombineDePreambles,1
 ```
 
+### Install with pre-built driver
+You could get pre-built driver installation package from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each stable code promotion in master branch or install the latest driver build from http://repo.radeon.com (currently only build for Ubuntu 18.04 is available, more will be added later):
+```
+sudo wget -qO - http://repo.radeon.com/amdvlk/apt/debian/amdvlk.gpg.key | sudo apt-key add -
+sudo sh -c 'echo deb [arch=amd64] http://repo.radeon.com/amdvlk/apt/debian/ bionic main > /etc/apt/sources.list.d/amdvlk.list'
+apt update
+apt-get install amdvlk
+```
+
 ## Runtime Settings
 The driver exposes many settings that can customize the driver's behavior and facilitate debugging. You can add/edit settings in amdPalSettings.cfg file under one of below paths, formatted with one `name,value` pair per line: 
 * /etc/amd
