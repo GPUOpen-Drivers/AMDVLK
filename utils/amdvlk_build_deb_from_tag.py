@@ -289,7 +289,13 @@ class BuildDeb:
         os.system('dpkg -b amdvlk_pkg amdvlk_' + self.version + '_amd64.deb');
 
     def UploadPackage(self, tag):
-        newRelease = self.repo.create_git_release(tag, tag, self.descript, False, False);
+        releaseNote = '';
+        for line in self.descript:
+            if line.strip() == 'New feature and improvement' or line.strip() == 'Issue fix':
+                line = '## ' + line.strip() + '\n'
+            releaseNote += line;
+
+        newRelease = self.repo.create_git_release(tag, tag, releaseNote, False, False);
         packageName = 'amdvlk_' + self.version + '_amd64.deb';
         newRelease.upload_asset(self.workDir + '/' + packageName, packageName + '(Ubuntu 18.04)');
 
