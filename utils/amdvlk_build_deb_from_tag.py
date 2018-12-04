@@ -171,6 +171,9 @@ class BuildDeb:
                 git.Git().clone(self.targetRepo + i);
 
             repo = git.Repo(i);
+            repo.git.clean('-xdf');
+            # Clean the submodule
+            repo.git.clean('-xdff');
             if (i == 'llvm'):
                 repo.git.checkout('remotes/origin/amd-vulkan-' + self.branch, B='amd-vulkan-' + self.branch);
             else:
@@ -203,6 +206,9 @@ class BuildDeb:
                     print(i + ":" + self.commits[i]);
                     # Checkout the commits
                     repo = git.Repo(i);
+                    repo.git.clean('-xdf');
+                    # Clean the submodule
+                    repo.git.clean('-xdff');
                     repo.git.checkout(self.commits[i]);
                     break;
 
@@ -227,8 +233,8 @@ class BuildDeb:
             exit(-1);
 
         os.chdir(self.srcDir + 'spvgen/');
-        if os.system('cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release'):
-            print("SPVGEN: cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release failed");
+        if os.system('cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=\"-Wno-error=unused-variable\"'):
+            print("SPVGEN: cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=\"-Wno-error=unused-variable\" failed");
             exit(-1);
 
         os.chdir('rbuild64');
@@ -289,7 +295,7 @@ class BuildDeb:
         os.system('dpkg -b amdvlk_pkg amdvlk_' + self.version + '_amd64.deb');
 
     def UploadPackage(self, tag):
-        releaseNote = '';
+        releaseNote = '[Driver installation instruction](https://github.com/GPUOpen-Drivers/AMDVLK#install-with-pre-built-driver) \n\n';
         for line in self.descript:
             if line.strip() == 'New feature and improvement' or line.strip() == 'Issue fix':
                 line = '## ' + line.strip() + '\n'
