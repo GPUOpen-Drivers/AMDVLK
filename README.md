@@ -215,7 +215,7 @@ CommandBufferCombineDePreambles,1
 ### Install with pre-built driver
 You could download and install pre-built deb package (compatible with Ubuntu 16.04 and 18.04) from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each stable code promotion in master branch:
 ```
-sudo dpkg ¨Cr amdvlk   /* If old version is installed on the machine, remove it first */
+sudo dpkg -r amdvlk   /* If old version is installed on the machine, remove it first */
 sudo dpkg -i amdvlk_x.x.x_amd64.deb
 sudo apt-get -f install
 ```
