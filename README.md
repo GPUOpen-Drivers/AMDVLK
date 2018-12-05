@@ -162,7 +162,7 @@ make -j$(nproc)
 
 ## Installation Instructions
 ### Install Vulkan SDK
-Refer to installation instructions [here](http://support.amd.com/en-us/kb-articles/Pages/Install-LunarG-Vulkan-SDK.aspx).
+You can download and install the SDK package [here](https://vulkan.lunarg.com/sdk/home).
 
 ### Uninstall Previously Installed JSON Files
 Please make sure all JSON files for AMD GPUs under below folders are uninstalled: 
@@ -213,12 +213,20 @@ CommandBufferCombineDePreambles,1
 ```
 
 ### Install with pre-built driver
-You could get pre-built driver installation package from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each stable code promotion in master branch or install the latest driver build from http://repo.radeon.com (currently only build for Ubuntu 18.04 is available, more will be added later):
+You could download and install pre-built deb package (compatible with Ubuntu 16.04 and 18.04) from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each stable code promotion in master branch:
+```
+sudo dpkg ¨Cr amdvlk   /* If old version is installed on the machine, remove it first */
+sudo dpkg -i amdvlk_x.x.x_amd64.deb
+sudo apt-get -f install
+```
+
+You could also install the latest driver build from http://repo.radeon.com:
 ```
 sudo wget -qO - http://repo.radeon.com/amdvlk/apt/debian/amdvlk.gpg.key | sudo apt-key add -
 sudo sh -c 'echo deb [arch=amd64] http://repo.radeon.com/amdvlk/apt/debian/ bionic main > /etc/apt/sources.list.d/amdvlk.list'
-apt update
-apt-get install amdvlk
+sudo apt-get remove amdvlk /* If old version is installed on the machine, remove it first */
+sudo apt update
+sudo apt-get install amdvlk
 ```
 
 ## Runtime Settings
