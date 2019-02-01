@@ -215,7 +215,7 @@ CommandBufferCombineDePreambles,1
 ### Install with pre-built driver
 You could download and install pre-built deb package (compatible with Ubuntu 16.04 and 18.04) from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each stable code promotion in master branch:
 ```
-sudo dpkg ¨Cr amdvlk   /* If old version is installed on the machine, remove it first */
+sudo dpkg -r amdvlk   /* If old version is installed on the machine, remove it first */
 sudo dpkg -i amdvlk_x.x.x_amd64.deb
 sudo apt-get -f install
 ```
@@ -253,6 +253,17 @@ Some example settings are listed below:
 
 Runtime settings are only read at device initialization, and cannot be changed without restarting the application. If running on a system with multiple GPUs, the same settings will apply to all of them.  Lines in the settings file that start with `;` will be treated as comments.
 
+
+## Enable extensions under development
+The extensions under development are not enabled by default in driver. You can enable them through environment variable:
+```
+export AMDVLK_ENABLE_DEVELOPING_EXT="<extension1-name> [<extension2-name>...]"
+```
+or
+```
+export AMDVLK_ENABLE_DEVELOPING_EXT="all"
+```
+The extension name is case-insensitive.
 
 ## PAL GpuProfiler Layer
 The GpuProfiler is an optional layer that is designed to intercept the PAL interface to provide basic GPU profiling support.  Currently, this layer is controlled exclusively through runtime settings and outputs its results to file.
