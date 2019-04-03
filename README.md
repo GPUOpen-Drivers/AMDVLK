@@ -49,6 +49,7 @@ The following features and improvements are planned in future releases (Please r
 
 ### Known Issues
 * CTS may hang in VK.synchronization.internally_synchronized_objects.pipeline_cache_compute with Linux kernel versions lower than 4.13
+* The driver can only work with firmware of ME feature version >= 25 (you can check the version with command "sudo cat /sys/kernel/debug/dri/0/amdgpu_firmware_info"). If you are using upstream stack with GPUs of SI or CI family, you may need to upgrade the kernel to 4.19 or later version and firmware (under /lib/firmware/amdgpu/) to the right version from https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/amdgpu, and then update ramfs (sudo mkinitramfs -o /boot/initrd.img-\`uname -r\` \`uname -r\`)
 
 ### How to Contribute
 You are welcome to submit contributions of code to the AMD Open Source Driver for Vulkan.
