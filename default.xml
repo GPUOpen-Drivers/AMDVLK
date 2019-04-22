@@ -9,11 +9,11 @@
            sync-j="8"
            sync-c="true" />
 
-  <project path="drivers/xgl" name="xgl" revision="5b4058dc288a25f6554fcc61f80bf3f27eb35d8d"/>
-  <project path="drivers/pal" name="pal" revision="99901922d67e502ff4233a8bfcbfa0347c0ffa1b"/>
-  <project path="drivers/llpc" name="llpc" revision="6c6de1dab3927bfb0f6659ba89c6fe80be8a4a04"/>
-  <project path="drivers/spvgen" name="spvgen" revision="69311f7c1e220d190909298b9c7bd702ecc237ff"/>
+  <project path="drivers/xgl" name="xgl" revision="54194f5ebb7d1d6b44b9eb87217041f44e08f789"/>
+  <project path="drivers/pal" name="pal" revision="14045067091d226072437527359a54c8b8e898eb"/>
+  <project path="drivers/llpc" name="llpc" revision="d1c1a55cfa58147c4814929e21038d30e6d48429"/>
+  <project path="drivers/spvgen" name="spvgen" revision="5378c7618a2a3bf60ba01a86db980930e8581146"/>
   <project path="drivers/AMDVLK" name="AMDVLK" revision="master"/>
-  <project path="drivers/llvm" name="llvm" revision="97cc33415120ae3ed472b6dd5cb234b74a80bd80"/>
+  <project path="drivers/llvm" name="llvm" revision="1ca248e6fc6d4d15491756f92f4da139222ef3ca"/>
 
 </manifest>
