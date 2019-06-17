@@ -159,7 +159,7 @@ make -j$(nproc)
 > **Note:**  
 * If the build runs into errors like "collect2: fatal error: ld terminated with signal 9 [Killed]" due to out of memory, you could try  with reducing the number of threads in "make" command.  
 * Debug build can be done by using -DCMAKE_BUILD_TYPE=Debug.
-* To enable Wayland support, you need to build the driver by using -DBUILD_WAYLAND_SUPPORT=ON and install the Wayland [WSA library](https://github.com/GPUOpen-Drivers/wsa). 
+* To enable Wayland support, you need to build the driver by using -DBUILD_WAYLAND_SUPPORT=ON. 
 
 ## Installation Instructions
 ### Install Vulkan SDK
