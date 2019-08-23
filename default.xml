@@ -15,5 +15,6 @@
   <project path="drivers/spvgen" name="spvgen" revision="2f31d1170e8a12a66168b23235638c4bbc43ecdc"/>
   <project path="drivers/AMDVLK" name="AMDVLK" revision="master"/>
   <project path="drivers/llvm" name="llvm" revision="9bc5dd4450a6361faf5c5661056a7ee494fad830"/>
+  <project path="drivers/third_party/metrohash" name="MetroHash" revision="amd-master"/>
 
 </manifest>
