@@ -61,12 +61,13 @@ class BuildDeb:
     def __init__(self):
         self.workDir    = os.getcwd();
         self.srcDir     = self.workDir + "/amdvlk_src/";
+        self.metroHash  = self.srcDir + "MetroHash/";
         self.pkgDir     = self.workDir + "/amdvlk_pkg/";
         self.branch     = 'master';
-        self.components = ['xgl', 'pal', 'llpc', 'spvgen', 'llvm'];
+        self.components = ['xgl', 'pal', 'llpc', 'spvgen', 'llvm', 'MetroHash'];
         self.tagList    = [];
         self.relTagList = []; # The tags already released on github
-        self.commits    = {'xgl':'', 'pal':'', 'llpc':'', 'spvgen':'', 'llvm':''};
+        self.commits    = {'xgl':'', 'pal':'', 'llpc':'', 'spvgen':'', 'llvm':'', 'MetroHash':''};
         self.descript   = "";
         self.basever    = "1.1.";
         self.targetRepo = 'https://github.com/GPUOpen-Drivers/';
@@ -176,6 +177,8 @@ class BuildDeb:
             repo.git.clean('-xdff');
             if (i == 'llvm'):
                 repo.git.checkout('remotes/origin/amd-vulkan-' + self.branch, B='amd-vulkan-' + self.branch);
+            elif (i == 'MetroHash'):
+                repo.git.checkout('remotes/origin/amd-master', B='amd-master');
             else:
                 repo.git.checkout('remotes/origin/' + self.branch, B=self.branch);
             repo.git.pull();
@@ -217,7 +220,7 @@ class BuildDeb:
     def Build(self):
         # build amdvlk64.so
         os.chdir(self.srcDir + 'xgl/');
-        if os.system('cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON'):
+        if os.system('cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON -DXGL_METROHASH_PATH=' + self.metroHash):
             print("cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release failed");
             exit(-1);
 
