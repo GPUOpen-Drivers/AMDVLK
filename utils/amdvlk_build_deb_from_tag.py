@@ -178,7 +178,7 @@ class BuildDeb:
             repo.git.clean('-xdff');
             if (i == 'llvm'):
                 repo.git.checkout('remotes/origin/amd-vulkan-' + self.branch, B='amd-vulkan-' + self.branch);
-            elif (i == 'MetroHash' or i == 'cwpack'):
+            elif (i == 'MetroHash' or i == 'CWPack'):
                 repo.git.checkout('remotes/origin/amd-master', B='amd-master');
             else:
                 repo.git.checkout('remotes/origin/' + self.branch, B=self.branch);
