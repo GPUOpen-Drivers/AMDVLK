@@ -62,6 +62,7 @@ class BuildDeb:
         self.workDir    = os.getcwd();
         self.srcDir     = self.workDir + "/amdvlk_src/";
         self.metroHash  = self.srcDir + "MetroHash/";
+        self.cwpack     = self.srcDir + "cwpack/";
         self.pkgDir     = self.workDir + "/amdvlk_pkg/";
         self.branch     = 'master';
         self.components = ['xgl', 'pal', 'llpc', 'spvgen', 'llvm', 'MetroHash'];
@@ -177,7 +178,7 @@ class BuildDeb:
             repo.git.clean('-xdff');
             if (i == 'llvm'):
                 repo.git.checkout('remotes/origin/amd-vulkan-' + self.branch, B='amd-vulkan-' + self.branch);
-            elif (i == 'MetroHash'):
+            elif (i == 'MetroHash' or i == 'cwpack'):
                 repo.git.checkout('remotes/origin/amd-master', B='amd-master');
             else:
                 repo.git.checkout('remotes/origin/' + self.branch, B=self.branch);
@@ -220,7 +221,7 @@ class BuildDeb:
     def Build(self):
         # build amdvlk64.so
         os.chdir(self.srcDir + 'xgl/');
-        if os.system('cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON -DXGL_METROHASH_PATH=' + self.metroHash):
+        if os.system('cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON -DXGL_METROHASH_PATH=' + self.metroHash + ' -DXGL_CWPACK_PATH=' + self.cwpack):
             print("cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release failed");
             exit(-1);
 
