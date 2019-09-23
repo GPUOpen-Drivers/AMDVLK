@@ -16,5 +16,6 @@
   <project path="drivers/AMDVLK" name="AMDVLK" revision="dev"/>
   <project path="drivers/llvm" name="llvm" revision="amd-vulkan-dev"/>
   <project path="drivers/third_party/metrohash" name="MetroHash" revision="amd-master"/>
+  <project path="drivers/third_party/cwpack" name="CWPack" revision="amd-master"/>
 
 </manifest>
