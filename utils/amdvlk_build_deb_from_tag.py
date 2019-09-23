@@ -62,13 +62,13 @@ class BuildDeb:
         self.workDir    = os.getcwd();
         self.srcDir     = self.workDir + "/amdvlk_src/";
         self.metroHash  = self.srcDir + "MetroHash/";
-        self.cwpack     = self.srcDir + "cwpack/";
+        self.cwpack     = self.srcDir + "CWPack/";
         self.pkgDir     = self.workDir + "/amdvlk_pkg/";
         self.branch     = 'master';
-        self.components = ['xgl', 'pal', 'llpc', 'spvgen', 'llvm', 'MetroHash'];
+        self.components = ['xgl', 'pal', 'llpc', 'spvgen', 'llvm', 'MetroHash', 'CWPack'];
         self.tagList    = [];
         self.relTagList = []; # The tags already released on github
-        self.commits    = {'xgl':'', 'pal':'', 'llpc':'', 'spvgen':'', 'llvm':'', 'MetroHash':''};
+        self.commits    = {'xgl':'', 'pal':'', 'llpc':'', 'spvgen':'', 'llvm':'', 'MetroHash':'', 'CWPack':''};
         self.descript   = "";
         self.basever    = "1.1.";
         self.targetRepo = 'https://github.com/GPUOpen-Drivers/';
