@@ -14,7 +14,7 @@
   <project path="drivers/llpc" name="llpc" revision="dev"/>
   <project path="drivers/spvgen" name="spvgen" revision="dev"/>
   <project path="drivers/AMDVLK" name="AMDVLK" revision="dev"/>
-  <project path="drivers/llvm" name="llvm" revision="amd-vulkan-dev"/>
+  <project path="drivers/llvm-project" name="llvm-project" revision="amd-gfx-gpuopen-dev"/>
   <project path="drivers/third_party/metrohash" name="MetroHash" revision="amd-master"/>
   <project path="drivers/third_party/cwpack" name="CWPack" revision="amd-master"/>
 
