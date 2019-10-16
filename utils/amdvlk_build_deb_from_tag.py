@@ -65,10 +65,10 @@ class BuildDeb:
         self.cwpack     = self.srcDir + "CWPack/";
         self.pkgDir     = self.workDir + "/amdvlk_pkg/";
         self.branch     = 'master';
-        self.components = ['xgl', 'pal', 'llpc', 'spvgen', 'llvm', 'MetroHash', 'CWPack'];
+        self.components = ['xgl', 'pal', 'llpc', 'spvgen', 'llvm-project', 'MetroHash', 'CWPack'];
         self.tagList    = [];
         self.relTagList = []; # The tags already released on github
-        self.commits    = {'xgl':'', 'pal':'', 'llpc':'', 'spvgen':'', 'llvm':'', 'MetroHash':'', 'CWPack':''};
+        self.commits    = {'xgl':'', 'pal':'', 'llpc':'', 'spvgen':'', 'llvm-project':'', 'MetroHash':'', 'CWPack':''};
         self.descript   = "";
         self.basever    = "1.1.";
         self.targetRepo = 'https://github.com/GPUOpen-Drivers/';
@@ -176,8 +176,8 @@ class BuildDeb:
             repo.git.clean('-xdf');
             # Clean the submodule
             repo.git.clean('-xdff');
-            if (i == 'llvm'):
-                repo.git.checkout('remotes/origin/amd-vulkan-' + self.branch, B='amd-vulkan-' + self.branch);
+            if (i == 'llvm-project'):
+                repo.git.checkout('remotes/origin/amd-gfx-gpuopen-' + self.branch, B='amd-gfx-gpuopen-' + self.branch);
             elif (i == 'MetroHash' or i == 'CWPack'):
                 repo.git.checkout('remotes/origin/amd-master', B='amd-master');
             else:
