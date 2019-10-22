@@ -55,9 +55,9 @@ The following features and improvements are planned in future releases (Please r
 ### How to Contribute
 You are welcome to submit contributions of code to the AMD Open Source Driver for Vulkan.
 
-The driver is built from source code in four repositories: [LLVM](https://github.com/GPUOpen-Drivers/llvm), [XGL](https://github.com/GPUOpen-Drivers/xgl), [LLPC](https://github.com/GPUOpen-Drivers/llpc) and [PAL](https://github.com/GPUOpen-Drivers/pal).
+The driver is built from source code in four repositories: [LLVM](https://github.com/GPUOpen-Drivers/llvm-project), [XGL](https://github.com/GPUOpen-Drivers/xgl), [LLPC](https://github.com/GPUOpen-Drivers/llpc) and [PAL](https://github.com/GPUOpen-Drivers/pal).
 
-For changes to LLVM, you should submit contribution to the [LLVM trunk](http://llvm.org/svn/llvm-project/llvm/trunk/). Commits there will be evaluated to merge into the amd-vulkan-master branch periodically.
+For changes to LLVM, you should submit contribution to the [LLVM trunk](https://reviews.llvm.org/). Commits there will be evaluated to merge into the amd-vulkan-master branch periodically.
 
 For changes to XGL, LLPC and PAL, please [create a pull request](https://help.github.com/articles/creating-a-pull-request/) against the dev branch. After your change is reviewed and if it is accepted, it will be evaluated to merge into the master branch in a subsequent regular promotion.
 
@@ -81,7 +81,7 @@ It is recommended to install 16GB RAM in your build system.
 ```
 sudo apt-get install build-essential python3 cmake curl g++-multilib gcc-multilib
 
-sudo apt-get install libssl-dev libx11-dev libxcb1-dev x11proto-dri2-dev libxcb-dri3-dev libxcb-dri2-0-dev libxcb-present-dev libxshmfence-dev libxrandr-dev libssl-dev:i386 libx11-dev:i386 libxcb1-dev:i386 x11proto-dri2-dev:i386 libxcb-dri3-dev:i386 libxcb-dri2-0-dev:i386 libxcb-present-dev:i386 libxshmfence-dev:i386 libwayland-dev libwayland-dev:i386 libxrandr-dev:i386
+sudo apt-get install libssl-dev libssl-dev:i386 libx11-dev libxcb1-dev x11proto-dri2-dev libxcb-dri3-dev libxcb-dri2-0-dev libxcb-present-dev libxshmfence-dev libxrandr-dev libx11-dev:i386 libxcb1-dev:i386 x11proto-dri2-dev:i386 libxcb-dri3-dev:i386 libxcb-dri2-0-dev:i386 libxcb-present-dev:i386 libxshmfence-dev:i386 libwayland-dev libwayland-dev:i386 libxrandr-dev:i386
 ```
 #### RedHat
 ```
@@ -91,7 +91,7 @@ sudo yum localinstall epel-release-latest-7.noarch.rpm
 
 sudo yum update
 
-sudo yum -y install openssl-devel gcc-c++ cmake3 python34 curl glibc-devel openssl-devel.i686 glibc-devel.i686 libstdc++-devel libstdc++-devel.i686 libxcb-devel libxcb-devel.i686 libX11-devel libX11-devel.i686 libxshmfence-devel libxshmfence-devel.i686 libXrandr-devel libXrandr-devel.i686
+sudo yum -y install openssl-devel openssl-devel.i686 gcc-c++ cmake3 python34 curl glibc-devel glibc-devel.i686 libstdc++-devel libstdc++-devel.i686 libxcb-devel libxcb-devel.i686 libX11-devel libX11-devel.i686 libxshmfence-devel libxshmfence-devel.i686 libXrandr-devel libXrandr-devel.i686
 ```
 
 ### Get Repo Tools
@@ -316,7 +316,7 @@ PAL's debug overlay can be enabled to display real time statistics and informati
 
 ## Third Party Software
 The AMD Open Source Driver for Vulkan contains code written by third parties.
-* LLVM is distributed under the terms of the University of Illinois/NCSA Open Source License. See LICENSE.TXT file in the top directory of the LLVM repository.
+* LLVM is distributed under the Apache License v2.0 with LLVM Exceptions. See LICENSE.TXT file in the top directory of the LLVM repository.
 * Please see the README.md file in the [PAL](https://github.com/GPUOpen-Drivers/pal), [LLPC](https://github.com/GPUOpen-Drivers/llpc) and [XGL](https://github.com/GPUOpen-Drivers/xgl) repositories for information on third party software used by those libraries.
 
 
