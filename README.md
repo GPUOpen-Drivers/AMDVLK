@@ -16,11 +16,11 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 * Radeon&trade; RX 400/500 Series
 * Radeon&trade; M200/M300/M400 Series
 * Radeon&trade; RX Vega Series
-* Radeon&trade; RX 5700 Series
+* Radeon&trade; RX 5700/5500 Series
 * AMD FirePro&trade; Workstation Wx000/Wx100/Wx300 Series
 * Radeon&trade; Pro WX x100 Series
 * Radeon&trade; Pro 400/500 Series
-
+* Radeon&trade; W5700/W5500 Series
 
 ### Operating System Support
 The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](http://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
@@ -35,7 +35,7 @@ The driver has not been tested on other distros. You may try it out on other dis
 ### Feature Support and Performance
 The AMD Open Source Driver for Vulkan is designed to support the following features:
 
-* Vulkan 1.1
+* Vulkan 1.2
 * More than 30 extensions
 * [Radeon&trade; GPUProfiler](https://github.com/GPUOpen-Tools/Radeon-GPUProfiler) tracing
 * Built-in debug and profiling tools
@@ -51,6 +51,8 @@ The following features and improvements are planned in future releases (Please r
 ### Known Issues
 * CTS may hang in VK.synchronization.internally_synchronized_objects.pipeline_cache_compute with Linux kernel versions lower than 4.13
 * The driver can only work with firmware of ME feature version >= 25 (you can check the version with command "sudo cat /sys/kernel/debug/dri/0/amdgpu_firmware_info"). If you are using upstream stack with GPUs of SI or CI family, you may need to upgrade the kernel to 4.19 or later version and firmware (under /lib/firmware/amdgpu/) to the right version from https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/amdgpu, and then update ramfs (sudo mkinitramfs -o /boot/initrd.img-\`uname -r\` \`uname -r\`)
+* Timeline semaphore is not fully supported in Linux kernel until version 5.5. You can install [Vulkan timeline semaphore layer](https://github.com/KhronosGroup/Vulkan-ExtensionLayer) to enable the extension if you are using earlier version of Linux kernel
+
 
 ### How to Contribute
 You are welcome to submit contributions of code to the AMD Open Source Driver for Vulkan.
@@ -316,7 +318,9 @@ PAL's debug overlay can be enabled to display real time statistics and informati
 
 ## Third Party Software
 The AMD Open Source Driver for Vulkan contains code written by third parties.
-* LLVM is distributed under the Apache License v2.0 with LLVM Exceptions. See LICENSE.TXT file in the top directory of the LLVM repository.
+* [LLVM](https://github.com/GPUOpen-Drivers/llvm-project) is distributed under the Apache License v2.0 with LLVM Exceptions. See LICENSE.TXT file in the top directory of the LLVM repository.
+* [MetroHash](https://github.com/GPUOpen-Drivers/MetroHash) is distributed under the terms of Apache License 2.0.  See LICENSE file in the top directory of the MetroHash repository.
+* [CWPack](https://github.com/GPUOpen-Drivers/CWPack) is distributed under the terms of MITLicense. See LICENSE file in the top directory of the CWPack repository.
 * Please see the README.md file in the [PAL](https://github.com/GPUOpen-Drivers/pal), [LLPC](https://github.com/GPUOpen-Drivers/llpc) and [XGL](https://github.com/GPUOpen-Drivers/xgl) repositories for information on third party software used by those libraries.
 
 
