@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 
 # This script is used to build the AMD open source vulkan driver and make a deb package from github for tags.
 

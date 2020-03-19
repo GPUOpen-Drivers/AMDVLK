@@ -22,5 +22,5 @@ pipeline {
 def runScript() {
     def workDir = "${WORKSPACE}"
 
-    sh "python ${WORKSPACE}/utils/amdvlk_build_deb_from_tag.py -w ${WORKSPACE} -a ${githubToken}"
+    sh "python3 ${WORKSPACE}/utils/amdvlk_build_deb_from_tag.py -w ${WORKSPACE} -a ${githubToken}"
 }
