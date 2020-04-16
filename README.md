@@ -23,7 +23,7 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 * Radeon&trade; W5700/W5500 Series
 
 ### Operating System Support
-The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](http://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
+The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
 * Ubuntu 18.04 (64-bit version) 
 * Ubuntu 16.04.4 (64-bit version)
 * RedHat 7.5 (64-bit version)
@@ -224,7 +224,7 @@ sudo dpkg -i amdvlk_x.x.x_amd64.deb
 sudo apt-get -f install
 ```
 
-You could also install the latest driver build from http://repo.radeon.com:
+You could also install the latest driver build from https://repo.radeon.com:
 ```
 sudo wget -qO - http://repo.radeon.com/amdvlk/apt/debian/amdvlk.gpg.key | sudo apt-key add -
 sudo sh -c 'echo deb [arch=amd64] http://repo.radeon.com/amdvlk/apt/debian/ bionic main > /etc/apt/sources.list.d/amdvlk.list'
