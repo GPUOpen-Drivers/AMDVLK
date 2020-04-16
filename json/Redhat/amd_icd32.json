@@ -2,7 +2,7 @@
 	"file_format_version": "1.0.0",
 		"ICD": {
 			"library_path": "/usr/lib/amdvlk32.so",
-			"api_version": "1.2.133"
+			"api_version": "1.2.135"
 		}
 }
 
