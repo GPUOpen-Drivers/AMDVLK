@@ -61,8 +61,6 @@ class BuildDeb:
     def __init__(self):
         self.workDir    = os.getcwd();
         self.srcDir     = self.workDir + "/amdvlk_src/";
-        self.metroHash  = self.srcDir + "MetroHash/";
-        self.cwpack     = self.srcDir + "CWPack/";
         self.pkgDir     = self.workDir + "/amdvlk_pkg/";
         self.branch     = 'master';
         self.components = ['xgl', 'pal', 'llpc', 'spvgen', 'llvm-project', 'MetroHash', 'CWPack'];
@@ -221,7 +219,7 @@ class BuildDeb:
     def Build(self):
         # build amdvlk64.so
         os.chdir(self.srcDir + 'xgl/');
-        if os.system('cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON -DXGL_METROHASH_PATH=' + self.metroHash + ' -DXGL_CWPACK_PATH=' + self.cwpack):
+        if os.system('cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON'):
             print("cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release failed");
             exit(-1);
 
