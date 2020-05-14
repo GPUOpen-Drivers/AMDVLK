@@ -7,7 +7,7 @@
  *      @githubToken: token to access github
  */
 
-def buildNode       = "Ubuntu && 18-04 && vulkan"
+def buildNode = "Ubuntu && 18-04 && vulkan"
 
 pipeline {
     agent none
@@ -20,6 +20,9 @@ pipeline {
     }
     stages {
         stage("BuildPackage") {
+            agent {
+                node { label params.buildNode }
+            }
             steps {
                 runScript()
             }
@@ -28,7 +31,5 @@ pipeline {
 }
 
 def runScript() {
-    def workDir = "${WORKSPACE}"
-
     sh "python3 ${WORKSPACE}/utils/amdvlk_build_deb_from_tag.py -w ${WORKSPACE} -a ${githubToken}"
 }
