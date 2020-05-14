@@ -298,10 +298,9 @@ class BuildDeb:
 
     def UploadPackage(self, tag):
         releaseNote = '[Driver installation instruction](https://github.com/GPUOpen-Drivers/AMDVLK#install-with-pre-built-driver) \n\n';
-        for line in self.descript:
-            if line.strip() == 'New feature and improvement' or line.strip() == 'Issue fix':
-                line = '## ' + line.strip() + '\n'
-            releaseNote += line;
+        formated_str = self.descript.replace("New feature and improvement", "## New feature and improvement")
+        formated_str = formated_str.replace("Issue fix", "## Issue fix")
+        releaseNote += formated_str;
 
         newRelease = self.repo.create_git_release(tag, tag, releaseNote, False, False);
         packageName = 'amdvlk_' + self.version + '_amd64.deb';
