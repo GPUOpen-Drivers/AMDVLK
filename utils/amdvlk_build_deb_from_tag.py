@@ -305,7 +305,7 @@ class BuildDeb:
 
         newRelease = self.repo.create_git_release(tag, tag, releaseNote, False, False);
         packageName = 'amdvlk_' + self.version + '_amd64.deb';
-        newRelease.upload_asset(self.workDir + '/' + packageName, packageName + '(Ubuntu 16.04 18.04)');
+        newRelease.upload_asset(self.workDir + '/' + packageName, packageName + '(Ubuntu 18.04 20.04)');
 
     def start(self):
         self.GetOpt();
