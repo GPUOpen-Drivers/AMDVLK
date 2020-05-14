@@ -23,10 +23,12 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 * Radeon&trade; W5700/W5500 Series
 
 ### Operating System Support
-The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](http://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
+The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
+* Ubuntu 20.04 (64-bit version) 
 * Ubuntu 18.04 (64-bit version) 
 * Ubuntu 16.04.4 (64-bit version)
-* RedHat 7.5 (64-bit version)
+* RedHat 8.2 (64-bit version)
+* RedHat 7.8 (64-bit version)
 
 The driver has not been tested on other distros. You may try it out on other distros of your choice.
 
@@ -59,7 +61,7 @@ You are welcome to submit contributions of code to the AMD Open Source Driver fo
 
 The driver is built from source code in four repositories: [LLVM](https://github.com/GPUOpen-Drivers/llvm-project), [XGL](https://github.com/GPUOpen-Drivers/xgl), [LLPC](https://github.com/GPUOpen-Drivers/llpc) and [PAL](https://github.com/GPUOpen-Drivers/pal).
 
-For changes to LLVM, you should submit contribution to the [LLVM trunk](https://reviews.llvm.org/). Commits there will be evaluated to merge into the amd-vulkan-master branch periodically.
+For changes to LLVM, you should submit contribution to the [LLVM trunk](https://reviews.llvm.org/). Commits there will be evaluated to merge into the amd-gfx-gpuopen-master branch periodically.
 
 For changes to XGL, LLPC and PAL, please [create a pull request](https://help.github.com/articles/creating-a-pull-request/) against the dev branch. After your change is reviewed and if it is accepted, it will be evaluated to merge into the master branch in a subsequent regular promotion.
 
@@ -224,7 +226,7 @@ sudo dpkg -i amdvlk_x.x.x_amd64.deb
 sudo apt-get -f install
 ```
 
-You could also install the latest driver build from http://repo.radeon.com:
+You could also install the latest driver build from https://repo.radeon.com:
 ```
 sudo wget -qO - http://repo.radeon.com/amdvlk/apt/debian/amdvlk.gpg.key | sudo apt-key add -
 sudo sh -c 'echo deb [arch=amd64] http://repo.radeon.com/amdvlk/apt/debian/ bionic main > /etc/apt/sources.list.d/amdvlk.list'
