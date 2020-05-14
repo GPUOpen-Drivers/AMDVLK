@@ -7,11 +7,19 @@
  *      @githubToken: token to access github
  */
 
+def buildNode       = "Ubuntu && 18-04 && vulkan"
+
 pipeline {
     agent none
+    parameters {
+        string(
+            name: "buildNode",
+            defaultValue: params.buildNode ? params.buildNode : buildNode,
+            description: "Jenkins node label or name of machine to run build stage on"
+        )
+    }
     stages {
         stage("BuildPackage") {
-            agent { label "ubuntu && 18.04 && linux-build" }
             steps {
                 runScript()
             }
