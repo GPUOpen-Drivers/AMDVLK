@@ -11,7 +11,7 @@ pipeline {
     agent none
     stages {
         stage("BuildPackage") {
-            agent { label "ubuntu && 16-04" }
+            agent { label "ubuntu && 18.04 && linux-build" }
             steps {
                 runScript()
             }
