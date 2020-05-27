@@ -24,8 +24,8 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 
 ### Operating System Support
 The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
-* Ubuntu 20.04 (64-bit version) 
-* Ubuntu 18.04 (64-bit version) 
+* Ubuntu 20.04 (64-bit version)
+* Ubuntu 18.04 (64-bit version)
 * RedHat 8.2 (64-bit version)
 * RedHat 7.8 (64-bit version)
 
@@ -83,8 +83,14 @@ It is recommended to install 16GB RAM in your build system.
 #### Ubuntu
 ```
 sudo apt-get install build-essential python3 cmake curl g++-multilib gcc-multilib
-
-sudo apt-get install libssl-dev libssl-dev:i386 libx11-dev libxcb1-dev x11proto-dri2-dev libxcb-dri3-dev libxcb-dri2-0-dev libxcb-present-dev libxshmfence-dev libxrandr-dev libx11-dev:i386 libxcb1-dev:i386 libxcb-dri3-dev:i386 libxcb-dri2-0-dev:i386 libxcb-present-dev:i386 libxshmfence-dev:i386 libwayland-dev libwayland-dev:i386 libxrandr-dev:i386
+```
+##### 64-bit
+```
+sudo apt-get install libssl-dev libx11-dev libxcb1-dev x11proto-dri2-dev libxcb-dri3-dev libxcb-dri2-0-dev libxcb-present-dev libxshmfence-dev libxrandr-dev libwayland-dev
+```
+##### 32-bit
+```
+sudo apt-get install libssl-dev:i386 libx11-dev:i386 libxcb1-dev:i386 libxcb-dri3-dev:i386 libxcb-dri2-0-dev:i386 libxcb-present-dev:i386 libxshmfence-dev:i386 libwayland-dev libwayland-dev:i386 libxrandr-dev:i386
 ```
 #### RedHat
 ```
@@ -93,10 +99,15 @@ wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum localinstall epel-release-latest-7.noarch.rpm
 
 sudo yum update
-
-sudo yum -y install openssl-devel openssl-devel.i686 gcc-c++ cmake3 python34 curl glibc-devel glibc-devel.i686 libstdc++-devel libstdc++-devel.i686 libxcb-devel libxcb-devel.i686 libX11-devel libX11-devel.i686 libxshmfence-devel libxshmfence-devel.i686 libXrandr-devel libXrandr-devel.i686
 ```
-
+##### 64-bit
+```
+sudo yum -y install openssl-devel gcc-c++ cmake3 python3 curl glibc-devel libstdc++-devel libxcb-devel libX11-devel libxshmfence-devel libXrandr-devel wayland-devel
+```
+##### 32-bit
+```
+sudo yum -y install openssl-devel.i686 gcc-c++ cmake3 python3 curl glibc-devel.i686 libstdc++-devel.i686 libxcb-devel.i686 libX11-devel.i686 libxshmfence-devel.i686 libXrandr-devel.i686 wayland-devel.i686
+```
 ### Get Repo Tools
 
 ```
@@ -160,17 +171,17 @@ cd builds/Release
 
 make -j$(nproc)
 ```
-> **Note:**  
-* If the build runs into errors like "collect2: fatal error: ld terminated with signal 9 [Killed]" due to out of memory, you could try  with reducing the number of threads in "make" command.  
-* Debug build can be done by using -DCMAKE_BUILD_TYPE=Debug.
-* To enable Wayland support, you need to build the driver by using -DBUILD_WAYLAND_SUPPORT=ON. 
+> **Note:**
+* If the build runs into errors like "collect2: fatal error: ld terminated with signal 9 [Killed]" due to out of memory, you could try  with reducing the number of threads in "make" command.
+* Debug build can be done by using `-DCMAKE_BUILD_TYPE=Debug`.
+* To enable Wayland support, you need to build the driver by using `-DBUILD_WAYLAND_SUPPORT=ON`.
 
 ## Installation Instructions
 ### Install Vulkan SDK
 You can download and install the SDK package [here](https://vulkan.lunarg.com/sdk/home).
 
 ### Uninstall Previously Installed JSON Files
-Please make sure all JSON files for AMD GPUs under below folders are uninstalled: 
+Please make sure all JSON files for AMD GPUs under below folders are uninstalled:
 
 ```
 /etc/vulkan/icd.d
@@ -235,10 +246,10 @@ sudo apt-get install amdvlk
 ```
 
 ## Runtime Settings
-The driver exposes many settings that can customize the driver's behavior and facilitate debugging. You can add/edit settings in amdPalSettings.cfg file under one of below paths, formatted with one `name,value` pair per line: 
+The driver exposes many settings that can customize the driver's behavior and facilitate debugging. You can add/edit settings in amdPalSettings.cfg file under one of below paths, formatted with one `name,value` pair per line:
 * /etc/amd
 * $XDG_CONFIG_HOME
-* $HOME/.config 
+* $HOME/.config
 
 Some example settings are listed below:
 
@@ -290,9 +301,9 @@ python timeReport.py <profiling_log_subdirectory>
 ```
 
 ## Dump Pipelines and Shaders
-The output of timeReport.py includes the information of top pipelines like below: 
+The output of timeReport.py includes the information of top pipelines like below:
 ```
-Top Pipelines (>= 1%) 
+Top Pipelines (>= 1%)
 Compiler Hash         | Type         | Avg. Call Count | Avg. GPU Time [us] | Avg. Frame %
 1. 0xd91d15e42d62dcbb | VsPs         |              43 |          11,203.15 |      10.20 %
 2. 0x724e9af55f2adf1b | Cs           |               1 |           9,347.50 |       8.51 %
@@ -330,9 +341,8 @@ The information contained herein is for informational purposes only, and is subj
 
 AMD, the AMD Arrow logo, Radeon, FirePro, and combinations thereof are trademarks of Advanced Micro Devices, Inc.  Other product names used in this publication are for identification purposes only and may be trademarks of their respective companies.
 
-Vega is a codename for AMD architecture, and is not a product name. 
+Vega is a codename for AMD architecture, and is not a product name.
 
 Linux is the registered trademark of Linus Torvalds in the U.S. and other countries.
 
 Vulkan and the Vulkan logo are registered trademarks of the Khronos Group, Inc.
-
