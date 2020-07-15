@@ -1,13 +1,14 @@
 #!/usr/bin/env groovy
 
 /**
- * Pipeline for building and upload deb package of AMDVLK
+ * Pipeline for building and upload package of AMDVLK release
  *
  * Build parameters:
  *      @githubToken: token to access github
  */
 
-def buildNode = "Ubuntu && 18-04 && vulkan"
+def buildNode = "srdcvk && build && ubuntu"
+def rpmPkgStash = "rpmStash"
 
 pipeline {
     agent none
@@ -19,17 +20,34 @@ pipeline {
         )
     }
     stages {
-        stage("BuildPackage") {
-            agent {
-                node { label params.buildNode }
+        stage("Package") {
+            parallel {
+                stage("Ubuntu") {
+                    agent { label "srdcvk && build && ubuntu" }
+                    steps {
+                        sh "rm -rf *.deb"
+                        sh "python3 ${WORKSPACE}/amdvlk_release_for_tag.py -w ${WORKSPACE} -a ${githubToken} -t build"
+                    }
+                }
+                stage("RHEL") {
+                    agent { label "srdcvk && build && RHEL" }
+                    steps {
+                        script {
+                            sh "rm -rf *.rpm"
+                            sh "python3 ${WORKSPACE}/amdvlk_release_for_tag.py -w ${WORKSPACE} -a ${githubToken} -t build"
+                            def pkgName = sh (script: "ls|grep *.rpm", returnStdout: true)
+                            stash name: rpmPkgStash, includes: pkgName.trim()
+                        }
+                    }
+                }
             }
+        }
+        stage("Release") {
+            agent { label buildNode }
             steps {
-                runScript()
+                unstash name: rpmPkgStash
+                sh "python3 ${WORKSPACE}/amdvlk_release_for_tag.py -w ${WORKSPACE} -a ${githubToken} -t release"
             }
         }
     }
-}
-
-def runScript() {
-    sh "python3 ${WORKSPACE}/utils/amdvlk_build_deb_from_tag.py -w ${WORKSPACE} -a ${githubToken}"
 }

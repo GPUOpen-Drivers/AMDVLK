@@ -3,8 +3,8 @@
 # This script is used to build the AMD open source vulkan driver and make a deb package from github for tags.
 
 # Before running this script, please install dependency packages with
-# apt install repo python-pip python-git -y
-# pip install PyGithub
+# pip3 install gitpython
+# pip3 install PyGithub
 
 import sys
 import os
@@ -30,6 +30,28 @@ Priority: optional\n\
 Multi-Arch: same\n\
 Homepage: https://github.com/GPUOpen-Drivers/AMDVLK\n\
 Description: AMD Open Source Driver for Vulkan";
+
+SPEC = "Name: amdvlk\n\
+Version: " + DriverVersion + "\n\
+Release: el\n\
+Summary: AMD Open Source Driver for Vulkan\n\
+License: MIT\n\
+Group: AMD\n\
+Vendor: AMD\n\
+Buildarch: x86_64\n\n\
+%description\n\
+%prep\n\
+%build\n\
+%pre\n\
+%post\n\
+%preun\n\
+%postun\n\
+%files\n\
+/usr/lib64/amdvlk64.so\n\
+/usr/lib64/spvgen.so\n\
+/etc/vulkan/icd.d/amd_icd64.json\n\
+/usr/share/doc/amdvlk/copyright\n\
+%changelog"
 
 ChangeHeader = "vulkan-amdgpu (" + DriverVersion + ") unstable; urgency=low\n\
 \n\
@@ -57,7 +79,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n\
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n\
 SOFTWARE."
 
-class BuildDeb:
+class Worker:
     def __init__(self):
         self.workDir    = os.getcwd();
         self.srcDir     = self.workDir + "/amdvlk_src/";
@@ -70,6 +92,8 @@ class BuildDeb:
         self.descript   = "";
         self.basever    = "1.1.";
         self.targetRepo = 'https://github.com/GPUOpen-Drivers/';
+        self.type       = 'build';
+        self.distro     = self.DistributionType()
 
     def GetOpt(self):
         parser = OptionParser();
@@ -84,10 +108,10 @@ class BuildDeb:
                           dest="accessToken",
                           help="Specify the accessToken to access github")
 
-        parser.add_option("-t", "--targetRepo", action="store",
+        parser.add_option("-t", "--type", action="store",
                           type="string",
-                          dest="targetRepo",
-                          help="Specify the target repo of github, default is " + self.targetRepo)
+                          dest="type",
+                          help="Build package or release it? Default is: " + self.type)
 
         (options, args) = parser.parse_args()
 
@@ -108,14 +132,18 @@ class BuildDeb:
             print("Please specify the access token to github, exiting...");
             sys.exit(-1);
 
-        if options.targetRepo:
-            self.targetRepo = options.targetRepo;
+        if options.type:
+            self.type = options.type;
+        else:
+            print('Please specify type, build or release?')
+            sys.exit(-1)
 
-        print("The target repos is " + self.targetRepo);
+        print('The type of the action is: ' + self.type)
+        print("The target repo is " + self.targetRepo);
 
     def ConnectGithub(self):
         foundRepo = False;
-        self.github = Github(self.accessToken);
+        self.github = Github(login_or_token = self.accessToken,retry=10);
         for repo in self.github.get_user().get_repos():
             if (repo.name == 'AMDVLK'):
                 self.repo = repo;
@@ -124,6 +152,16 @@ class BuildDeb:
         if (foundRepo == False):
             print("Fatal: AMDVLK repo is not found");
             sys.exit(-1);
+
+    def DistributionType(self):
+        result = os.popen('lsb_release -is').read().strip()
+        if (result == 'Ubuntu'):
+            return result
+        elif (result == 'RedHatEnterprise' or result == 'RedHatEnterpriseWorkstation'):
+            return 'RHEL'
+        else:
+            print('Unknown Linux distribution: ' + result)
+            sys.exit(-1)
 
     def GetReleasedTagsOnGithub(self):
         releases = self.repo.get_releases();
@@ -217,10 +255,13 @@ class BuildDeb:
         srcFile.close();
 
     def Build(self):
+        cmakeName = 'cmake'
+        if (self.distro == 'RHEL'):
+            cmakeName = 'source scl_source enable devtoolset-7 && cmake3'
         # build amdvlk64.so
         os.chdir(self.srcDir + 'xgl/');
-        if os.system('cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON'):
-            print("cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release failed");
+        if os.system(cmakeName + ' -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON'):
+            print(cmakeName + " -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release failed");
             exit(-1);
 
         os.chdir('rbuild64');
@@ -235,8 +276,8 @@ class BuildDeb:
             exit(-1);
 
         os.chdir(self.srcDir + 'spvgen/');
-        if os.system('cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=\"-Wno-error=unused-variable\"'):
-            print("SPVGEN: cmake -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=\"-Wno-error=unused-variable\" failed");
+        if os.system(cmakeName + ' -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=\"-Wno-error=unused-variable\"'):
+            print("SPVGEN: " + cmakeName + " -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=\"-Wno-error=unused-variable\" failed");
             exit(-1);
 
         os.chdir('rbuild64');
@@ -245,7 +286,7 @@ class BuildDeb:
             exit(-1);
 
 
-    def Package(self):
+    def MakeDebPackage(self):
         global Control;
         global ChangeHeader;
         global CopyRight;
@@ -296,40 +337,101 @@ class BuildDeb:
         os.chdir(self.workDir);
         os.system('dpkg -b amdvlk_pkg amdvlk_' + self.version + '_amd64.deb');
 
-    def UploadPackage(self, tag):
+    def MakeRpmPackage(self):
+        global CopyRight;
+        global DriverVersion;
+        global SPEC;
+
+        rpmbuild_dir = os.getenv('HOME') + '/rpmbuild'
+        if os.path.exists(rpmbuild_dir):
+            os.system('rm -rf ' + rpmbuild_dir)
+        os.makedirs(rpmbuild_dir)
+        os.chdir(rpmbuild_dir)
+        os.makedirs('BUILDROOT')
+        os.makedirs('SPEC')
+
+        SPEC = SPEC.replace(DriverVersion, self.version)
+        control_file = open('SPEC/amdvlk.spec', 'w')
+        control_file.write(SPEC + '\n')
+        control_file.close()
+
+        os.chdir('BUILDROOT')
+        packagename = 'amdvlk-' + self.version + '-el.x86_64'
+        os.makedirs(packagename)
+        os.chdir(packagename)
+        os.makedirs('usr/lib64');
+        os.makedirs('usr/share/doc/amdvlk');
+        os.makedirs('etc/vulkan/icd.d');
+
+        os.system('cp ' + self.srcDir + '/xgl/rbuild64/icd/amdvlk64.so ' + 'usr/lib64');
+        os.system('strip usr/lib64/amdvlk64.so');
+        os.system('cp ' + self.srcDir + '/spvgen/rbuild64/spvgen.so ' + 'usr/lib64');
+        os.system('strip usr/lib64/spvgen.so');
+        os.system('cp ' + self.srcDir + '/AMDVLK/json/Redhat/amd_icd64.json ' + 'etc/vulkan/icd.d/amd_icd64.json');
+
+        copyright_file = open("usr/share/doc/amdvlk/copyright",'w');
+        copyright_file.write(CopyRight + '\n');
+        copyright_file.close()
+
+        os.chdir(rpmbuild_dir)
+        os.chdir('SPEC')
+        os.system('rpmbuild -bb ./amdvlk.spec')
+        os.chdir(rpmbuild_dir)
+        os.system('cp RPMS/x86_64/' + packagename + '.rpm ' + self.workDir)
+
+    def Package(self):
+        if (self.distro == 'Ubuntu'):
+            self.MakeDebPackage()
+        elif (self.distro == 'RHEL'):
+            self.MakeRpmPackage()
+        print('Package is generated successfully')
+
+    def Release(self, tag):
+        rpmPackageName = 'amdvlk-' + self.version + '-el.x86_64.rpm'
+        debPackageName = 'amdvlk_' + self.version + '_amd64.deb';
+
+        if not os.path.isfile(self.workDir + '/' + rpmPackageName):
+            print('Can not find package: ' + rpmPackageName)
+            sys.exit(-1)
+        if not os.path.isfile(self.workDir + '/' + debPackageName):
+            print('Can not find package: ' + debPackageName)
+            sys.exit(-1)
+
         releaseNote = '[Driver installation instruction](https://github.com/GPUOpen-Drivers/AMDVLK#install-with-pre-built-driver) \n\n';
         formated_str = self.descript.replace("New feature and improvement", "## New feature and improvement")
         formated_str = formated_str.replace("Issue fix", "## Issue fix")
         releaseNote += formated_str;
 
         newRelease = self.repo.create_git_release(tag, tag, releaseNote, False, False);
-        packageName = 'amdvlk_' + self.version + '_amd64.deb';
-        newRelease.upload_asset(self.workDir + '/' + packageName, packageName + '(Ubuntu 18.04 20.04)');
+
+        newRelease.upload_asset(self.workDir + '/' + rpmPackageName, rpmPackageName + '(RedHat 7 8)');
+        newRelease.upload_asset(self.workDir + '/' + debPackageName, debPackageName + '(Ubuntu 18.04 20.04)');
+
+        print("Released " + tag + " successfully")
 
     def start(self):
         self.GetOpt();
         self.ConnectGithub();
         self.GetReleasedTagsOnGithub();
         self.CloneAMDVLK();
-        # Build and package if there is any tag un-released.
-        downloaded   = False;
-        PackageCount = 0;
+        # Build and package if there is any tag un-released, only release the first found un-released tag.
+        found = False;
         for tag in self.tagList:
             if tag not in self.relTagList:
-                if not downloaded:
-                    self.DownloadAMDVLKComponents();
-                    downloaded = True;
+                self.DownloadAMDVLKComponents();
                 self.GetRevisions(tag);
-                self.Build();
-                self.Package();
-                self.UploadPackage(tag);
-                PackageCount += 1;
-                print("The package is generated successfully for " + tag);
+                if (self.type == 'build'):
+                    self.Build();
+                    self.Package();
+                elif (self.type == 'release'):
+                    self.Release(tag);
+                found = True;
+                break
 
-        if PackageCount == 0:
+        if found == False:
             print("All of the tags are released!");
 
 if __name__ == '__main__':
-    buildDeb = BuildDeb();
-    buildDeb.start();
+    worker = Worker();
+    worker.start();
 
