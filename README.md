@@ -82,7 +82,7 @@ It is recommended to install 16GB RAM in your build system.
 ### Install Dev and Tools Packages
 #### Ubuntu
 ```
-sudo apt-get install build-essential python3 cmake curl g++-multilib gcc-multilib
+sudo apt-get install build-essential cmake curl g++-multilib gcc-multilib git pkg-config python3
 ```
 ##### 64-bit
 ```
@@ -90,6 +90,7 @@ sudo apt-get install libssl-dev libx11-dev libxcb1-dev x11proto-dri2-dev libxcb-
 ```
 ##### 32-bit
 ```
+dpkg --add-architecture i386
 sudo apt-get install libssl-dev:i386 libx11-dev:i386 libxcb1-dev:i386 libxcb-dri3-dev:i386 libxcb-dri2-0-dev:i386 libxcb-present-dev:i386 libxshmfence-dev:i386 libwayland-dev libwayland-dev:i386 libxrandr-dev:i386
 ```
 #### RedHat
@@ -110,10 +111,18 @@ sudo yum -y install openssl-devel.i686 gcc-c++ cmake3 python3 curl glibc-devel.i
 ```
 ### Get Repo Tools
 
+#### Ubuntu 18.04
+```
+sudo apt-get install repo
+```
+#### Ubuntu 20.04, RedHat 7.8, 8.2
 ```
 mkdir ~/bin
 curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+# Replacing python with python3 is only needed on Ubuntu 20.04 if the 'python' executable is not available
+sed -i s/python/python3/ ~/bin/repo
 chmod a+x ~/bin/repo
+export PATH=~/bin:"$PATH"
 ```
 
 ### Get Source Code
@@ -121,8 +130,8 @@ chmod a+x ~/bin/repo
 ```
 mkdir vulkandriver
 cd vulkandriver
-~/bin/repo init -u https://github.com/GPUOpen-Drivers/AMDVLK.git -b master
-~/bin/repo sync
+repo init -u https://github.com/GPUOpen-Drivers/AMDVLK.git -b master
+repo sync
 ```
 
 > **Note:** Source code in dev branch can be gotten by using "-b dev" in the "repo init" command
@@ -229,14 +238,20 @@ CommandBufferCombineDePreambles,1
 ```
 
 ### Install with pre-built driver
-You could download and install pre-built deb package (compatible with Ubuntu 16.04 and 18.04) from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each stable code promotion in master branch:
+You could download and install pre-built package from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each code promotion in master branch:
+#### Ubuntu 18.04, 20.04
 ```
 sudo dpkg -r amdvlk   /* If old version is installed on the machine, remove it first */
 sudo dpkg -i amdvlk_x.x.x_amd64.deb
 sudo apt-get -f install
 ```
+#### RedHat 7.8, 8.2
+```
+sudo rpm -e amdvlk   /* If old version is installed on the machine, remove it first */
+sudo rpm -i amdvlk-x.x.x-el.x86_64.rpm
+```
 
-You could also install the latest driver build from https://repo.radeon.com:
+For Ubuntu, you could also install the latest driver build from https://repo.radeon.com:
 ```
 sudo wget -qO - http://repo.radeon.com/amdvlk/apt/debian/amdvlk.gpg.key | sudo apt-key add -
 sudo sh -c 'echo deb [arch=amd64] http://repo.radeon.com/amdvlk/apt/debian/ bionic main > /etc/apt/sources.list.d/amdvlk.list'
