@@ -254,7 +254,7 @@ sudo rpm -i amdvlk-x.x.x-el.x86_64.rpm
 For Ubuntu, you could also install the latest driver build from https://repo.radeon.com:
 ```
 sudo wget -qO - http://repo.radeon.com/amdvlk/apt/debian/amdvlk.gpg.key | sudo apt-key add -
-sudo sh -c 'echo deb [arch=amd64] http://repo.radeon.com/amdvlk/apt/debian/ bionic main > /etc/apt/sources.list.d/amdvlk.list'
+sudo sh -c 'echo deb [arch=amd64,i386] http://repo.radeon.com/amdvlk/apt/debian/ bionic main > /etc/apt/sources.list.d/amdvlk.list'
 sudo apt-get remove amdvlk /* If old version is installed on the machine, remove it first */
 sudo apt update
 sudo apt-get install amdvlk
