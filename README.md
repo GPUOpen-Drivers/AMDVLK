@@ -79,10 +79,13 @@ Please make each contribution reasonably small. If you would like to make a big 
 ### System Requirements
 It is recommended to install 16GB RAM in your build system.
 
+### Build System
+CMake 3.13.4 or newer is required. [Download](https://cmake.org/download/) and install proper one if the cmake is older than 3.13.4.
+
 ### Install Dev and Tools Packages
 #### Ubuntu
 ```
-sudo apt-get install build-essential cmake curl g++-multilib gcc-multilib git pkg-config python3
+sudo apt-get install build-essential curl g++-multilib gcc-multilib git pkg-config python3
 ```
 ##### 64-bit
 ```
@@ -103,11 +106,11 @@ sudo yum update
 ```
 ##### 64-bit
 ```
-sudo yum -y install openssl-devel gcc-c++ cmake3 python3 curl glibc-devel libstdc++-devel libxcb-devel libX11-devel libxshmfence-devel libXrandr-devel wayland-devel
+sudo yum -y install openssl-devel gcc-c++ python3 curl glibc-devel libstdc++-devel libxcb-devel libX11-devel libxshmfence-devel libXrandr-devel wayland-devel
 ```
 ##### 32-bit
 ```
-sudo yum -y install openssl-devel.i686 gcc-c++ cmake3 python3 curl glibc-devel.i686 libstdc++-devel.i686 libxcb-devel.i686 libX11-devel.i686 libxshmfence-devel.i686 libXrandr-devel.i686 wayland-devel.i686
+sudo yum -y install openssl-devel.i686 gcc-c++ python3 curl glibc-devel.i686 libstdc++-devel.i686 libxcb-devel.i686 libX11-devel.i686 libxshmfence-devel.i686 libXrandr-devel.i686 wayland-devel.i686
 ```
 ### Get Repo Tools
 
