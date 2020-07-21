@@ -17,10 +17,11 @@ import re
 from optparse import OptionParser
 from github import Github
 
-DriverVersion = "Thisisjustastub"
+DriverVersionStub = 'DriverVersionStub'
+ArchitectureStub  = 'ArchitectureStub'
 Control = "Package: amdvlk\n\
-Version: " + DriverVersion + "\n\
-Architecture: amd64\n\
+Version: " + DriverVersionStub + "\n\
+Architecture: " + ArchitectureStub + "\n\
 Maintainer: Advanced Micro Devices (AMD) <gpudriverdevsupport@amd.com>\n\
 Depends: libc6 (>= 2.17), libgcc1 (>= 1:3.4), libstdc++6 (>= 5.2)\n\
 Conflicts: amdvlk\n\
@@ -32,12 +33,13 @@ Homepage: https://github.com/GPUOpen-Drivers/AMDVLK\n\
 Description: AMD Open Source Driver for Vulkan";
 
 SPEC = "Name: amdvlk\n\
-Version: " + DriverVersion + "\n\
+Version: " + DriverVersionStub + "\n\
 Release: el\n\
 Summary: AMD Open Source Driver for Vulkan\n\
+URL: https://github.com/GPUOpen-Drivers/AMDVLK\n\
 License: MIT\n\
-Group: AMD\n\
-Vendor: AMD\n\
+Group: System Environment/Libraries\n\
+Vendor: Advanced Micro Devices (AMD) <gpudriverdevsupport@amd.com>\n\
 Buildarch: x86_64\n\n\
 %description\n\
 %prep\n\
@@ -51,9 +53,10 @@ Buildarch: x86_64\n\n\
 /usr/lib64/spvgen.so\n\
 /etc/vulkan/icd.d/amd_icd64.json\n\
 /usr/share/doc/amdvlk/copyright\n\
+/usr/share/doc/amdvlk/changelog\n\
 %changelog"
 
-ChangeHeader = "vulkan-amdgpu (" + DriverVersion + ") unstable; urgency=low\n\
+ChangeHeader = "vulkan-amdgpu (" + DriverVersionStub + ") unstable; urgency=low\n\
 \n\
   * Checkout from github:"
 
@@ -81,19 +84,20 @@ SOFTWARE."
 
 class Worker:
     def __init__(self):
-        self.workDir    = os.getcwd();
-        self.srcDir     = self.workDir + "/amdvlk_src/";
-        self.pkgDir     = self.workDir + "/amdvlk_pkg/";
-        self.branch     = 'master';
-        self.components = ['xgl', 'pal', 'llpc', 'spvgen', 'llvm-project', 'MetroHash', 'CWPack'];
-        self.tagList    = [];
-        self.relTagList = []; # The tags already released on github
-        self.commits    = {'xgl':'', 'pal':'', 'llpc':'', 'spvgen':'', 'llvm-project':'', 'MetroHash':'', 'CWPack':''};
-        self.descript   = "";
-        self.basever    = "1.1.";
-        self.targetRepo = 'https://github.com/GPUOpen-Drivers/';
-        self.type       = 'build';
-        self.distro     = self.DistributionType()
+        self.workDir      = os.getcwd();
+        self.srcDir       = self.workDir + "/amdvlk_src/";
+        self.pkgDir       = self.workDir + "/amdvlk_pkg/";
+        self.pkgSharedDir = os.path.join(self.workDir, 'pkgShared')
+        self.branch       = 'master';
+        self.components   = ['xgl', 'pal', 'llpc', 'spvgen', 'llvm-project', 'MetroHash', 'CWPack'];
+        self.tagList      = [];
+        self.relTagList   = []; # The tags already released on github
+        self.commits      = {'xgl':'', 'pal':'', 'llpc':'', 'spvgen':'', 'llvm-project':'', 'MetroHash':'', 'CWPack':''};
+        self.descript     = "";
+        self.basever      = "1.1.";
+        self.targetRepo   = 'https://github.com/GPUOpen-Drivers/';
+        self.choice       = 'build';
+        self.distro       = self.DistributionType()
 
     def GetOpt(self):
         parser = OptionParser();
@@ -108,10 +112,15 @@ class Worker:
                           dest="accessToken",
                           help="Specify the accessToken to access github")
 
-        parser.add_option("-t", "--type", action="store",
+        parser.add_option("-t", "--targetRepo", action="store",
                           type="string",
-                          dest="type",
-                          help="Build package or release it? Default is: " + self.type)
+                          dest="targetRepo",
+                          help="Specify the target repo of github, default is " + self.targetRepo)
+
+        parser.add_option("-c", "--choice", action="store",
+                          type="string",
+                          dest="choice",
+                          help="Build package or release it? Default is: " + self.choice)
 
         (options, args) = parser.parse_args()
 
@@ -132,18 +141,20 @@ class Worker:
             print("Please specify the access token to github, exiting...");
             sys.exit(-1);
 
-        if options.type:
-            self.type = options.type;
-        else:
-            print('Please specify type, build or release?')
-            sys.exit(-1)
+        if options.targetRepo:
+            self.targetRepo = options.targetRepo;
 
-        print('The type of the action is: ' + self.type)
-        print("The target repo is " + self.targetRepo);
+        print("The target repos is " + self.targetRepo);
+
+        if options.choice:
+            self.choice = options.choice;
+        else:
+            print('Please specify choice, build or release?')
+            sys.exit(-1)
 
     def ConnectGithub(self):
         foundRepo = False;
-        self.github = Github(login_or_token = self.accessToken,retry=10);
+        self.github = Github(self.accessToken);
         for repo in self.github.get_user().get_repos():
             if (repo.name == 'AMDVLK'):
                 self.repo = repo;
@@ -253,18 +264,32 @@ class Worker:
                     break;
 
         srcFile.close();
-
     def Build(self):
-        cmakeName = 'cmake'
+        if self.distro == 'Ubuntu':
+            self.MakeDriver('64')
+            self.MakeDriver('32')
+        elif self.distro == 'RHEL':
+            self.MakeDriver('64')
+
+    def MakeDriver(self, arch):
+        cmakeName = 'cmake '
         if (self.distro == 'RHEL'):
-            cmakeName = 'source scl_source enable devtoolset-7 && cmake3'
-        # build amdvlk64.so
+            cmakeName = 'source scl_source enable devtoolset-7 && cmake3 '
+        # build amdvlk
+        buildDir = 'rbuild64' if arch == '64' else 'rbuild32'
+        cmakeFlags = ' -H. -B' + buildDir + ' -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON'
+        cFlags = '' if arch == '64' else ' -DCMAKE_C_FLAGS=\"-m32 -march=i686\" -DCMAKE_CXX_FLAGS=\"-m32 -march=i686\"'
+
         os.chdir(self.srcDir + 'xgl/');
-        if os.system(cmakeName + ' -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON'):
-            print(cmakeName + " -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release failed");
+        if os.path.exists(buildDir):
+            shutil.rmtree(buildDir)
+        os.makedirs(buildDir)
+
+        if os.system(cmakeName + cmakeFlags + cFlags):
+            print(cmakeName + cmakeFlags + cFlags + ' failed');
             exit(-1);
 
-        os.chdir('rbuild64');
+        os.chdir(buildDir);
         if os.system('make -j8'):
             print("build amdvlk failed");
             exit(-1);
@@ -276,125 +301,154 @@ class Worker:
             exit(-1);
 
         os.chdir(self.srcDir + 'spvgen/');
-        if os.system(cmakeName + ' -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=\"-Wno-error=unused-variable\"'):
-            print("SPVGEN: " + cmakeName + " -H. -Brbuild64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=\"-Wno-error=unused-variable\" failed");
+        cmakeFlags = '-H. -B' + buildDir + ' -DCMAKE_BUILD_TYPE=Release'
+        if os.system(cmakeName + cmakeFlags + cFlags):
+            print("SPVGEN: " + cmakeName + cmakeFlags + cFlags + ' failed');
             exit(-1);
 
-        os.chdir('rbuild64');
+        os.chdir(buildDir);
         if os.system('make -j8'):
             print("build spvgen failed");
             exit(-1);
 
+    def PreparePkgSharedResources(self):
+        if os.path.exists(self.pkgSharedDir):
+            shutil.rmtree(self.pkgSharedDir)
+        os.makedirs(self.pkgSharedDir)
+        os.chdir(self.pkgSharedDir)
 
-    def MakeDebPackage(self):
-        global Control;
-        global ChangeHeader;
-        global CopyRight;
-        global DriverVersion;
-
-        os.chdir(self.workDir);
-
-        if os.path.exists(self.pkgDir):
-            os.system('rm -rf ' + self.pkgDir)
-
-        os.makedirs(self.pkgDir);
-        os.chdir(self.pkgDir);
- 
-        os.makedirs('usr/lib/x86_64-linux-gnu');
-        os.makedirs('usr/share/doc/amdvlk');
-        os.makedirs('etc/vulkan/icd.d');
-        os.makedirs('DEBIAN');
-
-        os.system('cp ' + self.srcDir + '/xgl/rbuild64/icd/amdvlk64.so ' + 'usr/lib/x86_64-linux-gnu/');
-        os.system('strip usr/lib/x86_64-linux-gnu/amdvlk64.so');
-        os.system('cp ' + self.srcDir + '/spvgen/rbuild64/spvgen.so ' + 'usr/lib/x86_64-linux-gnu/');
-        os.system('strip usr/lib/x86_64-linux-gnu/spvgen.so');
-        os.system('cp ' + self.srcDir + '/AMDVLK/json/Ubuntu/amd_icd64.json ' + 'etc/vulkan/icd.d/amd_icd64.json');
-
-        Control      = Control.replace(DriverVersion, self.version);
-        ChangeHeader = ChangeHeader.replace(DriverVersion, self.version);
-
-        control_file = open("DEBIAN/control",'w');
-        control_file.write(Control + '\n');
-        control_file.close();
-
-        change_file = open("usr/share/doc/amdvlk/changelog.Debian",'w');
-        change_file.write(ChangeHeader + '\n');
+        change_file = open('changelog', 'w');
+        pkgChangeHeader = ChangeHeader.replace(DriverVersionStub, self.version);
+        change_file.write(pkgChangeHeader + '\n');
 
         for i in self.components:
             change_file.write("    " + self.targetRepo + i + ": " + self.branch + "--" + self.commits[i] + '\n');
         change_file.close()
 
-        os.system('gzip -9 -c usr/share/doc/amdvlk/changelog.Debian >| usr/share/doc/amdvlk/changelog.Debian.gz');
-        os.system('rm -rf usr/share/doc/amdvlk/changelog.Debian');
+        os.system('cp changelog changelog.Debian')
+        os.system('gzip -9 -c ' + 'changelog.Debian' + ' >| ' + 'changelog.Debian.gz');
+        os.remove('changelog.Debian')
 
-        copyright_file = open("usr/share/doc/amdvlk/copyright",'w');
+        copyright_file = open('copyright', 'w');
         copyright_file.write(CopyRight + '\n');
         copyright_file.close()
 
-        os.system('md5sum usr/lib/x86_64-linux-gnu/amdvlk64.so usr/lib/x86_64-linux-gnu/spvgen.so etc/vulkan/icd.d/amd_icd64.json usr/share/doc/amdvlk/changelog.Debian.gz usr/share/doc/amdvlk/copyright > DEBIAN/md5sums')
+    def MakeDebPackage(self, arch):
+        if not os.path.exists(self.pkgDir):
+            os.makedirs(self.pkgDir)
+        os.chdir(self.pkgDir)
+
+        if os.path.exists(arch):
+            shutil.rmtree(arch)
+        os.makedirs(arch);
+        os.chdir(arch);
+
+        icdInstallDir = 'usr/lib/x86_64-linux-gnu' if arch == 'amd64' else 'usr/lib/i386-linux-gnu'
+        jsonInstallDir = 'etc/vulkan/icd.d'
+        docInstallDir = 'usr/share/doc/amdvlk'
+        icdName = 'amdvlk64.so' if arch == 'amd64' else 'amdvlk32.so'
+        icdBuildDir = 'xgl/rbuild64/icd' if arch == 'amd64' else 'xgl/rbuild32/icd'
+        spvgenName = 'spvgen.so'
+        spvgenBuildDir = 'spvgen/rbuild64' if arch == 'amd64' else 'spvgen/rbuild32'
+        jsonName = 'amd_icd64.json' if arch == 'amd64' else 'amd_icd32.json'
+
+        os.makedirs(icdInstallDir);
+        os.makedirs(docInstallDir);
+        os.makedirs(jsonInstallDir);
+        os.makedirs('DEBIAN');
+
+        os.system('cp ' + os.path.join(self.srcDir, icdBuildDir, icdName) + ' ' + icdInstallDir);
+        os.system('strip ' + os.path.join(icdInstallDir, icdName));
+        os.system('cp ' + os.path.join(self.srcDir, spvgenBuildDir, spvgenName) + ' ' + icdInstallDir);
+        os.system('strip ' + os.path.join(icdInstallDir, spvgenName));
+        os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Ubuntu', jsonName) + ' ' + jsonInstallDir);
+
+        debControl = Control.replace(DriverVersionStub, self.version).replace(ArchitectureStub, arch)
+        control_file = open("DEBIAN/control",'w');
+        control_file.write(debControl + '\n');
+        control_file.close();
+
+        os.system('cp ' + os.path.join(self.pkgSharedDir, 'changelog.Debian.gz') + ' ' + os.path.join(docInstallDir, 'changelog.Debian.gz'))
+        os.system('cp ' + os.path.join(self.pkgSharedDir, 'copyright') + ' ' + docInstallDir)
+
+        pkg_content = os.path.join(icdInstallDir, icdName) + ' ' + os.path.join(icdInstallDir, spvgenName) + ' ' + os.path.join(jsonInstallDir, jsonName) + ' ' \
+                      + os.path.join(docInstallDir,'changelog.Debian.gz') + ' ' + os.path.join(docInstallDir, 'copyright') + ' '
+        os.system('md5sum ' + pkg_content + '> DEBIAN/md5sums')
 
         os.chdir(self.workDir);
-        os.system('dpkg -b amdvlk_pkg amdvlk_' + self.version + '_amd64.deb');
+        os.system('dpkg -b ' + os.path.join(self.pkgDir, arch) + ' amdvlk_' + self.version + '_' + arch + '.deb');
 
     def MakeRpmPackage(self):
-        global CopyRight;
-        global DriverVersion;
-        global SPEC;
+        rpmbuild_dir = os.path.join(os.getenv('HOME'), 'rpmbuild')
+        rpmbuildroot_dir = 'BUILDROOT'
+        rpmspec_dir = 'SPEC'
+        rpmspec_file_name = 'amdvlk.spec'
+        icd_install_dir = 'usr/lib64'
+        doc_install_dir = 'usr/share/doc/amdvlk'
+        json_install_dir = 'etc/vulkan/icd.d'
+        icd_name = 'amdvlk64.so'
+        spvgen_name = 'spvgen.so'
+        json_name = 'amd_icd64.json'
 
-        rpmbuild_dir = os.getenv('HOME') + '/rpmbuild'
         if os.path.exists(rpmbuild_dir):
-            os.system('rm -rf ' + rpmbuild_dir)
+            shutil.rmtree(rpmbuild_dir)
         os.makedirs(rpmbuild_dir)
         os.chdir(rpmbuild_dir)
-        os.makedirs('BUILDROOT')
-        os.makedirs('SPEC')
+        os.makedirs(rpmbuildroot_dir)
+        os.makedirs(rpmspec_dir)
 
-        SPEC = SPEC.replace(DriverVersion, self.version)
-        control_file = open('SPEC/amdvlk.spec', 'w')
-        control_file.write(SPEC + '\n')
-        control_file.close()
+        rpm_spec = SPEC.replace(DriverVersionStub, self.version)
+        spec_file = open(os.path.join(rpmspec_dir, rpmspec_file_name), 'w')
+        spec_file.write(rpm_spec + '\n')
+        spec_file.close()
 
-        os.chdir('BUILDROOT')
+        os.chdir(rpmbuildroot_dir)
         packagename = 'amdvlk-' + self.version + '-el.x86_64'
         os.makedirs(packagename)
         os.chdir(packagename)
-        os.makedirs('usr/lib64');
-        os.makedirs('usr/share/doc/amdvlk');
-        os.makedirs('etc/vulkan/icd.d');
+        os.makedirs(icd_install_dir);
+        os.makedirs(doc_install_dir);
+        os.makedirs(json_install_dir);
 
-        os.system('cp ' + self.srcDir + '/xgl/rbuild64/icd/amdvlk64.so ' + 'usr/lib64');
-        os.system('strip usr/lib64/amdvlk64.so');
-        os.system('cp ' + self.srcDir + '/spvgen/rbuild64/spvgen.so ' + 'usr/lib64');
-        os.system('strip usr/lib64/spvgen.so');
-        os.system('cp ' + self.srcDir + '/AMDVLK/json/Redhat/amd_icd64.json ' + 'etc/vulkan/icd.d/amd_icd64.json');
+        os.system('cp ' + os.path.join(self.srcDir, 'xgl/rbuild64/icd', icd_name) + ' ' + icd_install_dir);
+        os.system('strip ' + os.path.join(icd_install_dir, icd_name));
+        os.system('cp ' + os.path.join(self.srcDir, 'spvgen/rbuild64', spvgen_name) + ' ' + icd_install_dir);
+        os.system('strip ' + os.path.join(icd_install_dir, spvgen_name));
+        os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Redhat', json_name) + ' ' + json_install_dir);
 
-        copyright_file = open("usr/share/doc/amdvlk/copyright",'w');
-        copyright_file.write(CopyRight + '\n');
-        copyright_file.close()
+        os.system('cp ' + os.path.join(self.pkgSharedDir, 'changelog') + ' ' + doc_install_dir)
+        os.system('cp ' + os.path.join(self.pkgSharedDir, 'copyright') + ' ' + doc_install_dir)
 
         os.chdir(rpmbuild_dir)
-        os.chdir('SPEC')
-        os.system('rpmbuild -bb ./amdvlk.spec')
+        os.chdir(rpmspec_dir)
+        os.system('rpmbuild -bb ' + rpmspec_file_name)
         os.chdir(rpmbuild_dir)
         os.system('cp RPMS/x86_64/' + packagename + '.rpm ' + self.workDir)
 
     def Package(self):
+        self.PreparePkgSharedResources()
+
         if (self.distro == 'Ubuntu'):
-            self.MakeDebPackage()
+            self.MakeDebPackage('amd64')
+            self.MakeDebPackage('i386')
         elif (self.distro == 'RHEL'):
             self.MakeRpmPackage()
-        print('Package is generated successfully')
 
     def Release(self, tag):
-        rpmPackageName = 'amdvlk-' + self.version + '-el.x86_64.rpm'
-        debPackageName = 'amdvlk_' + self.version + '_amd64.deb';
+        os.chdir(self.workDir);
 
-        if not os.path.isfile(self.workDir + '/' + rpmPackageName):
+        rpmPackageName = 'amdvlk-' + self.version + '-el.x86_64.rpm'
+        debPackage64bitName = 'amdvlk_' + self.version + '_amd64.deb'
+        debPackage32bitName = 'amdvlk_' + self.version + '_i386.deb'
+
+        if not os.path.isfile(rpmPackageName):
             print('Can not find package: ' + rpmPackageName)
             sys.exit(-1)
-        if not os.path.isfile(self.workDir + '/' + debPackageName):
-            print('Can not find package: ' + debPackageName)
+        if not os.path.isfile(debPackage64bitName):
+            print('Can not find package: ' + debPackage64bitName)
+            sys.exit(-1)
+        if not os.path.isfile(debPackage32bitName):
+            print('Can not find package: ' + debPackage32bitName)
             sys.exit(-1)
 
         releaseNote = '[Driver installation instruction](https://github.com/GPUOpen-Drivers/AMDVLK#install-with-pre-built-driver) \n\n';
@@ -404,31 +458,34 @@ class Worker:
 
         newRelease = self.repo.create_git_release(tag, tag, releaseNote, False, False);
 
-        newRelease.upload_asset(self.workDir + '/' + rpmPackageName, rpmPackageName + '(RedHat 7 8)');
-        newRelease.upload_asset(self.workDir + '/' + debPackageName, debPackageName + '(Ubuntu 18.04 20.04)');
-
-        print("Released " + tag + " successfully")
+        newRelease.upload_asset(rpmPackageName, rpmPackageName + '(RedHat 7.8 8.2)');
+        newRelease.upload_asset(debPackage64bitName, debPackage64bitName + '(Ubuntu 18.04 20.04)');
+        newRelease.upload_asset(debPackage32bitName, debPackage32bitName + '(Ubuntu 18.04 20.04)');
 
     def start(self):
         self.GetOpt();
         self.ConnectGithub();
         self.GetReleasedTagsOnGithub();
         self.CloneAMDVLK();
-        # Build and package if there is any tag un-released, only release the first found un-released tag.
-        found = False;
+        # Build and package if there is any tag un-released.
+        downloaded   = False;
+        ReleaseCount = 0;
         for tag in self.tagList:
             if tag not in self.relTagList:
-                self.DownloadAMDVLKComponents();
+                ReleaseCount += 1
+                if not downloaded:
+                    self.DownloadAMDVLKComponents();
+                    downloaded = True;
                 self.GetRevisions(tag);
-                if (self.type == 'build'):
+                if (self.choice == 'build'):
                     self.Build();
                     self.Package();
-                elif (self.type == 'release'):
+                    print("The package is generated successfully for " + tag);
+                elif (self.choice == 'release'):
                     self.Release(tag);
-                found = True;
-                break
+                    print("Released " + tag + " successfully")
 
-        if found == False:
+        if ReleaseCount == 0:
             print("All of the tags are released!");
 
 if __name__ == '__main__':

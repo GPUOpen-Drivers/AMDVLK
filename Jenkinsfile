@@ -26,7 +26,7 @@ pipeline {
                     agent { label "srdcvk && build && ubuntu" }
                     steps {
                         sh "rm -rf *.deb"
-                        sh "python3 ${WORKSPACE}/utils/amdvlk_release_for_tag.py -w ${WORKSPACE} -a ${githubToken} -t build"
+                        sh "python3 ${WORKSPACE}/utils/amdvlk_release_for_tag.py -w ${WORKSPACE} -a ${githubToken} -c build"
                     }
                 }
                 stage("RHEL") {
@@ -34,7 +34,7 @@ pipeline {
                     steps {
                         script {
                             sh "rm -rf *.rpm"
-                            sh "python3 ${WORKSPACE}/utils/amdvlk_release_for_tag.py -w ${WORKSPACE} -a ${githubToken} -t build"
+                            sh "python3 ${WORKSPACE}/utils/amdvlk_release_for_tag.py -w ${WORKSPACE} -a ${githubToken} -c build"
                             def pkgName = sh (script: "ls|grep *.rpm", returnStdout: true)
                             stash name: rpmPkgStash, includes: pkgName.trim()
                         }
@@ -46,7 +46,7 @@ pipeline {
             agent { label buildNode }
             steps {
                 unstash name: rpmPkgStash
-                sh "python3 ${WORKSPACE}/utils/amdvlk_release_for_tag.py -w ${WORKSPACE} -a ${githubToken} -t release"
+                sh "python3 ${WORKSPACE}/utils/amdvlk_release_for_tag.py -w ${WORKSPACE} -a ${githubToken} -c release"
             }
         }
     }
