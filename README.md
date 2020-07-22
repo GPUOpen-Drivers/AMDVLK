@@ -139,8 +139,7 @@ repo sync
 
 > **Note:** Source code in dev branch can be gotten by using "-b dev" in the "repo init" command
 
-### 64-bit Build
-#### Ubuntu
+### Build Driver (64-bit, Release)
 ```
 cd <vulkandriver_path>/drivers/xgl
 
@@ -150,43 +149,12 @@ cd builds/Release64
 
 make -j$(nproc)
 ```
-
-#### RedHat
-```
-cd <vulkandriver_path>/drivers/xgl
-
-cmake3 -H. -Bbuilds/Release64
-
-cd builds/Release64
-
-make -j$(nproc)
-```
-
-### 32-bit Build
-#### Ubuntu
-```
-cd <vulkandriver_path>/drivers/xgl
-
-cmake -H. -Bbuilds/Release -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
-
-cd builds/Release
-
-make -j$(nproc)
-```
-#### RedHat
-```
-cd <vulkandriver_path>/drivers/xgl
-
-cmake3 -H. -Bbuilds/Release -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
-
-cd builds/Release
-
-make -j$(nproc)
-```
 > **Note:**
+* For RedHat 7.x, please use cmake3(>= 3.13.4) instead of cmake.
+* For debug build, use `-DCMAKE_BUILD_TYPE=Debug`.
+* For 32-bit build, use `-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32`.
+* To enable Wayland support, use `-DBUILD_WAYLAND_SUPPORT=ON`.
 * If the build runs into errors like "collect2: fatal error: ld terminated with signal 9 [Killed]" due to out of memory, you could try  with reducing the number of threads in "make" command.
-* Debug build can be done by using `-DCMAKE_BUILD_TYPE=Debug`.
-* To enable Wayland support, you need to build the driver by using `-DBUILD_WAYLAND_SUPPORT=ON`.
 
 ## Installation Instructions
 ### Install Vulkan SDK
