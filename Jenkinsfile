@@ -26,6 +26,7 @@ pipeline {
                     agent { label "srdcvk && build && ubuntu" }
                     steps {
                         sh "rm -rf *.deb"
+                        sh 'rm -rf *.rpm'
                         sh "python3 ${WORKSPACE}/utils/amdvlk_release_for_tag.py -w ${WORKSPACE} -a ${githubToken} -c build"
                     }
                 }
