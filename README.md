@@ -17,11 +17,11 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 * Radeon&trade; M200/M300/M400 Series
 * Radeon&trade; RX Vega Series
 * Radeon&trade; RX 5700/5500 Series
-* Radeon&trade; RX 6800 Series
 * AMD FirePro&trade; Workstation Wx000/Wx100/Wx300 Series
 * Radeon&trade; Pro WX x100 Series
 * Radeon&trade; Pro 400/500 Series
 * Radeon&trade; W5700/W5500 Series
+* Radeon&trade; RX 6800 Series
 
 ### Operating System Support
 The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
@@ -161,14 +161,6 @@ ninja
 ### Install Vulkan SDK
 You can download and install the SDK package [here](https://vulkan.lunarg.com/sdk/home).
 
-### Uninstall Previously Installed JSON Files
-Please make sure all JSON files for AMD GPUs under below folders are uninstalled:
-
-```
-/etc/vulkan/icd.d
-/usr/share/vulkan/icd.d
-```
-
 ### Copy Driver and JSON Files
 #### Ubuntu
 ```
@@ -182,6 +174,12 @@ sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/li
 sudo cp <vulkandriver_path>/drivers/xgl/builds/Release/icd/amdvlk32.so /usr/lib/
 sudo cp <vulkandriver_path>/drivers/AMDVLK/json/Redhat/* /etc/vulkan/icd.d/
 ```
+**NOTE:** To make AMDVLK driver work correctly on system with both AMDVLK and RADV installed, AMD switchable graphics layer needs to be enabled by:
+```
+sudo ln -s /etc/vulkan/icd.d/amd_icd64.json etc/vulkan/implicit_layer.d/amd_icd64.json
+sudo ln -s /etc/vulkan/icd.d/amd_icd32.json etc/vulkan/implicit_layer.d/amd_icd32.json
+```
+> By default, AMDVLK driver is enabled. You can switch the driver between AMDVLK and RADV by environment variable AMD_VULKAN_ICD = AMDVLK or RADV.
 
 > **Note:** The remaining steps are only required when running the AMDGPU upstream driver stack.
 
