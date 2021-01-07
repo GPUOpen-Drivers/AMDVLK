@@ -345,6 +345,7 @@ class Worker:
 
         icdInstallDir = 'usr/lib/x86_64-linux-gnu' if arch == 'amd64' else 'usr/lib/i386-linux-gnu'
         jsonInstallDir = 'etc/vulkan/icd.d'
+        implicitLayerDir = 'etc/vulkan/implicit_layer.d'
         docInstallDir = 'usr/share/doc/amdvlk'
         icdName = 'amdvlk64.so' if arch == 'amd64' else 'amdvlk32.so'
         icdBuildDir = 'xgl/rbuild64/icd' if arch == 'amd64' else 'xgl/rbuild32/icd'
@@ -355,6 +356,7 @@ class Worker:
         os.makedirs(icdInstallDir);
         os.makedirs(docInstallDir);
         os.makedirs(jsonInstallDir);
+        os.makedirs(implicitLayerDir);
         os.makedirs('DEBIAN');
 
         os.system('cp ' + os.path.join(self.srcDir, icdBuildDir, icdName) + ' ' + icdInstallDir);
@@ -362,6 +364,7 @@ class Worker:
         os.system('cp ' + os.path.join(self.srcDir, spvgenBuildDir, spvgenName) + ' ' + icdInstallDir);
         os.system('strip ' + os.path.join(icdInstallDir, spvgenName));
         os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Ubuntu', jsonName) + ' ' + jsonInstallDir);
+        os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Ubuntu', jsonName) + ' ' + implicitLayerDir);
 
         debControl = Control.replace(DriverVersionStub, self.version).replace(ArchitectureStub, arch)
         control_file = open("DEBIAN/control",'w');
@@ -386,6 +389,7 @@ class Worker:
         icd_install_dir = 'usr/lib64'
         doc_install_dir = 'usr/share/doc/amdvlk'
         json_install_dir = 'etc/vulkan/icd.d'
+        implicit_layer_dir = '/etc/vulkan/implicit_layer.d'
         icd_name = 'amdvlk64.so'
         spvgen_name = 'spvgen.so'
         json_name = 'amd_icd64.json'
@@ -415,6 +419,7 @@ class Worker:
         os.system('cp ' + os.path.join(self.srcDir, 'spvgen/rbuild64', spvgen_name) + ' ' + icd_install_dir);
         os.system('strip ' + os.path.join(icd_install_dir, spvgen_name));
         os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Redhat', json_name) + ' ' + json_install_dir);
+        os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Redhat', json_name) + ' ' + implicit_layer_dir);
 
         os.system('cp ' + os.path.join(self.pkgSharedDir, 'changelog') + ' ' + doc_install_dir)
         os.system('cp ' + os.path.join(self.pkgSharedDir, 'copyright') + ' ' + doc_install_dir)
