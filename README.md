@@ -10,18 +10,18 @@ Shaders that compose a particular `VkPipeline` object are compiled as a single e
 ### Product Support
 The AMD Open Source Driver for Vulkan is designed to support the following AMD GPUs:
 
-* Radeon&trade; HD 7000 Series
-* Radeon&trade; HD 8000M Series
+* Radeon&trade; RX 6900/6800 Series
+* Radeon&trade; RX 5700/5600/5500 Series
+* Radeon&trade; RX Vega Series
 * Radeon&trade; R5/R7/R9 200/300 Series
 * Radeon&trade; RX 400/500 Series
 * Radeon&trade; M200/M300/M400 Series
-* Radeon&trade; RX Vega Series
-* Radeon&trade; RX 5700/5500 Series
+* Radeon&trade; HD 8000M Series
+* Radeon&trade; HD 7000 Series
 * AMD FirePro&trade; Workstation Wx000/Wx100/Wx300 Series
 * Radeon&trade; Pro WX x100 Series
 * Radeon&trade; Pro 400/500 Series
 * Radeon&trade; W5700/W5500 Series
-* Radeon&trade; RX 6800 Series
 
 ### Operating System Support
 The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
