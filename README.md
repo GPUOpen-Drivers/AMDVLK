@@ -238,12 +238,13 @@ The driver exposes many settings that can customize the driver's behavior and fa
 
 Some example settings are listed below:
 
-| Setting Name             | Valid Values                                                | Comment                                                                                                                           |
-| ------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `ShaderCacheMode`        | 0: disable cache<br/>1: runtime cache<br/>2: cache to disk  | Runtime cache is the default mode. For "cache to disk", the cache file is generated under $AMD_SHADER_DISK_CACHE_PATH/AMD/LlpcCache or $XDG_CACHE_HOME/AMD/LlpcCache or $HOME/.cache/AMD/LlpcCache   |
-| `IFH`                    | 0: default<br/>1: drop all submits<br/>                     | Infinitely Fast Hardware.  Submit calls are dropped before being sent to hardware.  Useful for measuring CPU-limited performance. |
-| `EnableVmAlwaysValid`    | 0: disable<br/>1: default<br/>2:  force enable<br/>                               | 1 is the default setting which enables the VM-always-valid feature for kernel 4.16 and above.  The feature can reduce command buffer submission overhead related to virtual memory management.     |
-| `IdleAfterSubmitGpuMask` | Bitmask of GPUs (i.e., bit 0 is GPU0, etc.)                 | Forces the CPU to immediately wait for each GPU submission to complete on the specified set of GPUs.                              |
+| Setting Name                   | Valid Values                                                | Comment                                                                                                                           |
+| ------------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `AllowVkPipelineCachingToDisk` | 0: disallow<br/>1: default<br/>                             | 1 is default value which enables Pal's archive-file based caching.<br/>The archive-file is stored under ~/.cache/AMD/VkCache.   |
+| `ShaderCacheMode`              | 0: disable cache<br/>1: runtime cache<br/>2: cache to disk  | Runtime cache is the default mode. For "cache to disk", the cache file is generated under $AMD_SHADER_DISK_CACHE_PATH/AMD/LlpcCache or $XDG_CACHE_HOME/AMD/LlpcCache or $HOME/.cache/AMD/LlpcCache   |
+| `IFH`                          | 0: default<br/>1: drop all submits<br/>                     | Infinitely Fast Hardware.  Submit calls are dropped before being sent to hardware.  Useful for measuring CPU-limited performance. |
+| `EnableVmAlwaysValid`          | 0: disable<br/>1: default<br/>2:  force enable<br/>         | 1 is the default setting which enables the VM-always-valid feature for kernel 4.16 and above.  The feature can reduce command buffer submission overhead related to virtual memory management.     |
+| `IdleAfterSubmitGpuMask`       | Bitmask of GPUs (i.e., bit 0 is GPU0, etc.)                 | Forces the CPU to immediately wait for each GPU submission to complete on the specified set of GPUs.  |
 
 *All* available settings can be determined by examining below source files that define them.
 
