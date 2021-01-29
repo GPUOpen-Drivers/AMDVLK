@@ -51,7 +51,6 @@ Buildarch: x86_64\n\n\
 %files\n\
 /usr/lib64/amdvlk64.so\n\
 /etc/vulkan/icd.d/amd_icd64.json\n\
-/etc/vulkan/implicit_layer.d/amd_icd64.json\n\
 /usr/share/doc/amdvlk/copyright\n\
 /usr/share/doc/amdvlk/changelog\n\
 %changelog"
@@ -355,7 +354,7 @@ class Worker:
         os.system('cp ' + os.path.join(self.pkgSharedDir, 'changelog.Debian.gz') + ' ' + os.path.join(docInstallDir, 'changelog.Debian.gz'))
         os.system('cp ' + os.path.join(self.pkgSharedDir, 'copyright') + ' ' + docInstallDir)
 
-        pkg_content = os.path.join(icdInstallDir, icdName) + ' ' + os.path.join(jsonInstallDir, jsonName) + ' ' + os.path.join(implicitLayerDir, jsonName) + ' ' \
+        pkg_content = os.path.join(icdInstallDir, icdName) + ' ' + os.path.join(jsonInstallDir, jsonName)  + ' ' \
                       + os.path.join(docInstallDir,'changelog.Debian.gz') + ' ' + os.path.join(docInstallDir, 'copyright') + ' '
         os.system('md5sum ' + pkg_content + '> DEBIAN/md5sums')
 
