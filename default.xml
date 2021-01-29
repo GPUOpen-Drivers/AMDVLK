@@ -13,7 +13,7 @@
   <project path="drivers/pal" name="pal" revision="57cd977c79e4321c28dcb1a18a4aa23880aa48f4"/>
   <project path="drivers/llpc" name="llpc" revision="86ed348f405120042a2540ec3157e28baf45dc81"/>
   <project path="drivers/spvgen" name="spvgen" revision="6b84106b7e107173428647850b4ba93a75b23d84"/>
-  <project path="drivers/AMDVLK" name="AMDVLK" revision="eaec73f1852bd8f1fb68d38ce26f955d463bb698"/>
+  <project path="drivers/AMDVLK" name="AMDVLK" revision="e77387bc4409e53fa05ce69d3b17659cf313488f"/>
   <project path="drivers/llvm-project" name="llvm-project" revision="1551e626ea6b19f81928d2e4eddab657eb82af9b"/>
   <project path="drivers/third_party/metrohash" name="MetroHash" revision="3c566dd9cda44ca7fd97659e0b53ac953f9037d2"/>
   <project path="drivers/third_party/cwpack" name="CWPack" revision="7387247eb9889ddcabbc1053b9c2052e253b088e"/>
