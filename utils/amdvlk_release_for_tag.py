@@ -345,7 +345,7 @@ class Worker:
         os.system('cp ' + os.path.join(self.srcDir, icdBuildDir, icdName) + ' ' + icdInstallDir)
         os.system('strip ' + os.path.join(icdInstallDir, icdName))
         os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Ubuntu', jsonName) + ' ' + jsonInstallDir)
-        os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Ubuntu', jsonName) + ' ' + implicitLayerDir)
+        #os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Ubuntu', jsonName) + ' ' + implicitLayerDir)
 
         debControl = Control.replace(DriverVersionStub, self.version).replace(ArchitectureStub, arch)
         control_file = open("DEBIAN/control",'w')
@@ -415,7 +415,7 @@ class Worker:
         os.system('cp ' + os.path.join(self.srcDir, 'xgl/rbuild64/icd', icd_name) + ' ' + icd_install_dir)
         os.system('strip ' + os.path.join(icd_install_dir, icd_name))
         os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Redhat', json_name) + ' ' + json_install_dir)
-        os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Redhat', json_name) + ' ' + implicit_layer_dir)
+        #os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Redhat', json_name) + ' ' + implicit_layer_dir)
 
         os.system('cp ' + os.path.join(self.pkgSharedDir, 'changelog') + ' ' + doc_install_dir)
         os.system('cp ' + os.path.join(self.pkgSharedDir, 'copyright') + ' ' + doc_install_dir)
