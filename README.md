@@ -19,7 +19,7 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 * Radeon&trade; HD 8000M Series
 * Radeon&trade; HD 7000 Series
 * AMD FirePro&trade; Workstation Wx000/Wx100/Wx300 Series
-* Radeon&trade; Pro WX x100 Series
+* Radeon&trade; Pro WX x100/x200 Series
 * Radeon&trade; Pro 400/500 Series
 * Radeon&trade; W5700/W5500 Series
 
