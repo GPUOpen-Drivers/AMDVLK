@@ -9,12 +9,12 @@
            sync-j="8"
            sync-c="true" />
 
-  <project path="drivers/xgl" name="xgl" revision="a2c6ddfd90639d9ec4b5a381e0f8dfc46996040c"/>
-  <project path="drivers/pal" name="pal" revision="5262df4eae038624c412904f0a250b66db92194b"/>
-  <project path="drivers/llpc" name="llpc" revision="ca7003a056d3361031797cf956c3684d9d59edef"/>
-  <project path="drivers/spvgen" name="spvgen" revision="6b84106b7e107173428647850b4ba93a75b23d84"/>
-  <project path="drivers/AMDVLK" name="AMDVLK" revision="b57453470949e5512879a4fcfd57aa7760b81e82"/>
-  <project path="drivers/llvm-project" name="llvm-project" revision="97bea7830b74a3f3e0fab48bc79ff993ac0b86da"/>
+  <project path="drivers/xgl" name="xgl" revision="e5c5ad454049892ed803b0adcc15ef6fb27ec50e"/>
+  <project path="drivers/pal" name="pal" revision="575d41ff01c856d9566168d65b31e4b49db4734b"/>
+  <project path="drivers/llpc" name="llpc" revision="2692228d80d8be2221641b719eb7135f52bc34aa"/>
+  <project path="drivers/spvgen" name="spvgen" revision="59823e6c3557cb7f3fae4a9f2760ad3f6b694997"/>
+  <project path="drivers/AMDVLK" name="AMDVLK" revision="ba98a3fc6f2ef06eccd8b24199667319894f762f"/>
+  <project path="drivers/llvm-project" name="llvm-project" revision="90d06712ff54e242b7bd225321e4fc8629292d46"/>
   <project path="drivers/third_party/metrohash" name="MetroHash" revision="3c566dd9cda44ca7fd97659e0b53ac953f9037d2"/>
   <project path="drivers/third_party/cwpack" name="CWPack" revision="7387247eb9889ddcabbc1053b9c2052e253b088e"/>
 
