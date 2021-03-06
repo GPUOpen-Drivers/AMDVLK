@@ -143,18 +143,13 @@ repo sync
 
 ### Build Driver (64-bit, Release)
 ```
-cd <vulkandriver_path>/drivers/xgl
-
-cmake -H. -G Ninja -Bbuilds/Release64
-
-cd builds/Release64
-
-ninja
+cmake -G Ninja -S drivers/xgl -B drivers/xgl/builds/Release64
+ninja -C drivers/xgl/builds/Release64
 ```
 > **Note:**
 * For RedHat 7.x, please use cmake3(>= 3.13.4) instead of cmake.
 * For debug build, use `-DCMAKE_BUILD_TYPE=Debug -DLLVM_PARALLEL_LINK_JOBS=2` (Linking a debug build of llvm is very memory intensive, so we use only two parallel jobs).
-* For 32-bit build, use `-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32`.
+* For 32-bit build, use `-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32`, and adjust build sub-directory accordingly (i.e. `Release32`).
 * To enable Wayland support, use `-DBUILD_WAYLAND_SUPPORT=ON`.
 
 ## Installation Instructions
@@ -165,13 +160,13 @@ You can download and install the SDK package [here](https://vulkan.lunarg.com/sd
 #### Ubuntu
 ```
 sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib/x86_64-linux-gnu/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release/icd/amdvlk32.so /usr/lib/i386-linux-gnu/
+sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amdvlk32.so /usr/lib/i386-linux-gnu/
 sudo cp <vulkandriver_path>/drivers/AMDVLK/json/Ubuntu/* /etc/vulkan/icd.d/
 ```
 #### RedHat
 ```
 sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib64/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release/icd/amdvlk32.so /usr/lib/
+sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amdvlk32.so /usr/lib/
 sudo cp <vulkandriver_path>/drivers/AMDVLK/json/Redhat/* /etc/vulkan/icd.d/
 ```
 **NOTE:** To make AMDVLK driver work correctly on system with both AMDVLK and RADV installed, AMD switchable graphics layer needs to be enabled by:
