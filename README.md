@@ -10,7 +10,7 @@ Shaders that compose a particular `VkPipeline` object are compiled as a single e
 ### Product Support
 The AMD Open Source Driver for Vulkan is designed to support the following AMD GPUs:
 
-* Radeon&trade; RX 6900/6800 Series
+* Radeon&trade; RX 6900/6800/6700 Series
 * Radeon&trade; RX 5700/5600/5500 Series
 * Radeon&trade; RX Vega Series
 * Radeon&trade; R5/R7/R9 200/300 Series
