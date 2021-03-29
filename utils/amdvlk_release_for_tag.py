@@ -51,6 +51,7 @@ Buildarch: x86_64\n\n\
 %files\n\
 /usr/lib64/amdvlk64.so\n\
 /etc/vulkan/icd.d/amd_icd64.json\n\
+/etc/vulkan/implicit_layer.d/amd_icd64.json\n\
 /usr/share/doc/amdvlk/copyright\n\
 /usr/share/doc/amdvlk/changelog\n\
 %changelog"
@@ -142,7 +143,7 @@ class Worker:
         if options.targetRepo:
             self.targetRepo = options.targetRepo
 
-        print("The target repos is " + self.targetRepo)
+        print("The target repo is " + self.targetRepo)
 
         if options.choice:
             self.choice = options.choice
@@ -268,7 +269,11 @@ class Worker:
 
         # build amdvlk
         buildDir   = 'rbuild64' if arch == '64' else 'rbuild32'
-        cmakeFlags = ' -H. -G Ninja -B' + buildDir + ' -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON'
+        cmakeInstallPrefix = '/usr/lib/' if self.distro == 'Ubuntu' else '/usr/'
+        cmakeInstallLibdir = 'x86_64-linux-gnu' if arch == '64' else 'i386-linux-gnu'
+        if self.distro == 'RHEL':
+            cmakeInstallLibdir = 'lib64' if arch == '64' else 'lib'
+        cmakeFlags = ' -H. -G Ninja -B' + buildDir + ' -DCMAKE_BUILD_TYPE=Release -DBUILD_WAYLAND_SUPPORT=ON -DCMAKE_INSTALL_PREFIX=' + cmakeInstallPrefix + ' -DCMAKE_INSTALL_LIBDIR=' + cmakeInstallLibdir
         cFlags     = '' if arch == '64' else ' -DCMAKE_C_FLAGS=\"-m32 -march=i686\" -DCMAKE_CXX_FLAGS=\"-m32 -march=i686\"'
 
         os.chdir(self.srcDir + 'xgl/')
@@ -343,8 +348,8 @@ class Worker:
 
         os.system('cp ' + os.path.join(self.srcDir, icdBuildDir, icdName) + ' ' + icdInstallDir)
         os.system('strip ' + os.path.join(icdInstallDir, icdName))
-        os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Ubuntu', jsonName) + ' ' + jsonInstallDir)
-        #os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Ubuntu', jsonName) + ' ' + implicitLayerDir)
+        os.system('cp ' + os.path.join(self.srcDir, icdBuildDir, jsonName) + ' ' + jsonInstallDir)
+        os.system('cp ' + os.path.join(self.srcDir, icdBuildDir, jsonName) + ' ' + implicitLayerDir)
 
         debControl = Control.replace(DriverVersionStub, self.version).replace(ArchitectureStub, arch)
         control_file = open("DEBIAN/control",'w')
@@ -354,7 +359,7 @@ class Worker:
         os.system('cp ' + os.path.join(self.pkgSharedDir, 'changelog.Debian.gz') + ' ' + os.path.join(docInstallDir, 'changelog.Debian.gz'))
         os.system('cp ' + os.path.join(self.pkgSharedDir, 'copyright') + ' ' + docInstallDir)
 
-        pkg_content = os.path.join(icdInstallDir, icdName) + ' ' + os.path.join(jsonInstallDir, jsonName)  + ' ' \
+        pkg_content = os.path.join(icdInstallDir, icdName) + ' ' + os.path.join(jsonInstallDir, jsonName) + ' ' + os.path.join(implicitLayerDir, jsonName) + ' ' \
                       + os.path.join(docInstallDir,'changelog.Debian.gz') + ' ' + os.path.join(docInstallDir, 'copyright') + ' '
         os.system('md5sum ' + pkg_content + '> DEBIAN/md5sums')
 
@@ -383,6 +388,7 @@ class Worker:
         rpmbuildroot_dir = 'BUILDROOT'
         rpmspec_dir = 'SPEC'
         rpmspec_file_name = 'amdvlk.spec'
+        icd_build_dir = 'xgl/rbuild64/icd'
         icd_install_dir = 'usr/lib64'
         doc_install_dir = 'usr/share/doc/amdvlk'
         json_install_dir = 'etc/vulkan/icd.d'
@@ -411,10 +417,10 @@ class Worker:
         os.makedirs(json_install_dir)
         os.makedirs(implicit_layer_dir)
 
-        os.system('cp ' + os.path.join(self.srcDir, 'xgl/rbuild64/icd', icd_name) + ' ' + icd_install_dir)
+        os.system('cp ' + os.path.join(self.srcDir, 'icd_build_dir', icd_name) + ' ' + icd_install_dir)
         os.system('strip ' + os.path.join(icd_install_dir, icd_name))
-        os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Redhat', json_name) + ' ' + json_install_dir)
-        #os.system('cp ' + os.path.join(self.srcDir, 'AMDVLK/json/Redhat', json_name) + ' ' + implicit_layer_dir)
+        os.system('cp ' + os.path.join(self.srcDir, icd_build_dir, json_name) + ' ' + json_install_dir)
+        os.system('cp ' + os.path.join(self.srcDir, icd_build_dir, json_name) + ' ' + implicit_layer_dir)
 
         os.system('cp ' + os.path.join(self.pkgSharedDir, 'changelog') + ' ' + doc_install_dir)
         os.system('cp ' + os.path.join(self.pkgSharedDir, 'copyright') + ' ' + doc_install_dir)
