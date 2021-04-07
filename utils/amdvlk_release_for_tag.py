@@ -417,7 +417,7 @@ class Worker:
         os.makedirs(json_install_dir)
         os.makedirs(implicit_layer_dir)
 
-        os.system('cp ' + os.path.join(self.srcDir, 'icd_build_dir', icd_name) + ' ' + icd_install_dir)
+        os.system('cp ' + os.path.join(self.srcDir, icd_build_dir, icd_name) + ' ' + icd_install_dir)
         os.system('strip ' + os.path.join(icd_install_dir, icd_name))
         os.system('cp ' + os.path.join(self.srcDir, icd_build_dir, json_name) + ' ' + json_install_dir)
         os.system('cp ' + os.path.join(self.srcDir, icd_build_dir, json_name) + ' ' + implicit_layer_dir)
