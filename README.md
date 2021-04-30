@@ -173,15 +173,15 @@ You can download and install the SDK package [here](https://vulkan.lunarg.com/sd
 ```
 sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib/x86_64-linux-gnu/
 sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amdvlk32.so /usr/lib/i386-linux-gnu/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amd-icd64.json /etc/vulkan/icd.d/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amd-icd32.json /etc/vulkan/icd.d/
+sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amd_icd64.json /etc/vulkan/icd.d/
+sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amd_icd32.json /etc/vulkan/icd.d/
 ```
 #### RedHat
 ```
 sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib64/
 sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amdvlk32.so /usr/lib/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amd-icd64.json /etc/vulkan/icd.d/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amd-icd32.json /etc/vulkan/icd.d/
+sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amd_icd64.json /etc/vulkan/icd.d/
+sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amd_icd32.json /etc/vulkan/icd.d/
 ```
 **NOTE:** To make AMDVLK driver work correctly on system with both AMDVLK and RADV installed, AMD switchable graphics layer needs to be enabled by:
 ```
