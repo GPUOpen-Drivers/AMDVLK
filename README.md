@@ -144,19 +144,19 @@ repo sync
 ### Build Driver and Generate JSON Files
 #### Ubuntu
 ```
-cmake -G Ninja -S drivers/xgl -B drivers/xgl/builds/Release64 -DCMAKE_INSTALL_PREFIX=/usr/lib/ -DCMAKE_INSTALL_LIBDIR=x86_64-linux-gnu
-ninja -C drivers/xgl/builds/Release64
+cmake -G Ninja -S xgl -B xgl/builds/Release64
+cmake --build xgl/builds/Release64
 
-cmake -G Ninja -S drivers/xgl -B drivers/xgl/builds/Release32 -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_INSTALL_PREFIX=/usr/lib/ -DCMAKE_INSTALL_LIBDIR=i386-linux-gnu
-ninja -C drivers/xgl/builds/Release32
+cmake -G Ninja -S xgl -B xgl/builds/Release32 -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
+cmake --build xgl/builds/Release32
 ```
 #### RedHat
 ```
-cmake -G Ninja -S drivers/xgl -B drivers/xgl/builds/Release64 -DCMAKE_INSTALL_PREFIX=/usr/ -DCMAKE_INSTALL_LIBDIR=lib64
-ninja -C drivers/xgl/builds/Release64
+cmake -G Ninja -S drivers/xgl -B xgl/builds/Release64
+cmake --build xgl/builds/Release64
 
-cmake -G Ninja -S drivers/xgl -B drivers/xgl/builds/Release32 -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_INSTALL_PREFIX=/usr/ -DCMAKE_INSTALL_LIBDIR=lib
-ninja -C drivers/xgl/builds/Release32
+cmake -G Ninja -S drivers/xgl -B xgl/builds/Release32 -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
+cmake --build xgl/builds/Release32
 ```
 
 > **Note:**
@@ -168,27 +168,12 @@ ninja -C drivers/xgl/builds/Release32
 ### Install Vulkan SDK
 You can download and install the SDK package [here](https://vulkan.lunarg.com/sdk/home).
 
-### Copy Driver and JSON Files
-#### Ubuntu
+### Install Driver and JSON Files
 ```
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib/x86_64-linux-gnu/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amdvlk32.so /usr/lib/i386-linux-gnu/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amd_icd64.json /etc/vulkan/icd.d/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amd_icd32.json /etc/vulkan/icd.d/
+cmake --install xgl/builds/Release64 --component icd
+cmake --install xgl/builds/Release32 --component icd
 ```
-#### RedHat
-```
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amdvlk64.so /usr/lib64/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amdvlk32.so /usr/lib/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release64/icd/amd_icd64.json /etc/vulkan/icd.d/
-sudo cp <vulkandriver_path>/drivers/xgl/builds/Release32/icd/amd_icd32.json /etc/vulkan/icd.d/
-```
-**NOTE:** To make AMDVLK driver work correctly on system with both AMDVLK and RADV installed, AMD switchable graphics layer needs to be enabled by:
-```
-sudo ln -s /etc/vulkan/icd.d/amd_icd64.json /etc/vulkan/implicit_layer.d/amd_icd64.json
-sudo ln -s /etc/vulkan/icd.d/amd_icd32.json /etc/vulkan/implicit_layer.d/amd_icd32.json
-```
-> By default, AMDVLK driver is enabled. You can switch the driver between AMDVLK and RADV by environment variable AMD_VULKAN_ICD = AMDVLK or RADV.
+> If RADV is also installed in the system, AMDVLK driver will be enabled by default after installation. You can switch the driver between AMDVLK and RADV by environment variable AMD_VULKAN_ICD = AMDVLK or RADV.
 
 > **Note:** The remaining steps are only required when running the AMDGPU upstream driver stack.
 
@@ -217,7 +202,21 @@ CommandBufferCombineDePreambles,1
 ```
 
 ### Install with pre-built driver
-You could download and install pre-built package from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each code promotion in master branch:
+You could generate the installation package with below command while building driver:
+#### Ubuntu
+```
+cmake -G Ninja -S xgl -B xgl/builds/Release64 [-DPACKAGE_VERSION=package version]
+cmake --build xgl/builds/Release64 --target makePackage
+```
+#### RedHat
+```
+cmake -G Ninja -S xgl -B xgl/builds/Release64 [-DPACKAGE_VERSION=package version]
+cmake --build xgl/builds/Release64 --target makePackage
+```
+
+You could also download pre-built package from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each code promotion in master branch.
+
+Below is the installation instruction:
 #### Ubuntu 18.04, 20.04
 ```
 sudo dpkg -r amdvlk   /* If old version is installed on the machine, remove it first */
@@ -227,7 +226,7 @@ sudo apt-get -f install
 #### RedHat 7.8, 8.2
 ```
 sudo rpm -e amdvlk   /* If old version is installed on the machine, remove it first */
-sudo rpm -i amdvlk-x.x.x-el.x86_64.rpm
+sudo rpm -i amdvlk-x.x.x.x86_64.rpm
 ```
 
 For Ubuntu, you could also install the latest driver build from https://repo.radeon.com:
