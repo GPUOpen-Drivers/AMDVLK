@@ -164,6 +164,16 @@ cmake --build xgl/builds/Release32
 ### Install Vulkan SDK
 You can download and install the SDK package [here](https://vulkan.lunarg.com/sdk/home).
 
+### Install dependencies
+#### Ubuntu
+```
+sudo apt install libssl1.1
+```
+#### RedHat
+```
+sudo yum install openssl-libs
+```
+
 ### Install Driver and JSON Files
 ```
 cmake --install xgl/builds/Release64 --component icd
