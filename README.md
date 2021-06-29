@@ -176,9 +176,11 @@ sudo yum install openssl-libs
 
 ### Install Driver and JSON Files
 ```
-cmake --install xgl/builds/Release64 --component icd
-cmake --install xgl/builds/Release32 --component icd
+sudo cmake --install xgl/builds/Release64 --component icd
+sudo cmake --install xgl/builds/Release32 --component icd
 ```
+> If you want to install driver to customized directory, you can add "-DCMAKE_INSTALL_PREFIX={installation directory}" in the cmake build command. JSON files will be installed to /ect/vulkan/icd.d while other files will be installed to the installation directory you specified.
+
 > If RADV is also installed in the system, AMDVLK driver will be enabled by default after installation. You can switch the driver between AMDVLK and RADV by environment variable AMD_VULKAN_ICD = AMDVLK or RADV.
 
 > **Note:** The remaining steps are only required when running the AMDGPU upstream driver stack.
