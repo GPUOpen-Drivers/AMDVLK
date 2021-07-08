@@ -249,7 +249,7 @@ sudo apt-get install amdvlk
 ## Runtime Settings
 The driver exposes many settings that can customize the driver's behavior and facilitate debugging. You can add/edit settings in amdPalSettings.cfg file under one of below paths, formatted with one `name,value` pair per line:
 * /etc/amd
-* $XDG_CONFIG_HOME
+* $AMD_CONFIG_DIR
 * $HOME/.config
 
 Some example settings are listed below:
