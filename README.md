@@ -33,7 +33,7 @@ The driver has not been tested on other distros. You may try it out on other dis
 ### Feature Support and Performance
 The AMD Open Source Driver for Vulkan is designed to support the following features:
 
-* Vulkan 1.2
+* Vulkan 1.3
 * More than 30 extensions
 * [Radeon&trade; GPUProfiler](https://github.com/GPUOpen-Tools/Radeon-GPUProfiler) tracing
 * Built-in debug and profiling tools
