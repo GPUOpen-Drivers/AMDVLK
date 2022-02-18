@@ -140,19 +140,19 @@ repo sync
 ### Build Driver and Generate JSON Files
 #### Ubuntu
 ```
-cmake -G Ninja -S xgl -B xgl/builds/Release64
-cmake --build xgl/builds/Release64
+cmake -G Ninja -S xgl -B builds/Release64
+cmake --build builds/Release64
 
-cmake -G Ninja -S xgl -B xgl/builds/Release32 -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
-cmake --build xgl/builds/Release32
+cmake -G Ninja -S xgl -B builds/Release32 -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
+cmake --build builds/Release32
 ```
 #### RedHat
 ```
-cmake -G Ninja -S drivers/xgl -B xgl/builds/Release64
-cmake --build xgl/builds/Release64
+cmake -G Ninja -S xgl -B builds/Release64
+cmake --build builds/Release64
 
-cmake -G Ninja -S drivers/xgl -B xgl/builds/Release32 -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
-cmake --build xgl/builds/Release32
+cmake -G Ninja -S xgl -B builds/Release32 -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
+cmake --build builds/Release32
 ```
 
 > **Note:**
