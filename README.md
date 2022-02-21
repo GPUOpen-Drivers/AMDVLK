@@ -176,8 +176,8 @@ sudo yum install openssl-libs
 
 ### Install Driver and JSON Files
 ```
-sudo cmake --install xgl/builds/Release64 --component icd
-sudo cmake --install xgl/builds/Release32 --component icd
+sudo cmake --install builds/Release64 --component icd
+sudo cmake --install builds/Release32 --component icd
 ```
 > If you want to install driver to customized directory, you can add "-DCMAKE_INSTALL_PREFIX={installation directory}" in the cmake build command. JSON files will be installed to /etc/vulkan/icd.d while other files will be installed to the installation directory you specified.
 
@@ -213,13 +213,13 @@ CommandBufferCombineDePreambles,1
 You could generate the installation package with below command while building driver:
 #### Ubuntu
 ```
-cmake -G Ninja -S xgl -B xgl/builds/Release64 [-DPACKAGE_VERSION=package version]
-cmake --build xgl/builds/Release64 --target makePackage
+cmake -G Ninja -S xgl -B builds/Release64 [-DPACKAGE_VERSION=package version]
+cmake --build builds/Release64 --target makePackage
 ```
 #### RedHat
 ```
-cmake -G Ninja -S xgl -B xgl/builds/Release64 [-DPACKAGE_VERSION=package version]
-cmake --build xgl/builds/Release64 --target makePackage
+cmake -G Ninja -S xgl -B builds/Release64 [-DPACKAGE_VERSION=package version]
+cmake --build builds/Release64 --target makePackage
 ```
 
 You could also download pre-built package from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each code promotion in master branch.
