@@ -20,13 +20,13 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 > **Note:** For Pre-Polaris and Pre-Raven GPUs, please use v-2021.Q2.5 or older release.
 
 ### Operating System Support
-The AMD Open Source Driver for Vulkan is designed to support following distros on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
-* Ubuntu 20.04 (64-bit version)
-* Ubuntu 18.04 (64-bit version)
-* RedHat 8.2 (64-bit version)
-* RedHat 7.8 (64-bit version)
+The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
+* Ubuntu 20.04 (amd64 version)
+* Ubuntu 18.04 (amd64 version)
+* RedHat 8.2 (x86-64 version)
+* RedHat 7.8 (x86-64 version)
 
-The driver has not been tested on other distros. You may try it out on other distros of your choice.
+The driver has not been well tested on other distros and versions. You may try it out on other distros and versions of your choice.
 
 > **Note:** To run the Vulkan driver with AMDGPU upstream driver stack on SI and CI generation GPUs, amdgpu.si_support and amdgpu.cik_support need to be enabled in kernel
 
