@@ -77,7 +77,7 @@ Please make each contribution reasonably small. If you would like to make a big 
 It is recommended to install 16GB RAM in your build system.
 
 ### Build System
-* CMake 3.13.4 or newer is required. [Download](https://cmake.org/download/) and install proper one if the cmake is older than 3.13.4.
+* CMake 3.15 or newer is required. [Download](https://cmake.org/download/) and install proper one if the cmake is older than 3.15.
 * Ninja is requred.
 
 ### Install Dev and Tools Packages
@@ -156,7 +156,7 @@ cmake --build builds/Release32
 ```
 
 > **Note:**
-* For RedHat 7.x, please use cmake3(>= 3.13.4) instead of cmake.
+* For RedHat 7.x, please use cmake3(>= 3.15) instead of cmake.
 * For debug build, use `-DCMAKE_BUILD_TYPE=Debug -DLLVM_PARALLEL_LINK_JOBS=2` (Linking a debug build of llvm is very memory intensive, so we use only two parallel jobs).
 * To enable Wayland support, use `-DBUILD_WAYLAND_SUPPORT=ON`.
 
