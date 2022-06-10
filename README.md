@@ -159,7 +159,6 @@ cmake --build builds/Release32
 * For RedHat 7.x, please use cmake3(>= 3.15) instead of cmake.
 * For debug build, use `-DCMAKE_BUILD_TYPE=Debug -DLLVM_PARALLEL_LINK_JOBS=2` (Linking a debug build of llvm is very memory intensive, so we use only two parallel jobs).
 * To enable Wayland support, use `-DBUILD_WAYLAND_SUPPORT=ON`.
-* To enable tests, use `-DXGL_BUILD_TESTS=ON`.
 
 ## Installation Instructions
 ### Install Vulkan SDK
