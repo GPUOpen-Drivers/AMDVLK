@@ -74,7 +74,7 @@ Please make each contribution reasonably small. If you would like to make a big 
 ## Build Instructions
 
 ### System Requirements
-It is recommended to install 16GB RAM in your build system.
+It is recommended to install at least 16GB RAM in your build system.
 
 ### Build System
 * CMake 3.15 or newer is required. [Download](https://cmake.org/download/) and install proper one if the cmake is older than 3.15.
