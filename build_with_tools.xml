@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+
+  <remote  name="vulkan-github"
+           fetch="https://github.com/GPUOpen-Drivers" />
+
+  <remote  name="khronos-github"
+           fetch="https://github.com/KhronosGroup/" />
+
+  <default revision="master"
+           remote="vulkan-github"
+           sync-j="8"
+           sync-c="true" />
+
+  <project path="drivers/xgl" name="xgl" revision="dev"/>
+  <project path="drivers/pal" name="pal" revision="dev"/>
+  <project path="drivers/llpc" name="llpc" revision="dev"/>
+  <project path="drivers/spvgen" name="spvgen" revision="dev"/>
+  <project path="drivers/AMDVLK" name="AMDVLK" revision="dev"/>
+  <project path="drivers/llvm-project" name="llvm-project" revision="amd-gfx-gpuopen-dev"/>
+  <project path="drivers/third_party/metrohash" name="MetroHash" revision="amd-master"/>
+  <project path="drivers/third_party/cwpack" name="CWPack" revision="amd-master"/>
+  <project path="drivers/third_party/glslang" name="glslang.git" remote="khronos-github" revision="6624e1367309630b2f6df3cf93a5f864e89973f9"/>
+  <project path="drivers/third_party/SPIRV-tools" name="SPIRV-Tools.git" remote="khronos-github" revision="8a40f6de57d7b78bc431678d90aa8a570d1631f2"/>
+  <project path="drivers/third_party/SPIRV-tools/external/SPIRV-Headers" name="SPIRV-Headers.git" remote="khronos-github" revision="b8047fbe45f426f5918fadc67e8408f5b108c3c9"/>
+  <project path="drivers/third_party/SPIRV-cross" name="SPIRV-Cross.git" remote="khronos-github" revision="a1bb29ccbb285618028a24efb3fe4f6718cee0b5"/>
+
+</manifest>
