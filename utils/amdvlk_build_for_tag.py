@@ -57,7 +57,7 @@ class Worker:
 
         if options.workDir:
             print("The source code is under %s" % (options.workDir))
-            self.workDir = options.workDir
+            self.workDir = os.path.abspath(options.workDir)
             self.srcDir  = self.workDir + "/amdvlk_src/"
             self.pkgDir  = self.workDir + "/amdvlk_pkg/"
         else:
@@ -136,8 +136,6 @@ class Worker:
                 self.repoCommits[component] = child.attrib['revision']
 
     def CheckoutDriver(self):
-        os.chdir(self.srcDir)
-
         # Get the tagged commits of driver components from manifest
         manifestXml = self.driverRoot
         if self.IsBuildTagNewer():
@@ -149,6 +147,7 @@ class Worker:
             sys.exit(-1)
         self.ParseManifest(manifestXml)
 
+        os.chdir(self.srcDir)
         # Checkout commits
         for i in self.repoCommits:
             print('Checking out ' + i + ': ' + self.repoCommits[i])
