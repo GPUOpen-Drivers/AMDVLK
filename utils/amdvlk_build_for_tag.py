@@ -90,8 +90,10 @@ class Worker:
                 self.buildTag = options.buildTag
             else:
                 eprint("You input an invalid tag: " + options.buildTag)
+                exit(-1)
         else:
             self.buildTag = self.validTags[0]
+        print("The build tag is " + self.buildTag)
 
     def DistributionType(self):
         result = os.popen('lsb_release -is').read().strip()
@@ -241,7 +243,6 @@ class Worker:
     def start(self):
         self.GetOpt()
         self.SyncAMDVLK()
-        self.CheckoutDriver()
         self.Build()
 
 if __name__ == '__main__':
