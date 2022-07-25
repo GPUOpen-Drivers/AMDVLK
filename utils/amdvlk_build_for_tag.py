@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# This script is used to build the AMD open source vulkan driver from github for tags.
+# This script is used to generate release packages from release tag
 
 # Before running this script, please install dependency packages with
 # pip3 install gitpython
