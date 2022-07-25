@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# This script is used to build the AMD open source vulkan driver and make a deb package from github for tags.
+# This script is used to build the AMD open source vulkan driver from github for tags.
 
 # Before running this script, please install dependency packages with
 # pip3 install gitpython
@@ -15,6 +15,10 @@ import shutil
 import re
 from optparse import OptionParser
 import xml.etree.ElementTree as ET
+from github import Github
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 class Worker:
     def __init__(self):
@@ -30,10 +34,19 @@ class Worker:
 
         self.buildTag     = ''
         self.driverRoot   = ''
-        self.repoCommits  = {}
-        self.repoPathes   = {}
         self.diffTag      = 'v-2022.Q3.1'
+        self.validTags    = self.GetValidTags()
 
+    def GetValidTags(self):
+        repo = Github().get_repo('GPUOpen-Drivers/AMDVLK')
+        allTags = repo.get_tags()
+        validTags = []
+        for t in allTags:
+            if t.name[:2] == 'v-': validTags.append(t.name)
+        if not validTags:
+            eprint("No valid tags found from AMDVLK")
+            exit(-1)
+        return sorted(validTags, reverse=True)
 
     def GetOpt(self):
         parser = OptionParser()
@@ -51,7 +64,7 @@ class Worker:
         parser.add_option("-b", "--buildTag", action="store",
                           type="string",
                           dest="buildTag",
-                          help="Specify the tag to build, default is latest")
+                          help="Specify the tag to build, e.g.: \"v-2022.Q3.1\", default is latest")
 
         (options, args) = parser.parse_args()
 
@@ -72,7 +85,12 @@ class Worker:
         print("The target repo is " + self.targetRepo)
 
         if options.buildTag:
-            self.buildTag = options.buildTag
+            if options.buildTag in self.validTags:
+                self.buildTag = options.buildTag
+            else:
+                eprint("You input an invalid tag: " + options.buildTag)
+        else:
+            self.buildTag = self.validTags[0]
 
     def DistributionType(self):
         result = os.popen('lsb_release -is').read().strip()
@@ -81,36 +99,37 @@ class Worker:
         elif (result == 'RedHatEnterprise' or result == 'RedHatEnterpriseWorkstation'):
             return 'RHEL'
         else:
-            print('Unknown Linux distribution: ' + result)
+            eprint('Unknown Linux distribution: ' + result)
             sys.exit(-1)
 
     def IsBuildTagNewer(self):
+        #TODO: use a more flexible algorithm
         return self.buildTag > self.diffTag
 
     def SyncAMDVLK(self):
         # Sync all amdvlk repoes and checkout AMDVLK to specified tag
         os.chdir(self.srcDir)
 
-        # TODO: we use the latest build_with_tools.xml to init the repo,
-        # please update the command when the manifest is changed
         repoName = 'AMDVLK'
-        initcmd='repo init -u ' + self.targetRepo + repoName + ' -b master -m build_with_tools.xml'
-        if os.system(initcmd):
-            print(initcmd + ' failed')
+        initCmd='repo init -u ' + self.targetRepo + repoName + ' -b refs/tags/' + self.buildTag
+        syncCmd='repo sync -j8'
+        if self.IsBuildTagNewer():
+            initCmd += ' -m build_with_tools.xml'
+        else:
+            initCmd += ' -m default.xml'
+        if os.system(initCmd):
+            eprint(initCmd + ' failed')
             exit(-1)
-        if os.system('repo sync -j8'):
-            print('repo sync failed')
+        if os.system(syncCmd):
+            eprint('repo sync failed')
             exit(-1)
 
         # Simply use repo command instead of reading from manifest to get path
         amdvlkPath = os.popen('repo list --path-only ' + repoName).read().strip()
         self.driverRoot = self.srcDir + amdvlkPath[:-len(repoName)]
         repo = git.Repo(amdvlkPath)
-        if not self.buildTag: self.buildTag = repo.tags[-1].name
-        validTag = False
         for tagRef in repo.tags:
             if self.buildTag == tagRef.name:
-                validTag = True
                 if self.IsBuildTagNewer():
                     self.descript = tagRef.tag.message
                 else:
@@ -118,42 +137,7 @@ class Worker:
                 self.version = self.buildTag[2:]
                 break
 
-        if not validTag:
-            print('Not a valid tag: ' + self.buildTag)
-            sys.exit(-1)
         repo.git.checkout(self.buildTag)
-
-    def ParseManifest(self, manifestXml):
-        os.chdir(os.path.dirname(os.path.abspath(manifestXml)))
-        xmlRoot = ET.parse(manifestXml).getroot()
-        for child in xmlRoot:
-            if child.tag == 'include':
-                self.ParseManifest(child.attrib['name'])
-            if child.tag == 'project' and 'path' in child.attrib:
-                component = child.attrib['name']
-                if component == 'AMDVLK': continue
-                self.repoPathes[component] = child.attrib['path']
-                self.repoCommits[component] = child.attrib['revision']
-
-    def CheckoutDriver(self):
-        # Get the tagged commits of driver components from manifest
-        manifestXml = self.driverRoot
-        if self.IsBuildTagNewer():
-            manifestXml += 'AMDVLK/build_with_tools.xml'
-        else:
-            manifestXml += 'AMDVLK/default.xml'
-        if not os.path.exists(manifestXml):
-            print('Manifest file: ' + manifestXml + ' not found!')
-            sys.exit(-1)
-        self.ParseManifest(manifestXml)
-
-        os.chdir(self.srcDir)
-        # Checkout commits
-        for i in self.repoCommits:
-            print('Checking out ' + i + ': ' + self.repoCommits[i])
-            repo = git.Repo(self.repoPathes[i])
-            repo.git.clean('-xdff')
-            repo.git.checkout(self.repoCommits[i])
 
     def GenerateReleaseNotes(self):
         os.chdir(self.workDir)
@@ -187,7 +171,7 @@ class Worker:
             os.chdir(self.driverRoot + 'spvgen/external')
             print(self.driverRoot + 'spvgen/external')
             if os.system('python3 fetch_external_sources.py'):
-                print('SPVGEN: fetch external sources failed')
+                eprint('SPVGEN: fetch external sources failed')
                 exit(-1)
 
         self.buildDir   = 'xgl/Release64' if arch == '64' else 'xgl/Release32'
@@ -201,25 +185,25 @@ class Worker:
 
         # Build driver
         if os.system(cmakeName + cmakeFlags + cFlags):
-            print(cmakeName + cmakeFlags + cFlags + ' failed')
+            eprint(cmakeName + cmakeFlags + cFlags + ' failed')
             exit(-1)
 
         if os.system('cmake --build ' + self.buildDir):
-            print('build amdvlk failed')
+            eprint('build amdvlk failed')
             exit(-1);
 
         # Make driver package
         if os.system('cmake --build ' + self.buildDir + ' --target makePackage'):
-            print('make driver package failed')
+            eprint('make driver package failed')
 
         # Build spvgen
         if os.system('cmake --build ' + self.buildDir + ' --target spvgen'):
-            print('SPVGEN: build failed')
+            eprint('SPVGEN: build failed')
             exit(-1);
 
         # Build amdllpc
         if os.system('cmake --build ' + self.buildDir + ' --target amdllpc'):
-            print('build amdllpc failed')
+            eprint('build amdllpc failed')
             exit(-1);
 
         # Copy driver package to workDir, will be used in release step
