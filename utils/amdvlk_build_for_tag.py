@@ -36,10 +36,10 @@ class Worker:
         self.buildTag     = ''
         self.driverRoot   = ''
         self.diffTag      = 'v-2022.Q3.1'
-        self.validTags    = self.GetValidTags()
+        self.validTags    = []
 
-    def GetValidTags(self):
-        repo = Github().get_repo('GPUOpen-Drivers/AMDVLK')
+    def UpdateValidTags(self, repoPath):
+        repo = Github().get_repo(repoPath)
         allTags = repo.get_tags()
         validTags = []
         for t in allTags:
@@ -47,7 +47,7 @@ class Worker:
         if not validTags:
             eprint("No valid tags found from AMDVLK")
             exit(-1)
-        return sorted(validTags, reverse=True)
+        self.validTags = sorted(validTags, reverse=True)
 
     def GetOpt(self):
         parser = OptionParser()
@@ -85,6 +85,7 @@ class Worker:
 
         print("The target repo is " + self.targetRepo)
 
+        self.UpdateValidTags(self.targetRepo.strip('/ ').split('/')[-1] + '/AMDVLK')
         if options.buildTag:
             if options.buildTag in self.validTags:
                 self.buildTag = options.buildTag
