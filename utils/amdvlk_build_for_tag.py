@@ -81,7 +81,7 @@ class Worker:
             os.makedirs(self.srcDir)
 
         if options.targetRepo:
-            self.targetRepo = options.targetRepo
+            self.targetRepo = options.targetRepo.rstrip('/') + '/'
 
         print("The target repo is " + self.targetRepo)
 
