@@ -20,11 +20,11 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 > **Note:** For Pre-Polaris and Pre-Raven GPUs, please use v-2021.Q2.5 or older release.
 
 ### Operating System Support
-The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://support.amd.com/en-us/kb-articles/Pages/Radeon-Software-for-Linux-Release-Notes.aspx):
+The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://www.amd.com/en/support/kb/release-notes/rn-amdgpu-unified-linux-22-20):
+* Ubuntu 22.04 (amd64 version)
 * Ubuntu 20.04 (amd64 version)
-* Ubuntu 18.04 (amd64 version)
-* RedHat 8.2 (x86-64 version)
-* RedHat 7.8 (x86-64 version)
+* RedHat 8.6 (x86-64 version)
+* RedHat 9.0 (x86-64 version)
 
 The driver has not been well tested on other distros and versions. You may try it out on other distros and versions of your choice.
 
@@ -55,15 +55,15 @@ The following features and improvements are planned in future releases (Please r
 ### How to Contribute
 You are welcome to submit contributions of code to the AMD Open Source Driver for Vulkan.
 
-The driver is built from source code in four repositories: [LLVM](https://github.com/GPUOpen-Drivers/llvm-project), [XGL](https://github.com/GPUOpen-Drivers/xgl), [LLPC](https://github.com/GPUOpen-Drivers/llpc) and [PAL](https://github.com/GPUOpen-Drivers/pal).
+The driver is built from source code in five repositories: [LLVM](https://github.com/GPUOpen-Drivers/llvm-project), [XGL](https://github.com/GPUOpen-Drivers/xgl), [LLPC](https://github.com/GPUOpen-Drivers/llpc), [GPURT](https://github.com/GPUOpen-Drivers/gpurt) and [PAL](https://github.com/GPUOpen-Drivers/pal).
 
 For changes to LLVM, you should submit contribution to the [LLVM trunk](https://reviews.llvm.org/). Commits there will be evaluated to merge into the amd-gfx-gpuopen-master branch periodically.
 
-For changes to XGL, LLPC and PAL, please [create a pull request](https://help.github.com/articles/creating-a-pull-request/) against the dev branch. After your change is reviewed and if it is accepted, it will be evaluated to merge into the master branch in a subsequent regular promotion.
+For changes to XGL, LLPC, GPURT and PAL, please [create a pull request](https://help.github.com/articles/creating-a-pull-request/) against the dev branch. After your change is reviewed and if it is accepted, it will be evaluated to merge into the master branch in a subsequent regular promotion.
 
 **IMPORTANT**: By creating a pull request, you agree to allow your contribution to be licensed by the project owners under the terms of the [MIT License](LICENSE.txt).
 
-When contributing to XGL, LLPC and PAL, your code should:
+When contributing to XGL, LLPC, GPURT and PAL, your code should:
 * Match the style of nearby existing code. Your code may be edited to comply with our coding standards when it is merged into the master branch.
 * Avoid adding new dependencies, including dependencies on STL.
 
@@ -110,13 +110,51 @@ sudo yum -y install openssl-devel gcc-c++ python3 curl glibc-devel libstdc++-dev
 ```
 sudo yum -y install openssl-devel.i686 gcc-c++ python3 curl glibc-devel.i686 libstdc++-devel.i686 libxcb-devel.i686 libX11-devel.i686 libxshmfence-devel.i686 libXrandr-devel.i686 wayland-devel.i686
 ```
-### Get Repo Tools
+### Install shader compiler tools
+Shader compiler tools such as [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler) and [glslang](https://github.com/KhronosGroup/glslang) need to be installed to build raytracing support.
 
-#### Ubuntu 18.04
+#### Ubuntu 20.04
+It is recommended to install them from [VulkanSDK](https://packages.lunarg.com/) 1.3.216 or higher.
+
+Ubuntu 20.04 (Focal Fossa)
 ```
-sudo apt-get install repo
+wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
+sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.216-focal.list https://packages.lunarg.com/vulkan/1.3.216/lunarg-vulkan-1.3.216-focal.list
+sudo apt update
+sudo apt install dxc glslang-tools
 ```
-#### Ubuntu 20.04, RedHat 7.8, 8.2
+#### Others
+Get [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler) and [glslang](https://github.com/KhronosGroup/glslang) source code and build tools on local.
+```
+#!/bin/bash
+
+if [ ! -d DirectXShaderCompiler ]; then
+git clone --depth=1 -b release-1.6.2112 https://github.com/microsoft/DirectXShaderCompiler.git
+fi
+
+if [ ! -d glslang ]; then
+git clone --depth=1 -b sdk-1.3.216 https://github.com/KhronosGroup/glslang.git
+fi
+
+cd DirectXShaderCompiler
+git submodule init
+git submodule update
+cmake -H. -Bbuilds -GNinja -DCMAKE_BUILD_TYPE=Release -C ./cmake/caches/PredefinedParams.cmake
+cmake --build builds
+cd ..
+
+cd glslang
+cmake -H. -Bbuilds -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX='builds/install'
+cd builds
+make -j8 install
+cd ../../
+```
+Set env PATH and LD_LIBRARY_PATH before amdvlk driver build.
+```
+export PATH=<DirectXShaderCompiler>/builds/bin:<glslang>/install/bin:$PATH
+export LD_LIBRARY_PATH=<DirectXShaderCompiler>/builds/lib:$LD_LIBRARY_PATH
+```
+### Get Repo Tools
 ```
 mkdir ~/bin
 curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
@@ -135,7 +173,8 @@ repo init -u https://github.com/GPUOpen-Drivers/AMDVLK.git -b master
 repo sync
 ```
 
-> **Note:** Source code in dev branch can be gotten by using "-b dev" in the "repo init" command
+> **Note:**
+* Source code in dev branch can be gotten by using "-b dev" in the "repo init" command.
 
 ### Build Driver and Generate JSON Files
 #### Ubuntu
@@ -158,7 +197,7 @@ cmake --build builds/Release32
 > **Note:**
 * For RedHat 7.x, please use cmake3(>= 3.15) instead of cmake.
 * For debug build, use `-DCMAKE_BUILD_TYPE=Debug -DLLVM_PARALLEL_LINK_JOBS=2` (Linking a debug build of llvm is very memory intensive, so we use only two parallel jobs).
-* To enable Wayland support, use `-DBUILD_WAYLAND_SUPPORT=ON`.
+* If you want to build tools (such as [amdllpc](https://github.com/GPUOpen-Drivers/llpc/edit/dev/llpc/docs/amdllpc.md)) together with driver, add `-m build_with_tools.xml` in repo init and add the build option `-DXGK_BUILD_TOOLS=ON`.
 
 ## Installation Instructions
 ### Install Vulkan SDK
@@ -225,13 +264,13 @@ cmake --build builds/Release64 --target makePackage
 You could also download pre-built package from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each code promotion in master branch.
 
 Below is the installation instruction:
-#### Ubuntu 18.04, 20.04
+#### Ubuntu 20.04, 22.04
 ```
 sudo dpkg -r amdvlk   /* If old version is installed on the machine, remove it first */
 sudo dpkg -i amdvlk_x.x.x_amd64.deb
 sudo apt-get -f install
 ```
-#### RedHat 7.8, 8.2
+#### RedHat 8.6, 9.0
 ```
 sudo rpm -e amdvlk   /* If old version is installed on the machine, remove it first */
 sudo rpm -i amdvlk-x.x.x.x86_64.rpm
@@ -334,7 +373,7 @@ The AMD Open Source Driver for Vulkan contains code written by third parties.
 * [LLVM](https://github.com/GPUOpen-Drivers/llvm-project) is distributed under the Apache License v2.0 with LLVM Exceptions. See LICENSE.TXT file in the top directory of the LLVM repository.
 * [MetroHash](https://github.com/GPUOpen-Drivers/MetroHash) is distributed under the terms of Apache License 2.0.  See LICENSE file in the top directory of the MetroHash repository.
 * [CWPack](https://github.com/GPUOpen-Drivers/CWPack) is distributed under the terms of MITLicense. See LICENSE file in the top directory of the CWPack repository.
-* Please see the README.md file in the [PAL](https://github.com/GPUOpen-Drivers/pal), [LLPC](https://github.com/GPUOpen-Drivers/llpc) and [XGL](https://github.com/GPUOpen-Drivers/xgl) repositories for information on third party software used by those libraries.
+* Please see the README.md file in the [PAL](https://github.com/GPUOpen-Drivers/pal), [LLPC](https://github.com/GPUOpen-Drivers/llpc), [GPURT](https://github.com/GPUOpen-Drivers/gpurt) and [XGL](https://github.com/GPUOpen-Drivers/xgl) repositories for information on third party software used by those libraries.
 
 
 #### DISCLAIMER
