@@ -78,12 +78,12 @@ It is recommended to install at least 16GB RAM in your build system.
 
 ### Build System
 * CMake 3.15 or newer is required. [Download](https://cmake.org/download/) and install proper one if the cmake is older than 3.15.
-* Ninja is requred.
+* Ninja is required.
 
 ### Install Dev and Tools Packages
 #### Ubuntu
 ```
-sudo apt-get install build-essential curl g++-multilib gcc-multilib git pkg-config python3
+sudo apt-get install build-essential cmake curl g++-multilib gcc-multilib git ninja-build pkg-config python3
 ```
 ##### 64-bit
 ```
@@ -177,15 +177,6 @@ repo sync
 * Source code in dev branch can be gotten by using "-b dev" in the "repo init" command.
 
 ### Build Driver and Generate JSON Files
-#### Ubuntu
-```
-cmake -G Ninja -S xgl -B builds/Release64
-cmake --build builds/Release64
-
-cmake -G Ninja -S xgl -B builds/Release32 -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
-cmake --build builds/Release32
-```
-#### RedHat
 ```
 cmake -G Ninja -S xgl -B builds/Release64
 cmake --build builds/Release64
@@ -195,7 +186,6 @@ cmake --build builds/Release32
 ```
 
 > **Note:**
-* For RedHat 7.x, please use cmake3(>= 3.15) instead of cmake.
 * For debug build, use `-DCMAKE_BUILD_TYPE=Debug -DLLVM_PARALLEL_LINK_JOBS=2` (Linking a debug build of llvm is very memory intensive, so we use only two parallel jobs).
 * If you want to build tools (such as [amdllpc](https://github.com/GPUOpen-Drivers/llpc/edit/dev/llpc/docs/amdllpc.md)) together with driver, add `-m build_with_tools.xml` in repo init and add the build option `-DXGK_BUILD_TOOLS=ON`.
 
