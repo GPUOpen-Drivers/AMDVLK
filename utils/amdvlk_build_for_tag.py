@@ -38,41 +38,33 @@ class Worker:
         return self.buildTag > self.diffTag
 
     def SetupBuildTagInfo(self, inputTag):
-        ownerName = self.targetRepo.strip('/ ').split('/')[-1]
+        os.chdir(self.srcDir)
         repoName = 'AMDVLK'
-        g = Github(self.accessToken) if self.accessToken else Github()
-        repo = g.get_repo(os.path.join(ownerName, repoName))
-        allTags = repo.get_tags()
-        validTags = []
-        for t in allTags:
-            if t.name[:2] == 'v-': validTags.append(t.name)
-        if not validTags:
-            eprint("No valid tags found from AMDVLK")
+        if os.path.exists(repoName):
+            shutil.rmtree(repoName)
+        cloneCmd = 'git clone ' + self.targetRepo + repoName
+        if os.system(cloneCmd):
+            eprint(cloneCmd + ' failed')
+            exit(-1)
+        repo = git.Repo(repoName)
+        if not repo.tags:
+            eprint("No tags found from AMDVLK")
             exit(-1)
 
-        validTags.sort(reverse=True)
         if not inputTag:
-            self.buildTag = validTags[0]
-        elif inputTag and (inputTag in validTags):
+            self.buildTag = repo.tags[-1].name
+        elif inputTag in repo.tags:
             self.buildTag = inputTag
         else:
             eprint("You input an invalid tag: " + inputTag)
             exit(-1)
 
-        tagSha = os.popen('git ls-remote ' + self.targetRepo + repoName +\
-            ' -t refs/tags/' + self.buildTag).read().split('\t')[0];
-        tagObj = repo.get_git_tag(tagSha)
-        if not tagObj:
-            eprint("ERROR: fail to get tag " + self.buildTag + ' from ' + self.targetRepo + repoName)
-            exit(-1)
-
         self.version = self.buildTag[2:]
+        tagRef = repo.tag(self.buildTag)
         if self.IsBuildTagNewer():
-            self.descript = tagObj.message
+            self.descript = tagRef.object.message
         else:
-            assert(tagObj.object.type == 'commit')
-            commitObj = repo.get_git_commit(tagObj.object.sha)
-            self.descript = commitObj.message
+            self.descript = tagRef.commit.message
 
     def GetOpt(self):
         parser = OptionParser()
@@ -81,11 +73,6 @@ class Worker:
                           type="string",
                           dest="workDir",
                           help="Specify the directory to build, default is current working directory")
-
-        parser.add_option("-a", "--accessToken", action="store",
-                          type="string",
-                          dest="accessToken",
-                          help="Specify the accessToken to access github")
 
         parser.add_option("-t", "--targetRepo", action="store",
                           type="string",
@@ -101,22 +88,16 @@ class Worker:
 
         if options.workDir:
             print("The source code is under %s" % (options.workDir))
-            self.workDir        = os.path.abspath(options.workDir)
-            self.srcDir         = self.workDir + "/amdvlk_src/"
-            self.pkgDir         = self.workDir + "/amdvlk_pkg/"
-            self.pkgSharedDir   = self.workDir + "/pkgShared/"
+            self.workDir = os.path.abspath(options.workDir)
         else:
             print("The source code is not specified, downloading from github to: " + self.workDir)
 
+        self.srcDir = self.workDir + "/amdvlk_src/"
+        self.pkgDir = self.workDir + "/amdvlk_pkg/"
+        self.pkgSharedDir = self.workDir + "/pkgShared/"
+        self.driverRoot = os.path.join(self.srcDir, 'drivers/')
         if not os.path.exists(self.srcDir):
             os.makedirs(self.srcDir)
-
-        if options.accessToken:
-            self.accessToken = options.accessToken
-        else:
-            print(("WARNING: No access token, please specify it to avoid rate-limiting issue, check "
-                   "https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting "
-                   "for more details."))
 
         if options.targetRepo:
             self.targetRepo = options.targetRepo.rstrip('/') + '/'
@@ -152,14 +133,6 @@ class Worker:
         if os.system(syncCmd):
             eprint('repo sync failed')
             exit(-1)
-
-        # Simply use repo command instead of reading from manifest to get path
-        amdvlkPath = os.popen('repo list --all --path-only ' + repoName).read().strip()
-        self.driverRoot = self.srcDir + amdvlkPath[:-len(repoName)]
-        repo = git.Repo(amdvlkPath)
-        if repo.git.tag('--list', self.buildTag):
-            # Checkout to fix tag-commit mis-match issues of old version
-            repo.git.checkout(self.buildTag)
 
     def GenerateReleaseNotes(self):
         os.chdir(self.workDir)
