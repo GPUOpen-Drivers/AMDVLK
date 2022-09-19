@@ -187,7 +187,7 @@ cmake --build builds/Release32
 
 > **Note:**
 * For debug build, use `-DCMAKE_BUILD_TYPE=Debug -DLLVM_PARALLEL_LINK_JOBS=2` (Linking a debug build of llvm is very memory intensive, so we use only two parallel jobs).
-* If you want to build tools (such as [amdllpc](https://github.com/GPUOpen-Drivers/llpc/edit/dev/llpc/docs/amdllpc.md)) together with driver, add `-m build_with_tools.xml` in repo init and add the build option `-DXGK_BUILD_TOOLS=ON`.
+* If you want to build tools (such as [amdllpc](https://github.com/GPUOpen-Drivers/llpc/blob/dev/llpc/docs/amdllpc.md)) together with driver, add `-m build_with_tools.xml` in repo init and add the build option `-DXGK_BUILD_TOOLS=ON`.
 
 ## Installation Instructions
 ### Install Vulkan SDK
