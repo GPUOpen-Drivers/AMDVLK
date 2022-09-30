@@ -31,12 +31,17 @@ class Worker:
         self.buildTag     = ''
         self.driverRoot   = ''
         self.diffTag      = 'v-2022.Q3.1'
-        self.validTags    = []
+        self.accessToken  = ''
 
-    # TODO: avoid rate-limiting issue
-    # https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting
-    def UpdateValidTags(self, repoPath):
-        repo = Github().get_repo(repoPath)
+    def IsBuildTagNewer(self):
+        #TODO: use a more flexible algorithm
+        return self.buildTag > self.diffTag
+
+    def SetupBuildTagInfo(self, inputTag):
+        ownerName = self.targetRepo.strip('/ ').split('/')[-1]
+        repoName = 'AMDVLK'
+        g = Github(self.accessToken) if self.accessToken else Github()
+        repo = g.get_repo(os.path.join(ownerName, repoName))
         allTags = repo.get_tags()
         validTags = []
         for t in allTags:
@@ -44,7 +49,30 @@ class Worker:
         if not validTags:
             eprint("No valid tags found from AMDVLK")
             exit(-1)
-        self.validTags = sorted(validTags, reverse=True)
+
+        validTags.sort(reverse=True)
+        if not inputTag:
+            self.buildTag = validTags[0]
+        elif inputTag and (inputTag in validTags):
+            self.buildTag = inputTag
+        else:
+            eprint("You input an invalid tag: " + inputTag)
+            exit(-1)
+
+        tagSha = os.popen('git ls-remote ' + self.targetRepo + repoName +\
+            ' -t refs/tags/' + self.buildTag).read().split('\t')[0];
+        tagObj = repo.get_git_tag(tagSha)
+        if not tagObj:
+            eprint("ERROR: fail to get tag " + self.buildTag + ' from ' + self.targetRepo + repoName)
+            exit(-1)
+
+        self.version = self.buildTag[2:]
+        if self.IsBuildTagNewer():
+            self.descript = tagObj.message
+        else:
+            assert(tagObj.object.type == 'commit')
+            commitObj = repo.get_git_commit(tagObj.object.sha)
+            self.descript = commitObj.message
 
     def GetOpt(self):
         parser = OptionParser()
@@ -53,6 +81,11 @@ class Worker:
                           type="string",
                           dest="workDir",
                           help="Specify the directory to build, default is current working directory")
+
+        parser.add_option("-a", "--accessToken", action="store",
+                          type="string",
+                          dest="accessToken",
+                          help="Specify the accessToken to access github")
 
         parser.add_option("-t", "--targetRepo", action="store",
                           type="string",
@@ -78,23 +111,18 @@ class Worker:
         if not os.path.exists(self.srcDir):
             os.makedirs(self.srcDir)
 
-        if options.targetRepo:
-            targetRepo = options.targetRepo.rstrip('/') + '/'
-            if self.targetRepo != targetRepo:
-                eprint('WARNING: you specify a different repo, please make sure the revisions available in manifest!')
-            self.targetRepo = targetRepo
+        if options.accessToken:
+            self.accessToken = options.accessToken
+        else:
+            print(("WARNING: No access token, please specify it to avoid rate-limiting issue, check "
+                   "https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting "
+                   "for more details."))
 
+        if options.targetRepo:
+            self.targetRepo = options.targetRepo.rstrip('/') + '/'
         print("The target repo is " + self.targetRepo)
 
-        self.UpdateValidTags(self.targetRepo.strip('/ ').split('/')[-1] + '/AMDVLK')
-        if options.buildTag:
-            if options.buildTag in self.validTags:
-                self.buildTag = options.buildTag
-            else:
-                eprint("You input an invalid tag: " + options.buildTag)
-                exit(-1)
-        else:
-            self.buildTag = self.validTags[0]
+        self.SetupBuildTagInfo(options.buildTag)
         print("The build tag is " + self.buildTag)
 
     def DistributionType(self):
@@ -106,10 +134,6 @@ class Worker:
         else:
             eprint('Unknown Linux distribution: ' + result)
             sys.exit(-1)
-
-    def IsBuildTagNewer(self):
-        #TODO: use a more flexible algorithm
-        return self.buildTag > self.diffTag
 
     def SyncAMDVLK(self):
         # Sync all amdvlk repoes and checkout AMDVLK to specified tag
@@ -125,41 +149,17 @@ class Worker:
         if os.system(initCmd):
             eprint(initCmd + ' failed')
             exit(-1)
-
-        # Simply use repo command instead of reading from manifest to get path
-        amdvlkPath = os.popen('repo list --all --path-only ' + repoName).read().strip()
-        self.driverRoot = self.srcDir + amdvlkPath[:-len(repoName)]
-
-        # Check to warn the cases of building with local tag
-        if os.path.exists(amdvlkPath):
-            repo = git.Repo(amdvlkPath)
-            if repo.git.tag('--list', self.buildTag):
-                repo.git.fetch(self.targetRepo + repoName, self.buildTag)
-                remoteTagHash = repo.git.rev_parse('FETCH_HEAD')
-                localTagHash = repo.git.rev_parse(self.buildTag)
-                if remoteTagHash != localTagHash:
-                    eprint('WARNING: A local tag %s will be used, otherwise you can delete it and re-run!' % self.buildTag)
-
         if os.system(syncCmd):
             eprint('repo sync failed')
             exit(-1)
 
+        # Simply use repo command instead of reading from manifest to get path
+        amdvlkPath = os.popen('repo list --all --path-only ' + repoName).read().strip()
+        self.driverRoot = self.srcDir + amdvlkPath[:-len(repoName)]
         repo = git.Repo(amdvlkPath)
         if repo.git.tag('--list', self.buildTag):
             # Checkout to fix tag-commit mis-match issues of old version
             repo.git.checkout(self.buildTag)
-
-        #TODO: does manifests repo path change in the future?
-        manifestRepoPath = '.repo/manifests/'
-        manifestRepo = git.Repo(manifestRepoPath)
-        for tagRef in reversed(manifestRepo.tags):
-            if self.buildTag == tagRef.name:
-                if self.IsBuildTagNewer():
-                    self.descript = tagRef.tag.message
-                else:
-                    self.descript = tagRef.commit.message
-                self.version = self.buildTag[2:]
-                break
 
     def GenerateReleaseNotes(self):
         os.chdir(self.workDir)
