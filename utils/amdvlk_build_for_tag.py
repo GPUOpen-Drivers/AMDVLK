@@ -8,14 +8,9 @@
 
 import sys
 import os
-import string
-import time
-import datetime
 import git
 import shutil
-import re
 from optparse import OptionParser
-import xml.etree.ElementTree as ET
 from github import Github
 
 def eprint(*args, **kwargs):
@@ -36,18 +31,40 @@ class Worker:
         self.buildTag     = ''
         self.driverRoot   = ''
         self.diffTag      = 'v-2022.Q3.1'
-        self.validTags    = []
+        self.accessToken  = ''
 
-    def UpdateValidTags(self, repoPath):
-        repo = Github().get_repo(repoPath)
-        allTags = repo.get_tags()
-        validTags = []
-        for t in allTags:
-            if t.name[:2] == 'v-': validTags.append(t.name)
-        if not validTags:
-            eprint("No valid tags found from AMDVLK")
+    def IsBuildTagNewer(self):
+        #TODO: use a more flexible algorithm
+        return self.buildTag > self.diffTag
+
+    def SetupBuildTagInfo(self, inputTag):
+        os.chdir(self.srcDir)
+        repoName = 'AMDVLK'
+        if os.path.exists(repoName):
+            shutil.rmtree(repoName)
+        cloneCmd = 'git clone ' + self.targetRepo + repoName
+        if os.system(cloneCmd):
+            eprint(cloneCmd + ' failed')
             exit(-1)
-        self.validTags = sorted(validTags, reverse=True)
+        repo = git.Repo(repoName)
+        if not repo.tags:
+            eprint("No tags found from AMDVLK")
+            exit(-1)
+
+        if not inputTag:
+            self.buildTag = repo.tags[-1].name
+        elif inputTag in repo.tags:
+            self.buildTag = inputTag
+        else:
+            eprint("You input an invalid tag: " + inputTag)
+            exit(-1)
+
+        self.version = self.buildTag[2:]
+        tagRef = repo.tag(self.buildTag)
+        if self.IsBuildTagNewer():
+            self.descript = tagRef.object.message
+        else:
+            self.descript = tagRef.commit.message
 
     def GetOpt(self):
         parser = OptionParser()
@@ -55,7 +72,7 @@ class Worker:
         parser.add_option("-w", "--workDir", action="store",
                           type="string",
                           dest="workDir",
-                          help="Specify the location of source code, or download it from github")
+                          help="Specify the directory to build, default is current working directory")
 
         parser.add_option("-t", "--targetRepo", action="store",
                           type="string",
@@ -72,28 +89,21 @@ class Worker:
         if options.workDir:
             print("The source code is under %s" % (options.workDir))
             self.workDir = os.path.abspath(options.workDir)
-            self.srcDir  = self.workDir + "/amdvlk_src/"
-            self.pkgDir  = self.workDir + "/amdvlk_pkg/"
         else:
             print("The source code is not specified, downloading from github to: " + self.workDir)
 
+        self.srcDir = self.workDir + "/amdvlk_src/"
+        self.pkgDir = self.workDir + "/amdvlk_pkg/"
+        self.pkgSharedDir = self.workDir + "/pkgShared/"
+        self.driverRoot = os.path.join(self.srcDir, 'drivers/')
         if not os.path.exists(self.srcDir):
             os.makedirs(self.srcDir)
 
         if options.targetRepo:
             self.targetRepo = options.targetRepo.rstrip('/') + '/'
-
         print("The target repo is " + self.targetRepo)
 
-        self.UpdateValidTags(self.targetRepo.strip('/ ').split('/')[-1] + '/AMDVLK')
-        if options.buildTag:
-            if options.buildTag in self.validTags:
-                self.buildTag = options.buildTag
-            else:
-                eprint("You input an invalid tag: " + options.buildTag)
-                exit(-1)
-        else:
-            self.buildTag = self.validTags[0]
+        self.SetupBuildTagInfo(options.buildTag)
         print("The build tag is " + self.buildTag)
 
     def DistributionType(self):
@@ -105,10 +115,6 @@ class Worker:
         else:
             eprint('Unknown Linux distribution: ' + result)
             sys.exit(-1)
-
-    def IsBuildTagNewer(self):
-        #TODO: use a more flexible algorithm
-        return self.buildTag > self.diffTag
 
     def SyncAMDVLK(self):
         # Sync all amdvlk repoes and checkout AMDVLK to specified tag
@@ -127,21 +133,6 @@ class Worker:
         if os.system(syncCmd):
             eprint('repo sync failed')
             exit(-1)
-
-        # Simply use repo command instead of reading from manifest to get path
-        amdvlkPath = os.popen('repo list --path-only ' + repoName).read().strip()
-        self.driverRoot = self.srcDir + amdvlkPath[:-len(repoName)]
-        repo = git.Repo(amdvlkPath)
-        for tagRef in repo.tags:
-            if self.buildTag == tagRef.name:
-                if self.IsBuildTagNewer():
-                    self.descript = tagRef.tag.message
-                else:
-                    self.descript = tagRef.commit.message
-                self.version = self.buildTag[2:]
-                break
-
-        repo.git.checkout(self.buildTag)
 
     def GenerateReleaseNotes(self):
         os.chdir(self.workDir)
