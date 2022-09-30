@@ -2,7 +2,7 @@
 <manifest>
 
   <remote  name="vulkan-github"
-           fetch="https://github.com/GPUOpen-Drivers" />
+           fetch="." />
 
   <default revision="master"
            remote="vulkan-github"
