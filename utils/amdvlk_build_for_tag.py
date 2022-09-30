@@ -8,14 +8,9 @@
 
 import sys
 import os
-import string
-import time
-import datetime
 import git
 import shutil
-import re
 from optparse import OptionParser
-import xml.etree.ElementTree as ET
 from github import Github
 
 def eprint(*args, **kwargs):
@@ -38,6 +33,8 @@ class Worker:
         self.diffTag      = 'v-2022.Q3.1'
         self.validTags    = []
 
+    # TODO: avoid rate-limiting issue
+    # https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting
     def UpdateValidTags(self, repoPath):
         repo = Github().get_repo(repoPath)
         allTags = repo.get_tags()
@@ -55,7 +52,7 @@ class Worker:
         parser.add_option("-w", "--workDir", action="store",
                           type="string",
                           dest="workDir",
-                          help="Specify the location of source code, or download it from github")
+                          help="Specify the directory to build, default is current working directory")
 
         parser.add_option("-t", "--targetRepo", action="store",
                           type="string",
@@ -71,9 +68,10 @@ class Worker:
 
         if options.workDir:
             print("The source code is under %s" % (options.workDir))
-            self.workDir = os.path.abspath(options.workDir)
-            self.srcDir  = self.workDir + "/amdvlk_src/"
-            self.pkgDir  = self.workDir + "/amdvlk_pkg/"
+            self.workDir        = os.path.abspath(options.workDir)
+            self.srcDir         = self.workDir + "/amdvlk_src/"
+            self.pkgDir         = self.workDir + "/amdvlk_pkg/"
+            self.pkgSharedDir   = self.workDir + "/pkgShared/"
         else:
             print("The source code is not specified, downloading from github to: " + self.workDir)
 
@@ -81,7 +79,10 @@ class Worker:
             os.makedirs(self.srcDir)
 
         if options.targetRepo:
-            self.targetRepo = options.targetRepo.rstrip('/') + '/'
+            targetRepo = options.targetRepo.rstrip('/') + '/'
+            if self.targetRepo != targetRepo:
+                eprint('WARNING: you specify a different repo, please make sure the revisions available in manifest!')
+            self.targetRepo = targetRepo
 
         print("The target repo is " + self.targetRepo)
 
@@ -124,15 +125,34 @@ class Worker:
         if os.system(initCmd):
             eprint(initCmd + ' failed')
             exit(-1)
+
+        # Simply use repo command instead of reading from manifest to get path
+        amdvlkPath = os.popen('repo list --all --path-only ' + repoName).read().strip()
+        self.driverRoot = self.srcDir + amdvlkPath[:-len(repoName)]
+
+        # Check to warn the cases of building with local tag
+        if os.path.exists(amdvlkPath):
+            repo = git.Repo(amdvlkPath)
+            if repo.git.tag('--list', self.buildTag):
+                repo.git.fetch(self.targetRepo + repoName, self.buildTag)
+                remoteTagHash = repo.git.rev_parse('FETCH_HEAD')
+                localTagHash = repo.git.rev_parse(self.buildTag)
+                if remoteTagHash != localTagHash:
+                    eprint('WARNING: A local tag %s will be used, otherwise you can delete it and re-run!' % self.buildTag)
+
         if os.system(syncCmd):
             eprint('repo sync failed')
             exit(-1)
 
-        # Simply use repo command instead of reading from manifest to get path
-        amdvlkPath = os.popen('repo list --path-only ' + repoName).read().strip()
-        self.driverRoot = self.srcDir + amdvlkPath[:-len(repoName)]
         repo = git.Repo(amdvlkPath)
-        for tagRef in repo.tags:
+        if repo.git.tag('--list', self.buildTag):
+            # Checkout to fix tag-commit mis-match issues of old version
+            repo.git.checkout(self.buildTag)
+
+        #TODO: does manifests repo path change in the future?
+        manifestRepoPath = '.repo/manifests/'
+        manifestRepo = git.Repo(manifestRepoPath)
+        for tagRef in reversed(manifestRepo.tags):
             if self.buildTag == tagRef.name:
                 if self.IsBuildTagNewer():
                     self.descript = tagRef.tag.message
@@ -140,8 +160,6 @@ class Worker:
                     self.descript = tagRef.commit.message
                 self.version = self.buildTag[2:]
                 break
-
-        repo.git.checkout(self.buildTag)
 
     def GenerateReleaseNotes(self):
         os.chdir(self.workDir)
