@@ -60,7 +60,7 @@ class Worker:
             exit(-1)
 
         self.version = self.buildTag[2:]
-        tagRef = repo.tag(self.buildTag)
+        tagRef = repo.tag('refs/tags/' + self.buildTag)
         if self.IsBuildTagNewer():
             self.descript = tagRef.object.message
         else:
@@ -121,7 +121,7 @@ class Worker:
         os.chdir(self.srcDir)
 
         repoName = 'AMDVLK'
-        initCmd='repo init -u ' + self.targetRepo + repoName + ' -b refs/tags/' + self.buildTag
+        initCmd='repo init --depth=1 -u ' + self.targetRepo + repoName + ' -b refs/tags/' + self.buildTag
         syncCmd='repo sync -j8'
         if self.IsBuildTagNewer():
             initCmd += ' -m build_with_tools.xml'
