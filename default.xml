@@ -7,7 +7,8 @@
   <default revision="master"
            remote="vulkan-github"
            sync-j="8"
-           sync-c="true" />
+           sync-c="true"
+           sync-s="true" />
 
   <project path="drivers/xgl" name="xgl" revision="dev"/>
   <project path="drivers/pal" name="pal" revision="dev"/>
