@@ -9,7 +9,7 @@
            sync-j="8"
            sync-c="true" />
 
-  <project path="drivers/xgl" name="xgl" revision="8a67c76eedb8400fb5d3b1e7b6a3894efdc7a3b9"/>
+  <project path="drivers/xgl" name="xgl" revision="f5c942e2fc74630e60d6752d92a753e91e6cf864"/>
   <project path="drivers/pal" name="pal" revision="c2af6fc4c14ea61273bcf5576f8a83a12b945dd7"/>
   <project path="drivers/llpc" name="llpc" revision="9db0ba4c968bbfe2f3e7e546d17cbfd07dcfdc9e"/>
   <project path="drivers/gpurt" name="gpurt" revision="2874e509b677d78ddb3faae90989dd45e60669b3"/>
