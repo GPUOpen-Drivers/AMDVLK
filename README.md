@@ -327,7 +327,7 @@ You can use the following [Runtime Settings](#runtime-settings) to generate .csv
 
 You can use the script [timingReport.py](https://github.com/GPUOpen-Drivers/pal/tree/master/tools/gpuProfilerTools/timingReport.py) to analyze the profiling log:
 ```
-python timeReport.py <profiling_log_subdirectory>
+python timingReport.py <profiling_log_subdirectory>
 ```
 
 ## Dump Pipelines and Shaders
