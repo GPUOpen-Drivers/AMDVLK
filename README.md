@@ -18,7 +18,8 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 * Radeon&trade; Pro WX 9100, x200 Series
 * Radeon&trade; Pro W5700/W5500 Series
 
-> **Note:** For Pre-Polaris and Pre-Raven GPUs, please use v-2021.Q2.5 or older release.
+> **Note**
+> For Pre-Polaris and Pre-Raven GPUs, please use v-2021.Q2.5 or older release.
 
 ### Operating System Support
 The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://www.amd.com/en/support/kb/release-notes/rn-amdgpu-unified-linux-22-20):
@@ -29,7 +30,8 @@ The AMD Open Source Driver for Vulkan is designed to support following distros a
 
 The driver has not been well tested on other distros and versions. You may try it out on other distros and versions of your choice.
 
-> **Note:** To run the Vulkan driver with AMDGPU upstream driver stack on SI and CI generation GPUs, amdgpu.si_support and amdgpu.cik_support need to be enabled in kernel
+> **Note**
+> To run the Vulkan driver with AMDGPU upstream driver stack on SI and CI generation GPUs, amdgpu.si_support and amdgpu.cik_support need to be enabled in kernel
 
 ### Feature Support and Performance
 The AMD Open Source Driver for Vulkan is designed to support the following features:
@@ -70,7 +72,8 @@ When contributing to XGL, LLPC, GPURT and PAL, your code should:
 
 Please make each contribution reasonably small. If you would like to make a big contribution, like a new feature or extension, please raise an issue first to allow planning to evaluate and review your work.
 
-> **Note:** Since PAL is a shared component that must support other APIs, other operating systems, and pre-production hardware, you might be asked to revise your PAL change for reasons that may not be obvious from a pure Linux Vulkan driver perspective.
+> **Note**
+> Since PAL is a shared component that must support other APIs, other operating systems, and pre-production hardware, you might be asked to revise your PAL change for reasons that may not be obvious from a pure Linux Vulkan driver perspective.
 
 ## Build Instructions
 
@@ -174,8 +177,8 @@ repo init -u https://github.com/GPUOpen-Drivers/AMDVLK.git -b master
 repo sync
 ```
 
-> **Note:**
-* Source code in dev branch can be gotten by using "-b dev" in the "repo init" command.
+> **Note**
+> Source code in dev branch can be gotten by using "-b dev" in the "repo init" command.
 
 ### Build Driver and Generate JSON Files
 ```
@@ -186,9 +189,9 @@ cmake -G Ninja -S xgl -B builds/Release32 -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS
 cmake --build builds/Release32
 ```
 
-> **Note:**
-* For debug build, use `-DCMAKE_BUILD_TYPE=Debug -DLLVM_PARALLEL_LINK_JOBS=2` (Linking a debug build of llvm is very memory intensive, so we use only two parallel jobs).
-* If you want to build tools (such as [amdllpc](https://github.com/GPUOpen-Drivers/llpc/blob/dev/llpc/docs/amdllpc.md)) together with driver, add `-m build_with_tools.xml` in repo init and add the build option `-DXGL_BUILD_TOOLS=ON`.
+> **Note**
+> * For debug build, use `-DCMAKE_BUILD_TYPE=Debug -DLLVM_PARALLEL_LINK_JOBS=2` (Linking a debug build of llvm is very memory intensive, so we use only two parallel jobs).
+> * If you want to build tools (such as [amdllpc](https://github.com/GPUOpen-Drivers/llpc/blob/dev/llpc/docs/amdllpc.md)) together with driver, add `-m build_with_tools.xml` in repo init and add the build option `-DXGL_BUILD_TOOLS=ON`.
 
 ## Installation Instructions
 ### Install Vulkan SDK
