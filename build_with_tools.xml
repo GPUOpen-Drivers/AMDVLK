@@ -5,7 +5,7 @@
   <remote  name="khronos-github"
            fetch="https://github.com/KhronosGroup/" />
 
-  <project path="drivers/spvgen" name="spvgen" revision="a0fcde0aad48d80c93e4718b947b668fba0fb0d8"/>
+  <project path="drivers/spvgen" name="spvgen" revision="11eaa355cb3ba2838b818430130320e7f7651608"/>
   <project path="drivers/third_party/glslang" name="glslang.git" remote="khronos-github" revision="980ac50813fb567b6af6b89282eae850b328c967"/>
   <project path="drivers/third_party/SPIRV-tools" name="SPIRV-Tools.git" remote="khronos-github" revision="eb113f0fdfff8efc114953bdabf1738db681ad8d"/>
   <project path="drivers/third_party/SPIRV-tools/external/SPIRV-Headers" name="SPIRV-Headers.git" remote="khronos-github" revision="85a1ed200d50660786c1a88d9166e871123cce39"/>
