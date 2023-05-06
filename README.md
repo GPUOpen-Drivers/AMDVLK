@@ -260,13 +260,13 @@ You could also download pre-built package from https://github.com/GPUOpen-Driver
 Below is the installation instruction:
 #### Ubuntu 20.04, 22.04
 ```
-sudo dpkg -r amdvlk   /* If old version is installed on the machine, remove it first */
+sudo dpkg -r amdvlk  # If old version is installed on the machine, remove it first 
 sudo dpkg -i amdvlk_x.x.x_amd64.deb
 sudo apt-get -f install
 ```
 #### RedHat 8.6, 9.0
 ```
-sudo rpm -e amdvlk   /* If old version is installed on the machine, remove it first */
+sudo rpm -e amdvlk   # If old version is installed on the machine, remove it first 
 sudo rpm -i amdvlk-x.x.x.x86_64.rpm
 ```
 
@@ -274,7 +274,7 @@ For Ubuntu, you could also install the latest driver build from https://repo.rad
 ```
 sudo wget -qO - http://repo.radeon.com/amdvlk/apt/debian/amdvlk.gpg.key | sudo apt-key add -
 sudo sh -c 'echo deb [arch=amd64,i386] http://repo.radeon.com/amdvlk/apt/debian/ bionic main > /etc/apt/sources.list.d/amdvlk.list'
-sudo apt-get remove amdvlk /* If old version is installed on the machine, remove it first */
+sudo apt-get remove amdvlk # If old version is installed on the machine, remove it first 
 sudo apt update
 sudo apt-get install amdvlk
 ```
