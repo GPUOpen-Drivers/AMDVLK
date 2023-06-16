@@ -8,7 +8,7 @@
   <project path="drivers/spvgen" name="spvgen" revision="fd49f1d477a203379f6557e9c74edfadc10b7672"/>
   <project path="drivers/third_party/glslang" name="glslang.git" remote="khronos-github" revision="d9c3c7538b2449e39cfb0d793702d218ed58ff03"/>
   <project path="drivers/third_party/SPIRV-tools" name="SPIRV-Tools.git" remote="khronos-github" revision="51892874ba08f3ac0d9b1fcf3893c8516693a88e"/>
-  <project path="drivers/third_party/SPIRV-tools/external/SPIRV-Headers" name="SPIRV-Headers.git" remote="khronos-github" revision="268a061764ee69f09a477a695bf6a11ffe311b8d"/>
+  <project path="drivers/third_party/SPIRV-tools/external/spirv-headers" name="SPIRV-Headers.git" remote="khronos-github" revision="268a061764ee69f09a477a695bf6a11ffe311b8d"/>
   <project path="drivers/third_party/SPIRV-cross" name="SPIRV-Cross.git" remote="khronos-github" revision="54b48a2f3afd9bbaaddc9f876f85a0fbfad9c7fa"/>
 
 </manifest>
