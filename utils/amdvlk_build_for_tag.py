@@ -158,9 +158,6 @@ class Worker:
 
     def MakeDriverPackage(self, arch):
         cmakeName = 'cmake '
-        if (self.distro == 'RHEL'):
-            cmakeName = 'source scl_source enable devtoolset-7 && cmake '
-
         if not self.IsBuildTagNewer():
             # Fetch spvgen resources
             os.chdir(self.driverRoot + 'spvgen/external')
