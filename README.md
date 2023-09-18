@@ -81,7 +81,7 @@ Please make each contribution reasonably small. If you would like to make a big 
 It is recommended to install at least 16GB RAM in your build system.
 
 ### Build System
-* CMake 3.15 or newer is required. [Download](https://cmake.org/download/) and install proper one if the cmake is older than 3.15.
+* CMake 3.20 or newer is required. [Download](https://cmake.org/download/) and install proper one if the cmake is older than 3.20.
 * Ninja is required.
 
 ### Install Dev and Tools Packages
@@ -99,13 +99,6 @@ dpkg --add-architecture i386
 sudo apt-get install libssl-dev:i386 libx11-dev:i386 libxcb1-dev:i386 libxcb-dri3-dev:i386 libxcb-dri2-0-dev:i386 libxcb-present-dev:i386 libxshmfence-dev:i386 libwayland-dev libwayland-dev:i386 libxrandr-dev:i386
 ```
 #### RedHat
-```
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-
-sudo yum localinstall epel-release-latest-7.noarch.rpm
-
-sudo yum update
-```
 ##### 64-bit
 ```
 sudo yum -y install openssl-devel gcc-c++ python3 curl glibc-devel libstdc++-devel libxcb-devel libX11-devel libxshmfence-devel libXrandr-devel wayland-devel
