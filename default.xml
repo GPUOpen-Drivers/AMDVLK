@@ -11,7 +11,7 @@
            sync-s="true" />
 
   <project path="drivers/xgl" name="xgl" revision="5f4c7d9498c652d1e6b99012c7e83b99ea8da488"/>
-  <project path="drivers/pal" name="pal" revision="36490c70f37dea830f4b8fe6327a6af5fc001793"/>
+  <project path="drivers/pal" name="pal" revision="2de164b431f8a27652e63513ae73338dc512e5bf"/>
   <project path="drivers/llpc" name="llpc" revision="e9a3361712946970f70f592a237ad29a4c553509"/>
   <project path="drivers/gpurt" name="gpurt" revision="7a3d1d10f98a4bc0fdb5ea3f75a7549da44dcdfb"/>
   <project path="drivers/llvm-project" name="llvm-project" revision="92bd7b3505d4c3d93bd1dd0cadea70ac8bfe533f"/>
