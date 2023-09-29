@@ -10,7 +10,7 @@ Shaders that compose a particular `VkPipeline` object are compiled as a single e
 ### Product Support
 The AMD Open Source Driver for Vulkan is designed to support the following AMD GPUs:
 
-* Radeon&trade; RX 7900/7600 Series
+* Radeon&trade; RX 7900/7800/7700/7600 Series
 * Radeon&trade; RX 6900/6800/6700/6600/6500 Series
 * Radeon&trade; RX 5700/5600/5500 Series
 * Radeon&trade; RX Vega Series
@@ -82,6 +82,7 @@ It is recommended to install at least 16GB RAM in your build system.
 
 ### Build System
 * CMake 3.20 or newer is required. [Download](https://cmake.org/download/) and install proper one if the cmake is older than 3.20.
+* C++ 20 support is required. Like gcc9, clang11.
 * Ninja is required.
 
 ### Install Dev and Tools Packages
