@@ -13,13 +13,10 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 * Radeon&trade; RX 7900/7800/7700/7600 Series
 * Radeon&trade; RX 6900/6800/6700/6600/6500 Series
 * Radeon&trade; RX 5700/5600/5500 Series
-* Radeon&trade; RX Vega Series
-* Radeon&trade; RX 400/500 Series
-* Radeon&trade; Pro WX 9100, x200 Series
 * Radeon&trade; Pro W5700/W5500 Series
 
 > **Note**
-> For Pre-Polaris and Pre-Raven GPUs, please use v-2021.Q2.5 or older release.
+> For Pre-GFX10 GPUs, please use v-2023.Q3.3 or older release.
 
 ### Operating System Support
 The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://www.amd.com/en/support/kb/release-notes/rn-amdgpu-unified-linux-22-20):
@@ -37,7 +34,7 @@ The driver has not been well tested on other distros and versions. You may try i
 The AMD Open Source Driver for Vulkan is designed to support the following features:
 
 * Vulkan 1.3
-* More than 30 extensions
+* More than 170 extensions
 * [Radeon&trade; GPUProfiler](https://github.com/GPUOpen-Tools/Radeon-GPUProfiler) tracing
 * Built-in debug and profiling tools
 * Mid-command buffer preemption and SR-IOV virtualization
@@ -81,7 +78,7 @@ Please make each contribution reasonably small. If you would like to make a big 
 It is recommended to install at least 16GB RAM in your build system.
 
 ### Build System
-* CMake 3.20 or newer is required. [Download](https://cmake.org/download/) and install proper one if the cmake is older than 3.20.
+* CMake 3.21 or newer is required. [Download](https://cmake.org/download/) and install proper one if the cmake is older than 3.21.
 * C++ 20 support is required. Like gcc9, clang11.
 * Ninja is required.
 
