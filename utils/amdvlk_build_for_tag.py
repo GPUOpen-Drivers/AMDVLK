@@ -166,6 +166,10 @@ class Worker:
                 eprint('SPVGEN: fetch external sources failed')
                 exit(-1)
 
+        def useGccToolset():
+            return self.distro == 'RHEL'
+        gccToolsetCmd = "source scl_source enable gcc-toolset-10 &&" if useGccToolset() else ""
+
         self.buildDir   = 'xgl/Release64' if arch == '64' else 'xgl/Release32'
         cmakeFlags = ' -G Ninja -S xgl -B ' + self.buildDir + ' -DBUILD_WAYLAND_SUPPORT=ON -DPACKAGE_VERSION=' + self.version + ' -DXGL_BUILD_TOOLS=ON'
         cFlags     = '' if arch == '64' else ' -DCMAKE_C_FLAGS=\"-m32 -march=i686\" -DCMAKE_CXX_FLAGS=\"-m32 -march=i686\"'
@@ -176,7 +180,7 @@ class Worker:
         os.makedirs(self.buildDir)
 
         # Build driver
-        if os.system(cmakeName + cmakeFlags + cFlags):
+        if os.system(gccToolsetCmd + cmakeName + cmakeFlags + cFlags):
             eprint(cmakeName + cmakeFlags + cFlags + ' failed')
             exit(-1)
 
