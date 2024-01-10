@@ -19,7 +19,7 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 > For Pre-GFX10 GPUs, please use v-2023.Q3.3 or older release.
 
 ### Operating System Support
-The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://www.amd.com/en/support/kb/release-notes/rn-amdgpu-unified-linux-22-20):
+The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://www.amd.com/en/support/kb/release-notes/rn-amdgpu-unified-linux-23-30):
 * Ubuntu 22.04 (amd64 version)
 * Ubuntu 20.04 (amd64 version)
 * RedHat 8.6 (x86-64 version)
@@ -47,7 +47,7 @@ The following features and improvements are planned in future releases (Please r
 
 
 ### Known Issues
-* The driver can only work with GPUs of GFX10 family or newer, you may need to upgrade the kernel to 5.3 or later version and firmware (under /lib/firmware/amdgpu/) to the right version from https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/amdgpu, and then update ramfs (sudo mkinitramfs -o /boot/initrd.img-`uname -r` `uname -r` or sudo mkinitcpio --generate /boot/initrd.img-`uname -r` `uname -r`)
+* If you are using upstream stack, you may need to upgrade the kernel to 5.3 or later version and firmware (under /lib/firmware/amdgpu/) to the right version from https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/amdgpu, and then update ramfs (sudo mkinitramfs -o /boot/initrd.img-`uname -r` `uname -r` or sudo mkinitcpio --generate /boot/initrd.img-`uname -r` `uname -r`)
 * Timeline semaphore is not fully supported in Linux kernel until version 5.5. You can install [Vulkan timeline semaphore layer](https://github.com/KhronosGroup/Vulkan-ExtensionLayer) to enable the extension if you are using earlier version of Linux kernel
 
 
