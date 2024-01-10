@@ -19,7 +19,7 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 > For Pre-GFX10 GPUs, please use v-2023.Q3.3 or older release.
 
 ### Operating System Support
-The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://www.amd.com/en/support/kb/release-notes/rn-amdgpu-unified-linux-23-30):
+The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://www.amd.com/en/support/linux-drivers):
 * Ubuntu 22.04 (amd64 version)
 * Ubuntu 20.04 (amd64 version)
 * RedHat 8.6 (x86-64 version)
