@@ -47,8 +47,7 @@ The following features and improvements are planned in future releases (Please r
 
 
 ### Known Issues
-* CTS may hang in VK.synchronization.internally_synchronized_objects.pipeline_cache_compute with Linux kernel versions lower than 4.13
-* The driver can only work with firmware of ME feature version >= 25 (you can check the version with command "sudo cat /sys/kernel/debug/dri/0/amdgpu_firmware_info"). If you are using upstream stack with GPUs of SI or CI family, you may need to upgrade the kernel to 4.19 or later version and firmware (under /lib/firmware/amdgpu/) to the right version from https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/amdgpu, and then update ramfs (sudo mkinitramfs -o /boot/initrd.img-\`uname -r\` \`uname -r\` **or** sudo mkinitcpio --generate /boot/initrd.img-\`uname -r\` \`uname -r\`)
+* The driver can only work with GPUs of GFX10 family or newer, you may need to upgrade the kernel to 5.3 or later version and firmware (under /lib/firmware/amdgpu/) to the right version from https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/amdgpu, and then update ramfs (sudo mkinitramfs -o /boot/initrd.img-`uname -r` `uname -r` or sudo mkinitcpio --generate /boot/initrd.img-`uname -r` `uname -r`)
 * Timeline semaphore is not fully supported in Linux kernel until version 5.5. You can install [Vulkan timeline semaphore layer](https://github.com/KhronosGroup/Vulkan-ExtensionLayer) to enable the extension if you are using earlier version of Linux kernel
 
 
@@ -59,7 +58,7 @@ The driver is built from source code in five repositories: [LLVM](https://github
 
 For changes to LLVM, you should submit contribution to the [LLVM trunk](https://reviews.llvm.org/). Commits there will be evaluated to merge into the amd-gfx-gpuopen-master branch periodically.
 
-For changes to XGL, LLPC, GPURT and PAL, please [create a pull request](https://help.github.com/articles/creating-a-pull-request/) against the dev branch. After your change is reviewed and if it is accepted, it will be evaluated to merge into the master branch in a subsequent regular promotion.
+For changes to XGL, LLPC, GPURT and PAL, please [create a pull request](https://help.github.com/articles/creating-a-pull-request/) against the **dev branch**. After your change is reviewed and if it is accepted, it will be evaluated to merge into the master branch in a subsequent regular promotion.
 
 **IMPORTANT**: By creating a pull request, you agree to allow your contribution to be licensed by the project owners under the terms of the [MIT License](LICENSE.txt).
 
