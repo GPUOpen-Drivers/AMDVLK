@@ -6,9 +6,9 @@
            fetch="https://github.com/KhronosGroup/" />
 
   <project path="drivers/spvgen" name="spvgen" revision="dev"/>
-  <project path="drivers/third_party/glslang" name="glslang.git" remote="khronos-github" revision="f8dd5adde4cc5aec08243a82d8515c4fcb536b18"/>
-  <project path="drivers/third_party/SPIRV-tools" name="SPIRV-Tools.git" remote="khronos-github" revision="4f014aff9c653e5e16de1cc5f7130e99e02982e5"/>
-  <project path="drivers/third_party/SPIRV-tools/external/spirv-headers" name="SPIRV-Headers.git" remote="khronos-github" revision="88bc5e321c2839707df8b1ab534e243e00744177"/>
-  <project path="drivers/third_party/SPIRV-cross" name="SPIRV-Cross.git" remote="khronos-github" revision="637cff3d05892801daa43c93907e17151c7dfd31"/>
+  <project path="drivers/third_party/glslang" name="glslang.git" remote="khronos-github" revision="57d86ab763da7b2cd1e00ecec8aa697403a8fd20"/>
+  <project path="drivers/third_party/SPIRV-tools" name="SPIRV-Tools.git" remote="khronos-github" revision="c96fe8b943564fbab3424219d924d21cac2e877a"/>
+  <project path="drivers/third_party/SPIRV-tools/external/spirv-headers" name="SPIRV-Headers.git" remote="khronos-github" revision="7b0309708da5126b89e4ce6f19835f36dc912f2f"/>
+  <project path="drivers/third_party/SPIRV-cross" name="SPIRV-Cross.git" remote="khronos-github" revision="64f64c837a8ba7e32e91cebcc6c796e9b45ab186"/>
 
 </manifest>
