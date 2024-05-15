@@ -84,7 +84,7 @@ It is recommended to install at least 16GB RAM in your build system.
 ### Install Dev and Tools Packages
 #### Ubuntu
 ```
-sudo apt-get install build-essential cmake curl g++-multilib gcc-multilib git ninja-build pkg-config python3
+sudo apt-get install build-essential cmake curl g++-multilib gcc-multilib git ninja-build pkg-config python3 python3-jinja2 python3-ruamel.yaml
 ```
 ##### 64-bit
 ```
@@ -98,22 +98,25 @@ sudo apt-get install libssl-dev:i386 libx11-dev:i386 libxcb1-dev:i386 libxcb-dri
 #### RedHat
 ##### 64-bit
 ```
-sudo yum -y install openssl-devel gcc-c++ python3 curl glibc-devel libstdc++-devel libxcb-devel libX11-devel libxshmfence-devel libXrandr-devel wayland-devel
+sudo yum -y install openssl-devel gcc-c++ python3 python3-pip curl glibc-devel libstdc++-devel libxcb-devel libX11-devel libxshmfence-devel libXrandr-devel wayland-devel
+pip3 install jinja2 ruamel.yaml 
 ```
 ##### 32-bit
 ```
-sudo yum -y install openssl-devel.i686 gcc-c++ python3 curl glibc-devel.i686 libstdc++-devel.i686 libxcb-devel.i686 libX11-devel.i686 libxshmfence-devel.i686 libXrandr-devel.i686 wayland-devel.i686
+sudo yum -y install openssl-devel.i686 gcc-c++ python3 python3-pip curl glibc-devel.i686 libstdc++-devel.i686 libxcb-devel.i686 libX11-devel.i686 libxshmfence-devel.i686 libXrandr-devel.i686 wayland-devel.i686
+pip3 install jinja2 ruamel.yaml 
 ```
+
 ### Install shader compiler tools
 Shader compiler tools such as [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler) and [glslang](https://github.com/KhronosGroup/glslang) need to be installed to build raytracing support.
 
 #### Ubuntu 20.04
-It is recommended to install them from [VulkanSDK](https://packages.lunarg.com/) 1.3.216 or higher.
+It is recommended to install them from [VulkanSDK](https://packages.lunarg.com/) 1.3.280 or higher.
 
 Ubuntu 20.04 (Focal Fossa)
 ```
 wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
-sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.216-focal.list https://packages.lunarg.com/vulkan/1.3.216/lunarg-vulkan-1.3.216-focal.list
+sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.280-focal.list https://packages.lunarg.com/vulkan/1.3.280/lunarg-vulkan-1.3.280-focal.list
 sudo apt update
 sudo apt install dxc glslang-tools
 ```
@@ -123,11 +126,11 @@ Get [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler) 
 #!/bin/bash
 
 if [ ! -d DirectXShaderCompiler ]; then
-git clone --depth=1 -b release-1.6.2112 https://github.com/microsoft/DirectXShaderCompiler.git
+git clone --depth=1 -b release-1.7.2308 https://github.com/microsoft/DirectXShaderCompiler.git
 fi
 
 if [ ! -d glslang ]; then
-git clone --depth=1 -b sdk-1.3.216 https://github.com/KhronosGroup/glslang.git
+git clone --depth=1 -b sdk-1.3.280 https://github.com/KhronosGroup/glslang.git
 fi
 
 cd DirectXShaderCompiler
