@@ -20,8 +20,8 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 
 ### Operating System Support
 The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://www.amd.com/en/support/linux-drivers):
+* Ubuntu 24.04 (amd64 version)
 * Ubuntu 22.04 (amd64 version)
-* Ubuntu 20.04 (amd64 version)
 * RedHat 8.6 (x86-64 version)
 * RedHat 9.0 (x86-64 version)
 
@@ -110,15 +110,15 @@ pip3 install jinja2 ruamel.yaml
 ### Install shader compiler tools
 Shader compiler tools such as [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler) and [glslang](https://github.com/KhronosGroup/glslang) need to be installed to build raytracing support.
 
-#### Ubuntu 20.04
-It is recommended to install them from [VulkanSDK](https://packages.lunarg.com/) 1.3.280 or higher.
+#### Ubuntu 22.04
+It is recommended to install them from [VulkanSDK](https://packages.lunarg.com/) 1.3.290 or higher.
 
-Ubuntu 20.04 (Focal Fossa)
+Ubuntu 22.04 (Jammy)
 ```
-wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
-sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.280-focal.list https://packages.lunarg.com/vulkan/1.3.280/lunarg-vulkan-1.3.280-focal.list
+wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.290-jammy.list https://packages.lunarg.com/vulkan/1.3.290/lunarg-vulkan-1.3.290-jammy.list
 sudo apt update
-sudo apt install dxc glslang-tools
+sudo apt install vulkan-sdk
 ```
 #### Others
 Get [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler) and [glslang](https://github.com/KhronosGroup/glslang) source code and build tools on local.
@@ -126,11 +126,11 @@ Get [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler) 
 #!/bin/bash
 
 if [ ! -d DirectXShaderCompiler ]; then
-git clone --depth=1 -b release-1.7.2308 https://github.com/microsoft/DirectXShaderCompiler.git
+git clone --depth=1 -b release-1.8.2403 https://github.com/microsoft/DirectXShaderCompiler.git
 fi
 
 if [ ! -d glslang ]; then
-git clone --depth=1 -b sdk-1.3.280 https://github.com/KhronosGroup/glslang.git
+git clone --depth=1 -b vulkan-sdk-1.3.290.0 https://github.com/KhronosGroup/glslang.git
 fi
 
 cd DirectXShaderCompiler
@@ -155,8 +155,6 @@ export LD_LIBRARY_PATH=<DirectXShaderCompiler>/builds/lib:$LD_LIBRARY_PATH
 ```
 mkdir ~/bin
 curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-# Replacing python with python3 is only needed on Ubuntu 20.04 if the 'python' executable is not available
-sed -i s/python/python3/ ~/bin/repo
 chmod a+x ~/bin/repo
 export PATH=~/bin:"$PATH"
 ```
@@ -193,7 +191,7 @@ You can download and install the SDK package [here](https://vulkan.lunarg.com/sd
 ### Install dependencies
 #### Ubuntu
 ```
-sudo apt install libssl1.1
+sudo apt install libssl3
 ```
 #### RedHat
 ```
@@ -251,7 +249,7 @@ cmake --build builds/Release64 --target makePackage
 You could also download pre-built package from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each code promotion in master branch.
 
 Below is the installation instruction:
-#### Ubuntu 20.04, 22.04
+#### Ubuntu 22.04, 24.04
 ```
 sudo dpkg -r amdvlk  # If old version is installed on the machine, remove it first 
 sudo dpkg -i amdvlk_x.x.x_amd64.deb
