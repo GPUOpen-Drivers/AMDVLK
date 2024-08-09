@@ -249,13 +249,13 @@ cmake --build builds/Release64 --target makePackage
 You could also download pre-built package from https://github.com/GPUOpen-Drivers/AMDVLK/releases for each code promotion in master branch.
 
 Below is the installation instruction:
-#### Ubuntu 22.04, 24.04
+#### Ubuntu
 ```
 sudo dpkg -r amdvlk  # If old version is installed on the machine, remove it first 
 sudo dpkg -i amdvlk_x.x.x_amd64.deb
 sudo apt-get -f install
 ```
-#### RedHat 8.6, 9.0
+#### RedHat
 ```
 sudo rpm -e amdvlk   # If old version is installed on the machine, remove it first 
 sudo rpm -i amdvlk-x.x.x.x86_64.rpm
