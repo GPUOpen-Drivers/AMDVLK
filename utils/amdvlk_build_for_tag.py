@@ -171,7 +171,7 @@ class Worker:
         gccToolsetCmd = "source scl_source enable gcc-toolset-10 &&" if useGccToolset() else ""
 
         self.buildDir   = 'xgl/Release64' if arch == '64' else 'xgl/Release32'
-        cmakeFlags = ' -G Ninja -S xgl -B ' + self.buildDir + ' -DBUILD_WAYLAND_SUPPORT=ON -DPACKAGE_VERSION=' + self.version + ' -DXGL_BUILD_TOOLS=ON'
+        cmakeFlags = ' -G Ninja -S xgl -B ' + self.buildDir + ' -DVKI_BUILD_WAYLAND=ON -DPACKAGE_VERSION=' + self.version + ' -DVKI_BUILD_TOOLS=ON'
         cFlags     = '' if arch == '64' else ' -DCMAKE_C_FLAGS=\"-m32 -march=i686\" -DCMAKE_CXX_FLAGS=\"-m32 -march=i686\"'
 
         os.chdir(self.driverRoot)
