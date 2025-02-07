@@ -168,7 +168,7 @@ class Worker:
 
         def useGccToolset():
             return self.distro == 'RHEL'
-        gccToolsetCmd = "source scl_source enable gcc-toolset-10 &&" if useGccToolset() else ""
+        gccToolsetCmd = ""
 
         self.buildDir   = 'xgl/Release64' if arch == '64' else 'xgl/Release32'
         cmakeFlags = ' -G Ninja -S xgl -B ' + self.buildDir + ' -DVKI_BUILD_WAYLAND=ON -DPACKAGE_VERSION=' + self.version + ' -DVKI_BUILD_TOOLS=ON'
