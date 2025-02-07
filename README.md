@@ -20,10 +20,11 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 
 ### Operating System Support
 The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://www.amd.com/en/support/linux-drivers):
-* Ubuntu 24.04 (amd64 version)
 * Ubuntu 22.04 (amd64 version)
+* Ubuntu 24.04 (amd64 version)
 * RedHat 8.6 (x86-64 version)
 * RedHat 9.0 (x86-64 version)
+* RedHat 10.0 beta (x86-64 version)
 
 The driver has not been well tested on other distros and versions. You may try it out on other distros and versions of your choice.
 
@@ -47,7 +48,7 @@ The following features and improvements are planned in future releases (Please r
 
 
 ### Known Issues
-* If you are using upstream stack, you may need to upgrade the kernel to 5.3 or later version and firmware (under /lib/firmware/amdgpu/) to the right version from https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/amdgpu, and then update ramfs (sudo mkinitramfs -o /boot/initrd.img-`uname -r` `uname -r` or sudo mkinitcpio --generate /boot/initrd.img-`uname -r` `uname -r`)
+* If you are using upstream stack, you may need to upgrade the kernel to 5.3 or later version and firmware (under /lib/firmware/amdgpu/) to the right version from https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/amdgpu, and then update ramfs (sudo update-initramfs -u -k \`uname -r\`)
 * Timeline semaphore is not fully supported in Linux kernel until version 5.5. You can install [Vulkan timeline semaphore layer](https://github.com/KhronosGroup/Vulkan-ExtensionLayer) to enable the extension if you are using earlier version of Linux kernel
 
 
