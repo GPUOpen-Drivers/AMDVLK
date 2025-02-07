@@ -22,7 +22,7 @@ The AMD Open Source Driver for Vulkan is designed to support the following AMD G
 The AMD Open Source Driver for Vulkan is designed to support following distros and versions on both the AMDGPU upstream driver stack and the [AMDGPU Pro driver stack](https://www.amd.com/en/support/linux-drivers):
 * Ubuntu 22.04 (amd64 version)
 * Ubuntu 24.04 (amd64 version)
-* RedHat 8.6 (x86-64 version)
+* RedHat 8.0 (x86-64 version)
 * RedHat 9.0 (x86-64 version)
 * RedHat 10.0 beta (x86-64 version)
 
