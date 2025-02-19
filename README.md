@@ -287,9 +287,8 @@ Some example settings are listed below:
 
 *All* available settings can be determined by examining below source files that define them.
 
-* .../xgl/icd/settings/settings.cfg (API layer settings)
+* .../xgl/icd/settings/settings_xgl.json (API layer settings)
 * .../pal/src/core/settings_core.json (PAL hardware-independent settings)
-* .../pal/src/core/hw/gfxip/gfx6/settings_gfx6.json (PAL GFX6-8 settings)
 * .../pal/src/core/hw/gfxip/gfx9/settings_gfx9.json (PAL GFX9+ settings)
 
 Runtime settings are only read at device initialization, and cannot be changed without restarting the application. If running on a system with multiple GPUs, the same settings will apply to all of them.  Lines in the settings file that start with `;` will be treated as comments.
