@@ -10,6 +10,7 @@ Shaders that compose a particular `VkPipeline` object are compiled as a single e
 ### Product Support
 The AMD Open Source Driver for Vulkan is designed to support the following AMD GPUs:
 
+* Radeon&trade; RX 9070 Series
 * Radeon&trade; RX 7900/7800/7700/7600 Series
 * Radeon&trade; RX 6900/6800/6700/6600/6500 Series
 * Radeon&trade; RX 5700/5600/5500 Series
@@ -290,6 +291,7 @@ Some example settings are listed below:
 * .../xgl/icd/settings/settings_xgl.json (API layer settings)
 * .../pal/src/core/settings_core.json (PAL hardware-independent settings)
 * .../pal/src/core/hw/gfxip/gfx9/settings_gfx9.json (PAL GFX9+ settings)
+* .../pal/src/core/hw/gfxip/gfx12/settings_gfx12.json (PAL GFX12 settings)
 
 Runtime settings are only read at device initialization, and cannot be changed without restarting the application. If running on a system with multiple GPUs, the same settings will apply to all of them.  Lines in the settings file that start with `;` will be treated as comments.
 
