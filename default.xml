@@ -10,12 +10,12 @@
            sync-c="true"
            sync-s="true" />
 
-  <project path="drivers/xgl" name="xgl" revision="ba24064a9c93e76d0cafb0196996e779fbe70bf4"/>
-  <project path="drivers/pal" name="pal" revision="04bc1e796dd15fc90fff8fa826d32e431d8722f6"/>
-  <project path="drivers/llpc" name="llpc" revision="188bbf6a5b9403813e51d39f6fc8429550dbf267"/>
-  <project path="drivers/gpurt" name="gpurt" revision="f734985ebc31f471c376ed0cb217f43bdd40ee17"/>
-  <project path="drivers/llvm-project" name="llvm-project" revision="cf4271cbb7c60a6517c45e9fc9fa09a9f420f512"/>
-  <project path="drivers/third_party/metrohash" name="MetroHash" revision="18893fb28601bb9af1154cd1a671a121fff6d8d3"/>
-  <project path="drivers/third_party/cwpack" name="CWPack" revision="4f8cf0584442a91d829d269158567d7ed926f026"/>
+  <project path="drivers/xgl" name="xgl" revision="e9782eb33ce5e5e4ed2e339542a28c1b933624b4"/>
+  <project path="drivers/pal" name="pal" revision="c5e800072a32f68b6ccc4422936d96167c6e0728"/>
+  <project path="drivers/llpc" name="llpc" revision="40cb8d95ad8d6f7f1652e3fd47d39667594cce08"/>
+  <project path="drivers/gpurt" name="gpurt" revision="7b226d48b46b7e92fec3b9ecc5712e5bf2bf3dd9"/>
+  <project path="drivers/llvm-project" name="llvm-project" revision="8fd93e26cf9b1235fc9573b68b96233818be0ed4"/>
+  <project path="drivers/third_party/metrohash" name="MetroHash" revision="6ab6ee5d31d001ba73feb5e7f13dbc75da96b620"/>
+  <project path="drivers/third_party/cwpack" name="CWPack" revision="73d612971b3a73341f241b021e5cbda220eef7f2"/>
 
 </manifest>
